@@ -28,25 +28,27 @@ import itertools
 
 # ================ local imports
 import el_sys
-from el_sys import *
+from el_sys import ElSys
 import cab_tray
 from cab_tray import *
-
+# import graph
+# from graph import *
 
 global doc
 doc = DocumentManager.Instance.CurrentDBDocument
 cab_tray.doc = doc
 
-elecSystems = FilteredElementCollector(doc)\
-	.OfCategory(BuiltInCategory.OST_ElectricalCircuit)\
-	.OfClass(MEPSystem)
+# elecSystems = FilteredElementCollector(doc)\
+# 	.OfCategory(BuiltInCategory.OST_ElectricalCircuit)\
+# 	.OfClass(MEPSystem)
 
 reload = IN[1]
-elemId = IN[2]
+elem_id = IN[2]
 tray_name = IN[3]
 outlist = list()
 
-tray_relations = get_tray_relations("test")
+el_system = ElSys(doc, elem_id)
+# tray_relations = get_tray_relations("test")
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
@@ -56,4 +58,4 @@ TransactionManager.Instance.EnsureInTransaction(doc)
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-OUT = tray_relations
+OUT = el_system.rvt_members

@@ -80,14 +80,11 @@ def dijsktra(graph, initial, end):
 
 
 global doc
-start = IN[0]
-end = IN[1]
-edges = IN[2]
+# start = IN[0]
+# end = IN[1]
+# edges = IN[2]
 
-graph = Graph()
+# graph = Graph()
 
-for edge in edges:
-	graph.add_edge(edge[0], edge[1], 1)
-
-# Assign your output to the OUT variable.
-OUT = dijsktra(graph, start, end)
+# for edge in edges:
+# 	graph.add_edge(edge[0], edge[1], 1)

@@ -20,7 +20,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": false,
+      "InputValue": true,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -185,12 +185,12 @@
     {
       "ConcreteType": "Dynamo.Graph.Nodes.CodeBlockNodeModel, DynamoCore",
       "NodeType": "CodeBlockNode",
-      "Code": "569579;",
+      "Code": "7784174;",
       "Id": "0580a1acd9b04173b246578c9cb4d17c",
       "Inputs": [],
       "Outputs": [
         {
-          "Id": "32fc0eb755a24aa5b20f8c52b154a5b1",
+          "Id": "ffb680111fc94bc18da24220c6bd68a2",
           "Name": "",
           "Description": "Wert des Ausdrucks in Zeile 1",
           "UsingDefaultValue": false,
@@ -201,37 +201,6 @@
       ],
       "Replication": "Disabled",
       "Description": "Ermöglicht die direkte Erstellung von DesignScript-Code."
-    },
-    {
-      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
-      "NodeType": "PythonScriptNode",
-      "Code": "import itertools\r\nimport operator\r\n\r\n\r\ndef flatten_list(data):\r\n\t# iterating over the data\r\n\tlist_in_progress = data\r\n\toutlist = list()\r\n\t\r\n\tlist_found = True\r\n\tn = 0\r\n\t#while any(lists_found)\r\n\twhile list_found:\r\n\t\tflat_list = list()\r\n\t\tlist_found = False\r\n\t\tfor i in list_in_progress:\r\n\t\t\tif isinstance(i, list):\r\n\t\t\t\tlist_found = True\r\n\t\t\t\tmap(lambda x: flat_list.append(x), i)\t\t\r\n\t\t\telse:\r\n\t\t\t\tflat_list.append(i)\r\n\t\t\t\t\r\n\t\tlist_in_progress = [x for x in flat_list]\r\n\t\toutlist.append(list_in_progress)\r\n\treturn outlist\r\n\t\t\t\t\r\n\t\t\t\r\n       \r\n\r\noutlist = list()\r\ntl = [1, [2,3], [[4,[5]],6]]\r\noneLvl = [[1,2],[3],[4]]\r\n\r\n\t\r\nOUT = flatten_list(tl)",
-      "VariableInputPorts": true,
-      "Id": "0f0b36216bcf40e391c19179dc333282",
-      "Inputs": [
-        {
-          "Id": "97a404b7389c4ed589cdeb0874b48432",
-          "Name": "IN[0]",
-          "Description": "Input #0",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        }
-      ],
-      "Outputs": [
-        {
-          "Id": "c0bc52797e664b7892188d23a7d29425",
-          "Name": "OUT",
-          "Description": "Ergebnis des Python-Skripts",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        }
-      ],
-      "Replication": "Disabled",
-      "Description": "Führt ein eingebettetes IronPython-Skript aus."
     },
     {
       "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
@@ -255,11 +224,6 @@
     }
   ],
   "Connectors": [
-    {
-      "Start": "ef9d7fd5abed4398b74fdbba5f356c6c",
-      "End": "97a404b7389c4ed589cdeb0874b48432",
-      "Id": "a53fa370a7174e4389384cdde6e8ee4f"
-    },
     {
       "Start": "ef9d7fd5abed4398b74fdbba5f356c6c",
       "End": "f1ced3c8000d4c729c4cdde79c88a77f",
@@ -286,9 +250,9 @@
       "Id": "6c6625a2c4904cb2abd6e4db423d8c32"
     },
     {
-      "Start": "32fc0eb755a24aa5b20f8c52b154a5b1",
+      "Start": "ffb680111fc94bc18da24220c6bd68a2",
       "End": "9e25795ebb394da0a3d639e7263c3960",
-      "Id": "b0c74a0a3bf047f39ce5b80aa064c5aa"
+      "Id": "2304ee75892f434da50b7ccb348880b6"
     },
     {
       "Start": "2375d1cd4ec144f09ce73e2c3b9de271",
@@ -382,16 +346,6 @@
       },
       {
         "ShowGeometry": true,
-        "Name": "Python Script",
-        "Id": "0f0b36216bcf40e391c19179dc333282",
-        "IsSetAsInput": false,
-        "IsSetAsOutput": false,
-        "Excluded": false,
-        "X": 1028.9180645213025,
-        "Y": 366.63594882289607
-      },
-      {
-        "ShowGeometry": true,
         "Name": "cable-tray_code",
         "Id": "0418453c3ab148dca7fce923ee728757",
         "IsSetAsInput": false,
@@ -402,8 +356,8 @@
       }
     ],
     "Annotations": [],
-    "X": -35.546182159259274,
-    "Y": -93.442487361551514,
-    "Zoom": 0.62461279121349489
+    "X": 161.240778980473,
+    "Y": -171.10291776879029,
+    "Zoom": 0.67656467580199176
   }
 }

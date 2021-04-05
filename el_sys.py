@@ -4,141 +4,172 @@ __author__ = "IvaSerge"
 __email__ = "ivaserge@ukr.net"
 __status__ = "Development"
 
+__author__ = "IvaSerge"
+__email__ = "ivaserge@ukr.net"
+__status__ = "Development"
 
-def sort_by_distance(el_system, board_inst, list_inst):
-	"""Sort families by nearest distance
-	args:
-		el_system - current electrical system
-		board_inst - electrical board instance
-		instances - list of instances
-	return:
-		sort_list - sorted list of instances
-	"""
-	sorted_list = list()
-	sorted_list.append(board_inst)
-	unsorted_list = list()
-	map(lambda x: unsorted_list.append(x), list_inst)
+# ================ system imports
+import clr
+import System
 
-	while unsorted_list:
-		if len(unsorted_list) == 1:
-			sorted_list.append(unsorted_list.pop(0))
+# ================ Revit imports
+clr.AddReference('RevitAPI')
+import Autodesk
+from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import BuiltInCategory
+from Autodesk.Revit.DB.Category import GetCategory
+
+# ================ Python imports
+import operator
+from operator import itemgetter, attrgetter
+
+# ================ local imports
+
+
+class ElSys():
+	def __init__(self, doc, el_sys_id):
+		"""
+		Extended electrical system class
+		"""
+		self.rvt_sys = doc.GetElement(ElementId(el_sys_id))
+		self.rvt_board = self.rvt_sys.BaseEquipment
+		if not(self.rvt_sys.Elements.IsEmpty):
+			unsorted_members = [x for x in self.rvt_sys.Elements]
+			# self.rvt_members = self.sort_by_distance(unsorted_members)
+			self.rvt_members = unsorted_members
 		else:
-			start_inst = sorted_list[-1]
-			distances = [get_distance(
-				start_inst,
-				check_inst,
-				el_system)
-				for check_inst in unsorted_list]
-			temp_list = zip(unsorted_list, distances)
-			temp_list.sort(key=operator.itemgetter(1))
-			next_pnt = temp_list[0][0]
-			pop_index = unsorted_list.index(next_pnt)
-			unsorted_list.pop(pop_index)
-			sorted_list.append(next_pnt)
+			self.rvt_members = None
 
-	return sorted_list
+	# def sort_by_distance(self, unsorted):
+	# 	"""Sort families by nearest distance
+	# 	# 	args:
+	# 	# 		el_system - current electrical system
+	# 	# 		board_inst - electrical board instance
+	# 	# 		instances - list of instances
+	# 	# 	return:
+	# 	# 		sort_list - sorted list of instances
+	# 	# 	"""
+	# 	board_inst = self.rvt_board
+	# 	list_inst = unsorted
+	# 	sorted_list = list()
+	# 	sorted_list.append(board_inst)
+	# 	unsorted_list = list()
+	# 	map(lambda x: unsorted_list.append(x), list_inst)
 
+	# 	while unsorted_list:
+	# 		if len(unsorted_list) == 1:
+	# 			sorted_list.append(unsorted_list.pop(0))
+	# 		else:
+	# 			start_inst = sorted_list[-1]
+	# 			distances = [self._get_distance(
+	# 				start_inst,
+	# 				check_inst)
+	# 				for check_inst in unsorted_list]
+	# 			temp_list = zip(unsorted_list, distances)
+	# 			temp_list.sort(key=operator.itemgetter(1))
+	# 			next_pnt = temp_list[0][0]
+	# 			pop_index = unsorted_list.index(next_pnt)
+	# 			unsorted_list.pop(pop_index)
+	# 			sorted_list.append(next_pnt)
+	# 	return sorted_list
 
-def get_distance(inst_start, inst_to_check, el_system):
-	start_pnt = find_connector_origin(inst_start, el_system)
-	next_pnt = find_connector_origin(inst_to_check, el_system)
-	distance = start_pnt.DistanceTo(next_pnt)
-	return distance
+	# def _get_distance(self, inst_start, inst_to_check):
+	# 	start_pnt = self._find_connector_origin(inst_start)
+	# 	next_pnt = self._find_connector_origin(inst_to_check)
+	# 	distance = start_pnt.DistanceTo(next_pnt)
+	# 	return distance
 
-
-def find_connector_origin(inst, el_system):
-	con_set = inst.MEPModel.ConnectorManager.Connectors
-	for connector in con_set:
-		con_type = connector.ConnectorType
-		type_is_logic = con_type == ConnectorType.Logical
-		if not(connector.AllRefs.IsEmpty):
-			con_allRefs = [x for x in connector.AllRefs]
-			el_system_owner = con_allRefs[0].Owner
-			check_sys = el_system_owner.Id == el_system.Id
-			if check_sys and not(type_is_logic):
-				return connector.Origin
-			if check_sys and type_is_logic:
-				# connector is found
-				# but logic connector have no Origin
-				# so FamilyInstance coordinate would be taken
-				# may lead to mistakes while path creation!!!
-				return connector.Owner.Location.Point
-	return None
-
-
-def create_new_path(inst_list, el_system):
-	"""Creates list of XYZ that runs through instancees in list.
-
-	args:
-		inst_list - list of RVT instances
-	return:
-		xyz_list - list of points that make path
-	"""
-	pairs_list = list()
-	for i, inst in enumerate(inst_list):
-		if i < inst_list.Count - 1:
-			pairs_list.append([inst, inst_list[i + 1]])
-		else:
-			pass
-	xyz_list = [
-		get_intermadiate_points(x, el_system)
-		for x in pairs_list]
-	last_pnt = find_connector_origin(inst_list[-1], el_system)
-	xyz_list.append(last_pnt)
-
-	return flatten_list(xyz_list)
+	# def _find_connector_origin(self, inst):
+	# 	el_system = self.rvt_sys
+	# 	con_set = inst.MEPModel.ConnectorManager.Connectors
+	# 	for connector in con_set:
+	# 		con_type = connector.ConnectorType
+	# 		type_is_logic = con_type == ConnectorType.Logical
+	# 		if not(connector.AllRefs.IsEmpty):
+	# 			con_allRefs = [x for x in connector.AllRefs]
+	# 			el_system_owner = con_allRefs[0].Owner
+	# 			check_sys = el_system_owner.Id == el_system.Id
+	# 			if check_sys and not(type_is_logic):
+	# 				return connector.Origin
+	# 			if check_sys and type_is_logic:
+	# 				# connector is found
+	# 				# but logic connector have no Origin
+	# 				# so FamilyInstance coordinate would be taken
+	# 				# may lead to mistakes while path creation!!!
+	# 				return connector.Owner.Location.Point
+	# 	return None
 
 
-def get_intermadiate_points(inst_list, el_system):
-	start_pnt = find_connector_origin(inst_list[0], el_system)
-	end_pnt = find_connector_origin(inst_list[1], el_system)
-	# check if Z is equal with the tolerance
-	start_check_pnt = XYZ(0, 0, start_pnt.Z)
-	end_check_pnt = XYZ(0, 0, end_pnt.Z)
+# def create_new_path(inst_list, el_system):
+# 	"""Creates list of XYZ that runs through instancees in list.
 
-	vert_point = XYZ(
-		start_pnt.X,
-		start_pnt.Y,
-		end_pnt.Z)
+# 	args:
+# 		inst_list - list of RVT instances
+# 	return:
+# 		xyz_list - list of points that make path
+# 	"""
+# 	pairs_list = list()
+# 	for i, inst in enumerate(inst_list):
+# 		if i < inst_list.Count - 1:
+# 			pairs_list.append([inst, inst_list[i + 1]])
+# 		else:
+# 			pass
+# 	xyz_list = [
+# 		get_intermadiate_points(x, el_system)
+# 		for x in pairs_list]
+# 	last_pnt = find_connector_origin(inst_list[-1], el_system)
+# 	xyz_list.append(last_pnt)
 
-	if any([
-		start_check_pnt.IsAlmostEqualTo(end_check_pnt),
-		vert_point.IsAlmostEqualTo(end_check_pnt)
-	]):
-		# points are on the same level or above each other
-		# no additional vertical point requiered
-		return start_pnt
-	else:
-		# points are not on the same level
-		# additional vertical point requiered
-		return [start_pnt, vert_point]
+# 	return flatten_list(xyz_list)
 
 
-def flatten_list(data):
-	# iterating over the data
-	list_in_progress = data
-	list_found = True
+# def get_intermadiate_points(inst_list, el_system):
+# 	start_pnt = find_connector_origin(inst_list[0], el_system)
+# 	end_pnt = find_connector_origin(inst_list[1], el_system)
+# 	# check if Z is equal with the tolerance
+# 	start_check_pnt = XYZ(0, 0, start_pnt.Z)
+# 	end_check_pnt = XYZ(0, 0, end_pnt.Z)
 
-	while list_found:
-		flat_list = list()
-		list_found = False
-		for i in list_in_progress:
-			if isinstance(i, list):
-				list_found = True
-				map(lambda x: flat_list.append(x), i)
-			else:
-				flat_list.append(i)
-		list_in_progress = [x for x in flat_list]
+# 	vert_point = XYZ(
+# 		start_pnt.X,
+# 		start_pnt.Y,
+# 		end_pnt.Z)
 
-	return list_in_progress
+# 	if any([
+# 		start_check_pnt.IsAlmostEqualTo(end_check_pnt),
+# 		vert_point.IsAlmostEqualTo(end_check_pnt)
+# 	]):
+# 		# points are on the same level or above each other
+# 		# no additional vertical point requiered
+# 		return start_pnt
+# 	else:
+# 		# points are not on the same level
+# 		# additional vertical point requiered
+# 		return [start_pnt, vert_point]
 
 
-global doc
+# def flatten_list(data):
+# 	# iterating over the data
+# 	list_in_progress = data
+# 	list_found = True
 
-# sys_electrical = doc.GetElement(ElementId(elemId))
-# sys_board = sys_electrical.BaseEquipment
-# if not(sys_electrical.Elements.IsEmpty):
-# 	sys_elements = [x for x in sys_electrical.Elements]
+# 	while list_found:
+# 		flat_list = list()
+# 		list_found = False
+# 		for i in list_in_progress:
+# 			if isinstance(i, list):
+# 				list_found = True
+# 				map(lambda x: flat_list.append(x), i)
+# 			else:
+# 				flat_list.append(i)
+# 		list_in_progress = [x for x in flat_list]
+
+# 	return list_in_progress
+
+
+# global doc
+
+# doc = ChangeSysPath.doc
 
 # start_tray = getByCatAndStrParam(
 # 	_bic,
