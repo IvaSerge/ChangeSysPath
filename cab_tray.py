@@ -55,7 +55,6 @@ def _param_by_cat(_bic, _name):
 
 
 def _category_by_bic_name(_bicString):
-	global doc
 	bicList = System.Enum.GetValues(BuiltInCategory)
 	bic = [i for i in bicList if _bicString == i.ToString()][0]
 	return GetCategory(doc, bic)
@@ -123,6 +122,7 @@ def get_tray_relations(inst_first):
 	Relations are represented as pairs of neighbors.\n
 	It is possible more than 1 neighbor.\n
 	Example: A-B, A-C means that object A is connected to B and C
+	all conections are bi-directional. A-B and B-A would be created
 
 	args:
 		inst_first: first instance of net
@@ -133,12 +133,25 @@ def get_tray_relations(inst_first):
 	elems_to_ceck = collections.deque([])
 	elems_to_ceck.append(inst_first)
 	outlist = list()
+	elems_checked = list()
 
-	elem_current = elems_to_ceck.pop()
-	elem_refs = _get_all_reference(elem_current)
-	# outlist.append(elem_refs)
-
-	return elem_refs
-
+	# while elems_to_ceck:
+	while elems_to_ceck:
+		elem_current = elems_to_ceck.pop()
+		# there is no need to check element twice
+		# but it need to be removed from the que to
+		# avoid closed loop cycle
+		if elem_current.Id in elems_checked:
+			continue
+		elems_checked.append(elem_current.Id)
+		elem_refs = _get_all_reference(elem_current)
+		# fill que with new references
+		map(lambda x: elems_to_ceck.append(x), elem_refs)
+		# create pair of relations
+		for elem in elem_refs:
+			# filter out self-references
+			if elem.Id != elem_current.Id:
+				outlist.append([elem_current, elem])
+	return outlist
 
 global doc
