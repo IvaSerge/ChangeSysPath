@@ -46,8 +46,7 @@ elemId = IN[2]
 tray_name = IN[3]
 outlist = list()
 
-tray_first = cab_tray.get_first_tray("test")
-tray_relations = get_tray_relations(tray_first)
+tray_relations = get_tray_relations("test")
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)

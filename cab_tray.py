@@ -86,7 +86,7 @@ def _get_all_reference(_inst):
 	return reference_list
 
 
-def get_first_tray(_name):
+def _get_first_tray(_name):
 	"""Get first-in cable tray instance.
 
 	Cable tray will be selected by "MC Object Variable 1" parameter value
@@ -116,7 +116,7 @@ def get_first_tray(_name):
 	return elem
 
 
-def get_tray_relations(inst_first):
+def get_tray_relations(tree_name):
 	"""Get relations between cable trays and fittings
 
 	Relations are represented as pairs of neighbors.\n
@@ -125,11 +125,12 @@ def get_tray_relations(inst_first):
 	all conections are bi-directional. A-B and B-A would be created
 
 	args:
-		inst_first: first instance of net
+		tree name (str): name of the tree in revit
 	return:
 		relation_list: list of pairs
 	"""
 
+	inst_first = _get_first_tray(tree_name)
 	elems_to_ceck = collections.deque([])
 	elems_to_ceck.append(inst_first)
 	outlist = list()
@@ -153,5 +154,6 @@ def get_tray_relations(inst_first):
 			if elem.Id != elem_current.Id:
 				outlist.append([elem_current, elem])
 	return outlist
+
 
 global doc
