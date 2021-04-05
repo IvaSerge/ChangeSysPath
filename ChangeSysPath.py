@@ -29,14 +29,14 @@ import itertools
 # ================ local imports
 import el_sys
 from el_sys import ElSys
-import cab_tray
-from cab_tray import *
+# import cab_tray
+# from cab_tray import *
 # import graph
 # from graph import *
 
 global doc
 doc = DocumentManager.Instance.CurrentDBDocument
-cab_tray.doc = doc
+# cab_tray.doc = doc
 
 # elecSystems = FilteredElementCollector(doc)\
 # 	.OfCategory(BuiltInCategory.OST_ElectricalCircuit)\

@@ -35,69 +35,68 @@ class ElSys():
 		self.rvt_board = self.rvt_sys.BaseEquipment
 		if not(self.rvt_sys.Elements.IsEmpty):
 			unsorted_members = [x for x in self.rvt_sys.Elements]
-			# self.rvt_members = self.sort_by_distance(unsorted_members)
-			self.rvt_members = unsorted_members
+			self.rvt_members = self.sort_by_distance(unsorted_members)
 		else:
 			self.rvt_members = None
 
-	# def sort_by_distance(self, unsorted):
-	# 	"""Sort families by nearest distance
-	# 	# 	args:
-	# 	# 		el_system - current electrical system
-	# 	# 		board_inst - electrical board instance
-	# 	# 		instances - list of instances
-	# 	# 	return:
-	# 	# 		sort_list - sorted list of instances
-	# 	# 	"""
-	# 	board_inst = self.rvt_board
-	# 	list_inst = unsorted
-	# 	sorted_list = list()
-	# 	sorted_list.append(board_inst)
-	# 	unsorted_list = list()
-	# 	map(lambda x: unsorted_list.append(x), list_inst)
+	def sort_by_distance(self, unsorted):
+		"""Sort families by nearest distance
+		# 	args:
+		# 		el_system - current electrical system
+		# 		board_inst - electrical board instance
+		# 		instances - list of instances
+		# 	return:
+		# 		sort_list - sorted list of instances
+		# 	"""
+		board_inst = self.rvt_board
+		list_inst = unsorted
+		sorted_list = list()
+		sorted_list.append(board_inst)
+		unsorted_list = list()
+		map(lambda x: unsorted_list.append(x), list_inst)
 
-	# 	while unsorted_list:
-	# 		if len(unsorted_list) == 1:
-	# 			sorted_list.append(unsorted_list.pop(0))
-	# 		else:
-	# 			start_inst = sorted_list[-1]
-	# 			distances = [self._get_distance(
-	# 				start_inst,
-	# 				check_inst)
-	# 				for check_inst in unsorted_list]
-	# 			temp_list = zip(unsorted_list, distances)
-	# 			temp_list.sort(key=operator.itemgetter(1))
-	# 			next_pnt = temp_list[0][0]
-	# 			pop_index = unsorted_list.index(next_pnt)
-	# 			unsorted_list.pop(pop_index)
-	# 			sorted_list.append(next_pnt)
-	# 	return sorted_list
+		while unsorted_list:
+			if len(unsorted_list) == 1:
+				sorted_list.append(unsorted_list.pop(0))
+			else:
+				start_inst = sorted_list[-1]
+				distances = [self._get_distance(
+					start_inst,
+					check_inst)
+					for check_inst in unsorted_list]
+				temp_list = zip(unsorted_list, distances)
+				temp_list.sort(key=operator.itemgetter(1))
+				next_pnt = temp_list[0][0]
+				pop_index = unsorted_list.index(next_pnt)
+				unsorted_list.pop(pop_index)
+				sorted_list.append(next_pnt)
+		return sorted_list
 
-	# def _get_distance(self, inst_start, inst_to_check):
-	# 	start_pnt = self._find_connector_origin(inst_start)
-	# 	next_pnt = self._find_connector_origin(inst_to_check)
-	# 	distance = start_pnt.DistanceTo(next_pnt)
-	# 	return distance
+	def _get_distance(self, inst_start, inst_to_check):
+		start_pnt = self._find_connector_origin(inst_start)
+		next_pnt = self._find_connector_origin(inst_to_check)
+		distance = start_pnt.DistanceTo(next_pnt)
+		return distance
 
-	# def _find_connector_origin(self, inst):
-	# 	el_system = self.rvt_sys
-	# 	con_set = inst.MEPModel.ConnectorManager.Connectors
-	# 	for connector in con_set:
-	# 		con_type = connector.ConnectorType
-	# 		type_is_logic = con_type == ConnectorType.Logical
-	# 		if not(connector.AllRefs.IsEmpty):
-	# 			con_allRefs = [x for x in connector.AllRefs]
-	# 			el_system_owner = con_allRefs[0].Owner
-	# 			check_sys = el_system_owner.Id == el_system.Id
-	# 			if check_sys and not(type_is_logic):
-	# 				return connector.Origin
-	# 			if check_sys and type_is_logic:
-	# 				# connector is found
-	# 				# but logic connector have no Origin
-	# 				# so FamilyInstance coordinate would be taken
-	# 				# may lead to mistakes while path creation!!!
-	# 				return connector.Owner.Location.Point
-	# 	return None
+	def _find_connector_origin(self, inst):
+		el_system = self.rvt_sys
+		con_set = inst.MEPModel.ConnectorManager.Connectors
+		for connector in con_set:
+			con_type = connector.ConnectorType
+			type_is_logic = con_type == ConnectorType.Logical
+			if not(connector.AllRefs.IsEmpty):
+				con_allRefs = [x for x in connector.AllRefs]
+				el_system_owner = con_allRefs[0].Owner
+				check_sys = el_system_owner.Id == el_system.Id
+				if check_sys and not(type_is_logic):
+					return connector.Origin
+				if check_sys and type_is_logic:
+					# connector is found
+					# but logic connector have no Origin
+					# so FamilyInstance coordinate would be taken
+					# may lead to mistakes while path creation!!!
+					return connector.Owner.Location.Point
+		return None
 
 
 # def create_new_path(inst_list, el_system):
