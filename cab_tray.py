@@ -60,100 +60,105 @@ def _category_by_bic_name(_bicString):
 	return GetCategory(doc, bic)
 
 
-def _get_all_reference(_inst):
-	reference_list = list()
-	elem = _inst
-	category_elem = elem.Category.Id
-	category_tray = _category_by_bic_name("OST_CableTray").Id
-	category_fitting = _category_by_bic_name("OST_CableTrayFitting").Id
+class TrayNet():
+	"""A class to represent conntected cable tray net"""
+	def __init__(self, net_name):
+		"""Create TrayNet by name
+		args:
+			net_name (str):
+			The name of the net, that can be found in
+			"MC Object Variable 1" parameter
+		"""
+		self.name = net_name
+		self.nodes = self.get_tray_relations()
+		self.first_elem = self._get_first_tray()
 
-	# for cable tray
-	if category_elem == category_tray:
-		elem_con_manager = elem.ConnectorManager
+	def _get_first_tray(self):
+		"""Get first-in cable tray instance.
 
-	# for cable tray fitting
-	if category_elem == category_fitting:
-		elem_mep_model = elem.MEPModel
-		elem_con_manager = elem_mep_model.ConnectorManager
+		Cable tray will be selected by "MC Object Variable 1" parameter value
+		"""
 
-	elem_cons = elem_con_manager.Connectors
-	for connector in elem_cons:
-		elem_ref = connector.AllRefs
-		if elem_ref:
-			for ref in elem_ref:
-				reference_list.append(ref.Owner)
+		name = self.name
+		# tray system name is in "MC Object Variable 1" parameter
+		param = _param_by_cat(
+			Autodesk.Revit.DB.BuiltInCategory.OST_CableTray,
+			"MC Object Variable 1")
 
-	return reference_list
+		fnrvStr = FilterStringEquals()
+		pvp = ParameterValueProvider(param.Id)
+		frule = FilterStringRule(pvp, fnrvStr, name, False)
+		filter = ElementParameterFilter(frule)
 
+		elem = FilteredElementCollector(doc).\
+			OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_CableTray).\
+			WhereElementIsNotElementType().\
+			WherePasses(filter).\
+			FirstElement()
+		return elem
 
-def _get_first_tray(_name):
-	"""Get first-in cable tray instance.
+	@staticmethod
+	def _get_all_reference(_inst):
+		reference_list = list()
+		elem = _inst
+		category_elem = elem.Category.Id
+		category_tray = _category_by_bic_name("OST_CableTray").Id
+		category_fitting = _category_by_bic_name("OST_CableTrayFitting").Id
 
-	Cable tray will be selected by "MC Object Variable 1" parameter value
+		# for cable tray
+		if category_elem == category_tray:
+			elem_con_manager = elem.ConnectorManager
 
-	args:
-		_name (str): parameter value
-	return:
-		cable tray instance
-	"""
+		# for cable tray fitting
+		if category_elem == category_fitting:
+			elem_mep_model = elem.MEPModel
+			elem_con_manager = elem_mep_model.ConnectorManager
 
-	# tray system name is in "MC Object Variable 1" parameter
-	param = _param_by_cat(
-		Autodesk.Revit.DB.BuiltInCategory.OST_CableTray,
-		"MC Object Variable 1")
+		elem_cons = elem_con_manager.Connectors
+		for connector in elem_cons:
+			elem_ref = connector.AllRefs
+			if elem_ref:
+				for ref in elem_ref:
+					reference_list.append(ref.Owner)
+		return reference_list
 
-	fnrvStr = FilterStringEquals()
-	pvp = ParameterValueProvider(param.Id)
-	frule = FilterStringRule(pvp, fnrvStr, _name, False)
-	filter = ElementParameterFilter(frule)
+	def get_tray_relations(self):
+		"""Get relations between cable trays and fittings
 
-	elem = FilteredElementCollector(doc).\
-		OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_CableTray).\
-		WhereElementIsNotElementType().\
-		WherePasses(filter).\
-		FirstElement()
+		Relations are represented as pairs of neighbors.\n
+		It is possible more than 1 neighbor.\n
+		Example: A-B, A-C means that object A is connected to B and C
+		all conections are bi-directional. A-B and B-A would be created
 
-	return elem
+		return:
+			relation_list: list of pairs
+		"""
 
+		# tree_name = self.name
+		inst_first = self._get_first_tray()
+		elems_to_ceck = collections.deque([])
+		elems_to_ceck.append(inst_first)
+		outlist = list()
+		elems_checked = list()
 
-def get_tray_relations(tree_name):
-	"""Get relations between cable trays and fittings
-
-	Relations are represented as pairs of neighbors.\n
-	It is possible more than 1 neighbor.\n
-	Example: A-B, A-C means that object A is connected to B and C
-	all conections are bi-directional. A-B and B-A would be created
-
-	args:
-		tree name (str): name of the tree in revit
-	return:
-		relation_list: list of pairs
-	"""
-
-	inst_first = _get_first_tray(tree_name)
-	elems_to_ceck = collections.deque([])
-	elems_to_ceck.append(inst_first)
-	outlist = list()
-	elems_checked = list()
-
-	# while elems_to_ceck:
-	while elems_to_ceck:
-		elem_current = elems_to_ceck.pop()
-		# there is no need to check element twice
-		# but it need to be removed from the que to
-		# avoid closed loop cycle
-		if elem_current.Id in elems_checked:
-			continue
-		elems_checked.append(elem_current.Id)
-		elem_refs = _get_all_reference(elem_current)
-		# fill que with new references
-		map(lambda x: elems_to_ceck.append(x), elem_refs)
-		# create pair of relations
-		for elem in elem_refs:
-			# filter out self-references
-			if elem.Id != elem_current.Id:
-				outlist.append([elem_current, elem])
-	return outlist
+		# while elems_to_ceck:
+		while elems_to_ceck:
+			elem_current = elems_to_ceck.pop()
+			# there is no need to check element twice
+			# but it need to be removed from the que to
+			# avoid closed loop cycle
+			if elem_current.Id in elems_checked:
+				continue
+			elems_checked.append(elem_current.Id)
+			elem_refs = self._get_all_reference(elem_current)
+			# fill que with new references
+			map(lambda x: elems_to_ceck.append(x), elem_refs)
+			# create pair of relations
+			for elem in elem_refs:
+				# filter out self-references
+				if elem.Id != elem_current.Id:
+					outlist.append([elem_current, elem])
+		return outlist
 
 
 global doc

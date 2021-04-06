@@ -99,6 +99,8 @@ class ElSys():
 		return None
 
 
+global doc
+
 # def create_new_path(inst_list, el_system):
 # 	"""Creates list of XYZ that runs through instancees in list.
 
