@@ -70,8 +70,9 @@ class TrayNet():
 			"MC Object Variable 1" parameter
 		"""
 		self.name = net_name
-		self.nodes = self.get_tray_relations()
-		self.first_elem = self._get_first_tray()
+		self.nodes = None
+		self.instances = None
+		self.get_tray_relations()
 
 	def _get_first_tray(self):
 		"""Get first-in cable tray instance.
@@ -158,7 +159,10 @@ class TrayNet():
 				# filter out self-references
 				if elem.Id != elem_current.Id:
 					outlist.append([elem_current, elem])
-		return outlist
+		self.nodes = outlist
+		self.instances = [
+			doc.GetElement(x)
+			for x in elems_checked]
 
 
 global doc

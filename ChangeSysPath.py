@@ -31,17 +31,14 @@ import el_sys
 from el_sys import ElSys
 import cab_tray
 from cab_tray import *
-# import graph
-# from graph import *
+import graph
+from graph import *
 
 global doc
 doc = DocumentManager.Instance.CurrentDBDocument
 cab_tray.doc = doc
 el_sys.doc = doc
-
-# elecSystems = FilteredElementCollector(doc)\
-# 	.OfCategory(BuiltInCategory.OST_ElectricalCircuit)\
-# 	.OfClass(MEPSystem)
+graph.doc = doc
 
 reload = IN[1]
 elem_id = IN[2]
@@ -59,4 +56,4 @@ TransactionManager.Instance.EnsureInTransaction(doc)
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-OUT = tray_net.first_elem
+OUT = tray_net.instances
