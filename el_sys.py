@@ -4,10 +4,6 @@ __author__ = "IvaSerge"
 __email__ = "ivaserge@ukr.net"
 __status__ = "Development"
 
-__author__ = "IvaSerge"
-__email__ = "ivaserge@ukr.net"
-__status__ = "Development"
-
 # ================ system imports
 import clr
 import System
@@ -22,12 +18,13 @@ from Autodesk.Revit.DB.Category import GetCategory
 # ================ Python imports
 import operator
 from operator import itemgetter, attrgetter
+import re
 
 # ================ local imports
 
 
 class ElSys():
-	def __init__(self, doc, el_sys_id):
+	def __init__(self, el_sys_id):
 		"""
 		Extended electrical system class
 		"""
@@ -38,6 +35,7 @@ class ElSys():
 			self.rvt_members = self.sort_by_distance(unsorted_members)
 		else:
 			self.rvt_members = None
+		self.routed_along_trays = self._get_rout_names()
 
 	def sort_by_distance(self, unsorted):
 		"""Sort families by nearest distance
@@ -97,6 +95,23 @@ class ElSys():
 					# may lead to mistakes while path creation!!!
 					return connector.Owner.Location.Point
 		return None
+
+	def _get_rout_names(self):
+		"""Get name list of cable trays through which cables run
+		"""
+		# the list should be in correct ORDER at this point!
+		# TO DO. Automatical ordering to be done later
+
+		el_sys = self.rvt_sys
+		tray_net_str = el_sys.LookupParameter("MC Object Variable 1")
+		tray_net_str = tray_net_str.AsString()
+
+		# tray-net names shoud be separated by koma and white space
+		# Example: aaaa, bbbb
+		if tray_net_str:
+			return tray_net_str.split(", ")
+		else:
+			return None
 
 
 global doc
