@@ -20,6 +20,10 @@ from Autodesk.Revit.DB.Category import GetCategory
 import collections
 from collections import deque
 
+# ================ local imports
+import graph
+from graph import *
+
 
 def _param_by_cat(_bic, _name):
 	"""Get parametr by category and parameter Name
@@ -70,9 +74,29 @@ class TrayNet():
 			"MC Object Variable 1" parameter
 		"""
 		self.name = net_name
-		self.nodes = None
 		self.instances = None
+		self.nodes = None
+
 		self.get_tray_relations()
+		if self.nodes:
+			self.graph = Graph(self.nodes)
+
+	@staticmethod
+	def get_connector_points(instance):
+		category_elem = instance.Category.Id
+		category_tray = _category_by_bic_name("OST_CableTray").Id
+		category_fitting = _category_by_bic_name("OST_CableTrayFitting").Id
+
+		# for cable tray
+		if category_elem == category_tray:
+			con_manager = instance.ConnectorManager
+			con = con_manager.Connectors
+			points = [x.Origin for x in con]
+			return points
+
+		# for fitting
+		if category_elem == category_fitting:
+			return [instance.Location.Point]
 
 	def _get_first_tray(self):
 		"""Get first-in cable tray instance.
@@ -135,7 +159,6 @@ class TrayNet():
 			relation_list: list of pairs
 		"""
 
-		# tree_name = self.name
 		inst_first = self._get_first_tray()
 		elems_to_ceck = collections.deque([])
 		elems_to_ceck.append(inst_first)
@@ -158,7 +181,10 @@ class TrayNet():
 			for elem in elem_refs:
 				# filter out self-references
 				if elem.Id != elem_current.Id:
-					outlist.append([elem_current, elem])
+					# graph works good with Id and do not work with object
+					# that seems to be strange!!!
+					# As idea obj1 != obj1 but obj1.Id == obj1.Id
+					outlist.append([elem_current.Id, elem.Id])
 		self.nodes = outlist
 		self.instances = [
 			doc.GetElement(x)

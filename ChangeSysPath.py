@@ -45,8 +45,22 @@ elem_id = IN[2]
 tray_name = IN[3]
 outlist = list()
 
-# el_system = ElSys(doc, elem_id)
+el_system = ElSys(elem_id)
+# find all connected cable-tray nets in project.
+# for each net create TrayNet object.
+# list_of_nets
 tray_net = TrayNet("test")
+
+el_system_start = el_system.rvt_board
+el_start_xyz = el_system._find_connector_origin(el_system_start)
+el_system_end = el_system.rvt_members[0]
+el_end_xyz = el_system._find_connector_origin(el_system_end)
+
+get_start_end = el_system.get_in_out(
+	tray_net,
+	el_start_xyz,
+	el_end_xyz)
+# path = tray_net.graph.dijsktra(get_start_end[0], get_start_end[1])
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
@@ -56,4 +70,4 @@ TransactionManager.Instance.EnsureInTransaction(doc)
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-OUT = tray_net.instances
+OUT = get_start_end

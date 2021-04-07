@@ -84,5 +84,4 @@ global doc
 # start = IN[0]
 # end = IN[1]
 # edges = IN[2]
-
 # graph = Graph()

@@ -18,9 +18,12 @@ from Autodesk.Revit.DB.Category import GetCategory
 # ================ Python imports
 import operator
 from operator import itemgetter, attrgetter
-import re
 
 # ================ local imports
+import cab_tray
+from cab_tray import *
+import graph
+from graph import *
 
 
 class ElSys():
@@ -32,26 +35,27 @@ class ElSys():
 		self.rvt_board = self.rvt_sys.BaseEquipment
 		if not(self.rvt_sys.Elements.IsEmpty):
 			unsorted_members = [x for x in self.rvt_sys.Elements]
+			unsorted_members.insert(0, self.rvt_board)
 			self.rvt_members = self.sort_by_distance(unsorted_members)
 		else:
 			self.rvt_members = None
 		self.routed_along_trays = self._get_rout_names()
+		self.graf_list = list()
 
-	def sort_by_distance(self, unsorted):
+	def sort_by_distance(self, _unsorted):
 		"""Sort families by nearest distance
-		# 	args:
-		# 		el_system - current electrical system
-		# 		board_inst - electrical board instance
-		# 		instances - list of instances
-		# 	return:
-		# 		sort_list - sorted list of instances
-		# 	"""
-		board_inst = self.rvt_board
-		list_inst = unsorted
-		sorted_list = list()
-		sorted_list.append(board_inst)
+
+		args:
+			instances - list of instances
+		return:
+			sort_list - sorted list of instances
+		"""
+
 		unsorted_list = list()
-		map(lambda x: unsorted_list.append(x), list_inst)
+		sorted_list = list()
+		# New list need to be created! Not just memory link!
+		map(lambda x: unsorted_list.append(x), _unsorted)
+		sorted_list.append(unsorted_list.pop())
 
 		while unsorted_list:
 			if len(unsorted_list) == 1:
@@ -112,6 +116,51 @@ class ElSys():
 			return tray_net_str.split(", ")
 		else:
 			return None
+
+	def get_in_out(self, tray_net, start, end):
+		"""
+		For each graph it is necessery to find IN-OUT elements
+
+		args:
+			tray_net (TrayNet instance)
+			start, end (XYZ) - end points
+
+		return:
+			start_tray, end_tray - IN, OUT instances
+		"""
+
+		tray_elems = tray_net.instances
+		outlist = list()
+
+		for check_point in [start, end]:
+			min_distance = 1000000000
+			for elem in tray_elems:
+				pnts = TrayNet.get_connector_points(elem)
+				for pnt in pnts:
+					distance = check_point.DistanceTo(pnt)
+					if distance < min_distance:
+						min_distance = distance
+						out_elem = elem
+			outlist.append(out_elem)
+		return outlist
+
+	def find_tray_path(self):
+		# Work in progress
+		pass
+		# """Find path throught cable trays"""
+		# # find a net in net list
+		# global list_of_nets
+		# # if it is not the last net - find connection to other net
+		# # get start-end points of the current net
+		# get_start_end = self.get_in_out(
+		# 	tray_net,
+		# 	el_start_xyz,
+		# 	el_end_xyz)
+		# path = tray_net.graph.dijsktra(get_start_end[0], get_start_end[1])
+		# return [doc.GetElement(x) for x in path]
+
+		# # TODO #1
+		# # if it is not the last net - find connection to other net
 
 
 global doc
