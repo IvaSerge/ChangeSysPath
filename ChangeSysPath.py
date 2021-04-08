@@ -34,6 +34,7 @@ from cab_tray import *
 import graph
 from graph import *
 
+# ================ GLOBAL VARIABLES
 global doc
 doc = DocumentManager.Instance.CurrentDBDocument
 cab_tray.doc = doc
@@ -42,25 +43,29 @@ graph.doc = doc
 
 reload = IN[1]
 elem_id = IN[2]
-tray_name = IN[3]
 outlist = list()
 
+# Create electrical system objects
+# TODO
+# Get all systems in project
+# Filter out electrical systems with empty path
 el_system = ElSys(elem_id)
+
 # find all connected cable-tray nets in project.
 # for each net create TrayNet object.
-# list_of_nets
-tray_net = TrayNet("test")
+all_trays = FilteredElementCollector(doc).\
+	OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_CableTray).\
+	WhereElementIsNotElementType().\
+	ToElements()
+tray_names = set([
+	x.LookupParameter("""MC Object Variable 1""").AsString()
+	for x in all_trays
+	if x.LookupParameter("""MC Object Variable 1""").AsString()])
+list_of_nets = [TrayNet(x) for x in tray_names]
+el_sys.list_of_nets = list_of_nets
+el_system.find_trays_run()
+el_system.create_new_path()
 
-el_system_start = el_system.rvt_board
-el_start_xyz = el_system._find_connector_origin(el_system_start)
-el_system_end = el_system.rvt_members[0]
-el_end_xyz = el_system._find_connector_origin(el_system_end)
-
-get_start_end = el_system.get_in_out(
-	tray_net,
-	el_start_xyz,
-	el_end_xyz)
-# path = tray_net.graph.dijsktra(get_start_end[0], get_start_end[1])
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
@@ -70,4 +75,5 @@ TransactionManager.Instance.EnsureInTransaction(doc)
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-OUT = get_start_end
+OUT = el_system.path
+

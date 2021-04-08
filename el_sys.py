@@ -39,8 +39,8 @@ class ElSys():
 			self.rvt_members = self.sort_by_distance(unsorted_members)
 		else:
 			self.rvt_members = None
-		self.routed_along_trays = self._get_rout_names()
-		self.graf_list = list()
+		self.run_along_trays = None
+		self.path = None
 
 	def sort_by_distance(self, _unsorted):
 		"""Sort families by nearest distance
@@ -55,7 +55,7 @@ class ElSys():
 		sorted_list = list()
 		# New list need to be created! Not just memory link!
 		map(lambda x: unsorted_list.append(x), _unsorted)
-		sorted_list.append(unsorted_list.pop())
+		sorted_list.append(unsorted_list.pop(0))
 
 		while unsorted_list:
 			if len(unsorted_list) == 1:
@@ -144,26 +144,43 @@ class ElSys():
 			outlist.append(out_elem)
 		return outlist
 
-	def find_tray_path(self):
-		# Work in progress
-		pass
-		# """Find path throught cable trays"""
-		# # find a net in net list
-		# global list_of_nets
-		# # if it is not the last net - find connection to other net
-		# # get start-end points of the current net
-		# get_start_end = self.get_in_out(
-		# 	tray_net,
-		# 	el_start_xyz,
-		# 	el_end_xyz)
-		# path = tray_net.graph.dijsktra(get_start_end[0], get_start_end[1])
-		# return [doc.GetElement(x) for x in path]
+	def find_trays_run(self):
+		"""Find cable trays witin cable runs"""
+		el_system_start = self.rvt_members[0]
+		el_start = self._find_connector_origin(el_system_start)
+		el_system_end = self.rvt_members[1]
+		el_end = self._find_connector_origin(el_system_end)
 
-		# # TODO #1
+		# find a net in net list
+		nets_current = list()
+		rout_names = self._get_rout_names()
+		for rout in rout_names:
+			for net in list_of_nets:
+				if net.name == rout:
+					nets_current.append(net)
+
+		# if it is not the single net - find connection between nets
+
+		# get start-end points of the current net
+		net = nets_current[0]
+		start_end = self.get_in_out(net, el_start, el_end)
+		start, end = start_end[0].Id, start_end[1].Id
+		path = net.graph.dijsktra(start, end)
+		self.run_along_trays = [doc.GetElement(x) for x in path]
+
+		# TODO #1
 		# # if it is not the last net - find connection to other net
+
+	def create_new_path(self):
+		path_instances = list()
+		path_instances.append(self.rvt_members[0])
+		map(lambda x: path_instances.append(x), self.run_along_trays)
+		map(lambda x: path_instances.append(x), self.rvt_members[1:])
+		self.path = path_instances
 
 
 global doc
+global list_of_nets
 
 # def create_new_path(inst_list, el_system):
 # 	"""Creates list of XYZ that runs through instancees in list.
