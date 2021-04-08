@@ -20,7 +20,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": true,
+      "InputValue": false,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -356,8 +356,8 @@
       }
     ],
     "Annotations": [],
-    "X": -382.76383444459964,
-    "Y": -393.74485603252924,
-    "Zoom": 0.78694151901488452
+    "X": -304.84705018592581,
+    "Y": -286.81693723683617,
+    "Zoom": 0.66496490338205771
   }
 }

@@ -26,6 +26,39 @@ import graph
 from graph import *
 
 
+def process_list(_func, _list):
+	return map(
+		lambda x: process_list(_func, x)
+		if type(x) == list else _func(x), _list)
+
+
+def flatten_list(data):
+	# iterating over the data
+	list_in_progress = data
+	list_found = True
+
+	while list_found:
+		flat_list = list()
+		list_found = False
+		for i in list_in_progress:
+			if isinstance(i, list):
+				list_found = True
+				map(lambda x: flat_list.append(x), i)
+			else:
+				flat_list.append(i)
+		list_in_progress = [x for x in flat_list]
+	return list_in_progress
+
+
+def sort_list_by_point(start_point, point_list):
+	list_len = len(point_list)
+	start_pnt_list = [start_point] * list_len
+	calc_dist = zip(point_list, start_pnt_list)
+	sort_dist = [x[0].DistanceTo(x[1]) for x in calc_dist]
+	sort_list = zip(point_list, sort_dist)
+	return [x[0] for x in sorted(sort_list, key=itemgetter(1))]
+
+
 class ElSys():
 	def __init__(self, el_sys_id):
 		"""
@@ -172,10 +205,42 @@ class ElSys():
 		# # if it is not the last net - find connection to other net
 
 	def create_new_path(self):
-		path_instances = list()
-		path_instances.append(self.rvt_members[0])
-		map(lambda x: path_instances.append(x), self.run_along_trays)
-		map(lambda x: path_instances.append(x), self.rvt_members[1:])
+		path_instances = [[], [], []]
+		# first of all instances need to be sorted
+		# Elements need to be sorted to calculate additional points
+		# between parts of instances
+
+		# first instance - is electrical board
+		brd_inst = self.rvt_members[0]
+		brd_point = TrayNet.get_connector_points(brd_inst)[0]
+		path_instances[0].append(brd_point)
+
+		# next - cable tray sorted by tray-nets.
+		unsorted_points = [
+			TrayNet.get_connector_points(x)
+			for x in self.run_along_trays]
+
+		# Points are need to be sorted because connectors are unsorted
+		sorted_path_points = list()
+		for i, pnt_list in enumerate(unsorted_points):
+			if i == 0:
+				# the last point of previous net
+				check_pnt = path_instances[0][-1]
+			if i > 0:
+				check_pnt = sorted_path_points[-1]
+			sorted_list = sort_list_by_point(check_pnt, pnt_list)
+			map(lambda x: sorted_path_points.append(x), sorted_list)
+		map(lambda x: path_instances[1].append(x), sorted_path_points)
+
+		# last instancees - list of electrical equipment points
+		sys_inst = self.rvt_members[1:]
+		inst_points = flatten_list([
+			TrayNet.get_connector_points(x)
+			for x in sys_inst])
+		map(lambda x: path_instances[2].append(x), inst_points)
+
+		# map(lambda x: path_instances[2].append(x), self.rvt_members[1:])
+
 		self.path = path_instances
 
 

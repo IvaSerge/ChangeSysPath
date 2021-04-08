@@ -1,4 +1,3 @@
-
 """Cable tray fuctions."""
 
 __author__ = "IvaSerge"
@@ -83,20 +82,17 @@ class TrayNet():
 
 	@staticmethod
 	def get_connector_points(instance):
-		category_elem = instance.Category.Id
-		category_tray = _category_by_bic_name("OST_CableTray").Id
-		category_fitting = _category_by_bic_name("OST_CableTrayFitting").Id
+		location_str = instance.Location.GetType().Name
 
-		# for cable tray
-		if category_elem == category_tray:
+		if location_str == "LocationCurve":
 			con_manager = instance.ConnectorManager
 			con = con_manager.Connectors
 			points = [x.Origin for x in con]
 			return points
 
-		# for fitting
-		if category_elem == category_fitting:
+		if location_str == "LocationPoint":
 			return [instance.Location.Point]
+		return None
 
 	def _get_first_tray(self):
 		"""Get first-in cable tray instance.
