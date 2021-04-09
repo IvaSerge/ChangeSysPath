@@ -238,102 +238,45 @@ class ElSys():
 			TrayNet.get_connector_points(x)
 			for x in sys_inst])
 		map(lambda x: path_instances[2].append(x), inst_points)
+		flattened_path = flatten_list(path_instances)
+		self.path = flattened_path
+		self.path = self.path_update(flattened_path)
 
-		# map(lambda x: path_instances[2].append(x), self.rvt_members[1:])
+	@staticmethod
+	def path_update(path_points):
+		"""Add or remove additional points to path
 
-		self.path = path_instances
+		new horisontal points to be add when Z changes,
+		remove points in reisers, remove dublicates
+		"""
+		updated_list = list()
+		for i, point in enumerate(path_points):
+			if i == len(path_points) - 1:
+				updated_list.append(point)
+				continue
+
+			point_next = path_points[i + 1]
+			# no changes in Z
+			if point.Z == point_next.Z:
+				updated_list.append(point)
+
+			# Z is changed
+			# add new point on the same level as current
+			if point.Z != point_next.Z:
+				point_new = XYZ(
+					point_next.X,
+					point_next.Y,
+					point.Z)
+				# check if new point is not the same point as next point
+				if point_new.IsAlmostEqualTo(point_next):
+					# there is no need to make dublicate of the point
+					updated_list.append(point)
+				else:
+					# new point will be added to list
+					updated_list.append(point)
+					updated_list.append(point_new)
+		return updated_list
 
 
 global doc
 global list_of_nets
-
-# def create_new_path(inst_list, el_system):
-# 	"""Creates list of XYZ that runs through instancees in list.
-
-# 	args:
-# 		inst_list - list of RVT instances
-# 	return:
-# 		xyz_list - list of points that make path
-# 	"""
-# 	pairs_list = list()
-# 	for i, inst in enumerate(inst_list):
-# 		if i < inst_list.Count - 1:
-# 			pairs_list.append([inst, inst_list[i + 1]])
-# 		else:
-# 			pass
-# 	xyz_list = [
-# 		get_intermadiate_points(x, el_system)
-# 		for x in pairs_list]
-# 	last_pnt = find_connector_origin(inst_list[-1], el_system)
-# 	xyz_list.append(last_pnt)
-
-# 	return flatten_list(xyz_list)
-
-
-# def get_intermadiate_points(inst_list, el_system):
-# 	start_pnt = find_connector_origin(inst_list[0], el_system)
-# 	end_pnt = find_connector_origin(inst_list[1], el_system)
-# 	# check if Z is equal with the tolerance
-# 	start_check_pnt = XYZ(0, 0, start_pnt.Z)
-# 	end_check_pnt = XYZ(0, 0, end_pnt.Z)
-
-# 	vert_point = XYZ(
-# 		start_pnt.X,
-# 		start_pnt.Y,
-# 		end_pnt.Z)
-
-# 	if any([
-# 		start_check_pnt.IsAlmostEqualTo(end_check_pnt),
-# 		vert_point.IsAlmostEqualTo(end_check_pnt)
-# 	]):
-# 		# points are on the same level or above each other
-# 		# no additional vertical point requiered
-# 		return start_pnt
-# 	else:
-# 		# points are not on the same level
-# 		# additional vertical point requiered
-# 		return [start_pnt, vert_point]
-
-
-# def flatten_list(data):
-# 	# iterating over the data
-# 	list_in_progress = data
-# 	list_found = True
-
-# 	while list_found:
-# 		flat_list = list()
-# 		list_found = False
-# 		for i in list_in_progress:
-# 			if isinstance(i, list):
-# 				list_found = True
-# 				map(lambda x: flat_list.append(x), i)
-# 			else:
-# 				flat_list.append(i)
-# 		list_in_progress = [x for x in flat_list]
-
-# 	return list_in_progress
-
-
-# global doc
-
-# doc = ChangeSysPath.doc
-
-# start_tray = getByCatAndStrParam(
-# 	_bic,
-# 	_bip,
-# 	tray_name,
-# 	False)
-
-# sys_sorted_elements = sort_by_distance(
-# 	sys_electrical,
-# 	sys_board,
-# 	sys_elements)
-
-# short_path = create_new_path(
-# 	sys_sorted_elements,
-# 	sys_electrical)
-
-# standard_path = elem.GetCircuitPath()
-# short_path = List[XYZ]([
-# 	standard_path[0],
-# 	standard_path[standard_path.Count - 1]])
