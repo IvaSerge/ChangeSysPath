@@ -231,13 +231,31 @@ class ElSys():
 		last_points.append(sorted_path_points[-2])
 		last_points.append(sorted_path_points[-1])
 		exit_point = self.get_exit_point(last_points, end_pnt)
+		if exit_point:
+			sorted_path_points.pop()
+			sorted_path_points.append(exit_point)
+		clean_path = self.clear_near_points(sorted_path_points)
+		return clean_path
 
-		return exit_point
+	@staticmethod
+	def clear_near_points(points):
+		list_to_check = points
+		clean_list = list()
+		clean_list.append(list_to_check.pop(0))
+
+		while list_to_check:
+			current_point = clean_list[-1]
+			next_point = list_to_check.pop(0)
+			if current_point.IsAlmostEqualTo(next_point):
+				pass
+			else:
+				clean_list.append(next_point)
+		return clean_list
 
 	@staticmethod
 	def get_exit_point(line_points, check_pnt):
 		vec = Vec(line_points[0], line_points[1])
-		return vec.origin
+		return vec.altitude_foot(check_pnt)
 
 	def create_new_path(self):
 		path_instances = [[], [], []]
@@ -253,23 +271,19 @@ class ElSys():
 		# next - cable tray sorted by tray-nets.
 		from_pnt = path_instances[0][-1]
 		to_inst = self.rvt_members[1]
-		to_pnt = TrayNet.get_connector_points(to_inst)
+		to_pnt = TrayNet.get_connector_points(to_inst)[0]
 		sorted_tray_points = self._tray_path(from_pnt, to_pnt)
-		# map(lambda x: path_instances[1].append(x), sorted_tray_points)
+		map(lambda x: path_instances[1].append(x), sorted_tray_points)
 
+		# last instancees - list of electrical equipment points
+		sys_inst = self.rvt_members[1:]
+		inst_points = flatten_list([
+			TrayNet.get_connector_points(x)
+			for x in sys_inst])
+		map(lambda x: path_instances[2].append(x), inst_points)
 
-		## last instancees - list of electrical equipment points
-		#sys_inst = self.rvt_members[1:]
-		#inst_points = flatten_list([
-		#	TrayNet.get_connector_points(x)
-		#	for x in sys_inst])
-		#map(lambda x: path_instances[2].append(x), inst_points)
-		#self.path = path_instances
-
-		#flattened_path = flatten_list(path_instances)
-		#self.path = self.add_z_points(flattened_path)
-
-		self.path = sorted_tray_points
+		flattened_path = flatten_list(path_instances)
+		self.path = self.add_z_points(flattened_path)
 
 	@staticmethod
 	def add_z_points(path_points):

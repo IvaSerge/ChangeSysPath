@@ -33,6 +33,8 @@ import cab_tray
 from cab_tray import *
 import graph
 from graph import *
+import vector
+from vector import *
 
 # ================ GLOBAL VARIABLES
 global doc
@@ -70,10 +72,12 @@ el_system.create_new_path()
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-# el_system.rvt_sys.SetCircuitPath(el_system.path)
+el_system.rvt_sys.SetCircuitPath(el_system.path)
+
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-OUT = el_system.path
 
+# OUT = map(lambda x: vector.toPoint(x), test_path)
+OUT = el_system.path

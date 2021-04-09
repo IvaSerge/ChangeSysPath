@@ -20,7 +20,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": false,
+      "InputValue": true,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -264,7 +264,7 @@
   "Bindings": [],
   "View": {
     "Dynamo": {
-      "ScaleFactor": 1.0,
+      "ScaleFactor": 10000.0,
       "HasRunWithoutCrash": true,
       "IsVisibleInDynamoLibrary": true,
       "Version": "2.0.3.8810",
@@ -273,15 +273,15 @@
     },
     "Camera": {
       "Name": "Hintergrundvorschau",
-      "EyeX": -17.0,
-      "EyeY": 24.0,
-      "EyeZ": 50.0,
-      "LookX": 12.0,
-      "LookY": -13.0,
-      "LookZ": -58.0,
-      "UpX": 0.0,
-      "UpY": 1.0,
-      "UpZ": 0.0
+      "EyeX": 23755.684376853853,
+      "EyeY": 5816.2844564673151,
+      "EyeZ": -31264.843145542443,
+      "LookX": -2693.5102546697162,
+      "LookY": -5435.6014543389565,
+      "LookZ": 5599.3593996313466,
+      "UpX": -0.20883631006899353,
+      "UpY": 0.8763066800438577,
+      "UpZ": 0.43413592123581252
     },
     "NodeViews": [
       {
@@ -301,7 +301,7 @@
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 1006.98317751948,
+        "X": 1007.9956888755294,
         "Y": 614.081990649096
       },
       {
@@ -356,8 +356,8 @@
       }
     ],
     "Annotations": [],
-    "X": -288.69679928175697,
-    "Y": -371.52362190247982,
-    "Zoom": 0.79011459498243308
+    "X": -377.1988575338778,
+    "Y": -221.61604680436619,
+    "Zoom": 0.92109168443555722
   }
 }
