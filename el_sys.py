@@ -24,6 +24,8 @@ import cab_tray
 from cab_tray import *
 import graph
 from graph import *
+import vector
+from vector import *
 
 
 def process_list(_func, _list):
@@ -204,13 +206,12 @@ class ElSys():
 		# TODO #1
 		# # if it is not the last net - find connection to other net
 
-	def _tray_path(self, start_pnt):
+	def _tray_path(self, start_pnt, end_pnt):
 		"""From tray instances get path points
-		
+
 		args:
 			start_pnt (XYZ) - start point to get sorted points
 		"""
-
 		unsorted_points = [
 			TrayNet.get_connector_points(x)
 			for x in self.run_along_trays]
@@ -225,7 +226,18 @@ class ElSys():
 				check_pnt = sorted_path_points[-1]
 			sorted_list = sort_list_by_point(check_pnt, pnt_list)
 			map(lambda x: sorted_path_points.append(x), sorted_list)
-		return sorted_path_points
+		# exit point from cable tray need to be calculated
+		last_points = list()
+		last_points.append(sorted_path_points[-2])
+		last_points.append(sorted_path_points[-1])
+		exit_point = self.get_exit_point(last_points, end_pnt)
+
+		return exit_point
+
+	@staticmethod
+	def get_exit_point(line_points, check_pnt):
+		vec = Vec(line_points[0], line_points[1])
+		return vec.origin
 
 	def create_new_path(self):
 		path_instances = [[], [], []]
@@ -239,22 +251,25 @@ class ElSys():
 		path_instances[0].append(brd_point)
 
 		# next - cable tray sorted by tray-nets.
-		start_pnt = path_instances[0][-1]
-		sorted_tray_points = self._tray_path(start_pnt)
-		map(lambda x: path_instances[1].append(x), sorted_tray_points)
-		# get exit point from cable tray
-		# self.get_exit_point()
+		from_pnt = path_instances[0][-1]
+		to_inst = self.rvt_members[1]
+		to_pnt = TrayNet.get_connector_points(to_inst)
+		sorted_tray_points = self._tray_path(from_pnt, to_pnt)
+		# map(lambda x: path_instances[1].append(x), sorted_tray_points)
 
-		# last instancees - list of electrical equipment points
-		sys_inst = self.rvt_members[1:]
-		inst_points = flatten_list([
-			TrayNet.get_connector_points(x)
-			for x in sys_inst])
-		map(lambda x: path_instances[2].append(x), inst_points)
-		self.path = path_instances
 
-		flattened_path = flatten_list(path_instances)
-		self.path = self.add_z_points(flattened_path)
+		## last instancees - list of electrical equipment points
+		#sys_inst = self.rvt_members[1:]
+		#inst_points = flatten_list([
+		#	TrayNet.get_connector_points(x)
+		#	for x in sys_inst])
+		#map(lambda x: path_instances[2].append(x), inst_points)
+		#self.path = path_instances
+
+		#flattened_path = flatten_list(path_instances)
+		#self.path = self.add_z_points(flattened_path)
+
+		self.path = sorted_tray_points
 
 	@staticmethod
 	def add_z_points(path_points):
@@ -290,6 +305,7 @@ class ElSys():
 					updated_list.append(point)
 					updated_list.append(point_new)
 		return updated_list
+
 
 global doc
 global list_of_nets
