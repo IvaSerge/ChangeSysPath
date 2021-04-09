@@ -238,12 +238,12 @@ class ElSys():
 			TrayNet.get_connector_points(x)
 			for x in sys_inst])
 		map(lambda x: path_instances[2].append(x), inst_points)
-		flattened_path = flatten_list(path_instances)
-		self.path = flattened_path
-		self.path = self.path_update(flattened_path)
+		# flattened_path = flatten_list(path_instances)
+		self.path = path_instances
+		# self.path = self.add_z_points(flattened_path)
 
 	@staticmethod
-	def path_update(path_points):
+	def add_z_points(path_points):
 		"""Add or remove additional points to path
 
 		new horisontal points to be add when Z changes,

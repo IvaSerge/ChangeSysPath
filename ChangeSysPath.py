@@ -70,7 +70,7 @@ el_system.create_new_path()
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-el_system.rvt_sys.SetCircuitPath(el_system.path)
+# el_system.rvt_sys.SetCircuitPath(el_system.path)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
