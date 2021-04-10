@@ -98,4 +98,4 @@ class Vec():
 			pnt_A.Y + vector_AX.Y,
 			pnt_A.Z + vector_AX.Z)
 
-		return pnt_X		
+		return pnt_X

@@ -186,5 +186,30 @@ class TrayNet():
 			doc.GetElement(x)
 			for x in elems_checked]
 
+	@staticmethod
+	def get_shortest_distance(inst_from, inst_to):
+		pass
+
+	@staticmethod
+	def find_nearest_inst(current_net, next_net):
+		"""Search for nearest instance to the next net
+
+		return:
+			FamilyInstance: nearest instance
+		"""
+
+		nearest_inst = None
+		current_instances = current_net.instances
+		next_instances = next_net.instances
+
+		min_dist = 1000000
+		# not very optimiset all-to-all distances coparasion
+		for c_inst in current_instances:
+			for n_inst in next_instances:
+				s_dinst = TrayNet.get_shortest_distance(c_inst, n_inst)
+				if s_dinst < min_dist:
+					nearest_inst = c_inst
+		return nearest_inst
+
 
 global doc
