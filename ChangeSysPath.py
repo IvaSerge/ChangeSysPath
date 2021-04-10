@@ -48,7 +48,7 @@ elem_id = IN[2]
 outlist = list()
 
 # Create electrical system objects
-# TODO
+# TODO #2
 # Get all systems in project
 # Filter out electrical systems with empty path
 el_system = ElSys(elem_id)
