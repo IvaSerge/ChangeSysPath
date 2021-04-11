@@ -206,22 +206,22 @@ class TrayNet():
 
 		return:
 			nearest_pnt (XYZ): clothest to the next_net point
-
 		"""
 
-		nearest_pnt = None
 		current_instances = current_net.instances
 		next_instances = next_net.instances
 
 		min_dist = 1000000
-		# not very optimiset all-to-all distances coparasion
+		# not very optimiset all-to-all distances comparasion
 		for c_inst in current_instances:
 			for n_inst in next_instances:
 				distance = TrayNet.get_shortest_distance(c_inst, n_inst)
 				if distance[0] < min_dist:
-					# nearest_inst = c_inst
-					nearest_pnt = distance[1]
-		return nearest_pnt
+					nearest_pair = c_inst, n_inst
+					min_dist = distance[0]
+		nearest_pnt = TrayNet.get_shortest_distance(
+			nearest_pair[0], nearest_pair[1])
+		return nearest_pnt[1]
 
 
 global doc

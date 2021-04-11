@@ -66,13 +66,13 @@ tray_names = set([
 list_of_nets = [TrayNet(x) for x in tray_names]
 el_sys.list_of_nets = list_of_nets
 el_system.find_trays_run()
-#el_system.create_new_path()
+el_system.create_new_path()
 
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-#el_system.rvt_sys.SetCircuitPath(el_system.path)
+el_system.rvt_sys.SetCircuitPath(el_system.path)
 
 
 # =========End transaction
@@ -81,5 +81,3 @@ TransactionManager.Instance.TransactionTaskDone()
 
 # OUT = [x.name for x in el_system.run_along_trays]
 OUT = el_system.run_along_trays
-
-
