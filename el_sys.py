@@ -199,30 +199,27 @@ class ElSys():
 		net_start = el_start
 		outlist = list()
 		while i <= len(el_sys_nets) - 1:
-		# while el_sys_nets:
 			# if it is not the last net - find nearest elem to next net
 			# in real life there is only one nearest point
 			# but unpredectable crazy situations are possible HERE!!!
-			if i != len(el_sys_nets) - 1:
-				# net_nearest_ins = TrayNet.find_nearest_inst(
-				# 	el_sys_nets[i], el_sys_nets[i+1])
-				outlist.append("next_net")
-				i += 1
-				#cnet_nearest_pnt = 
 
-			# it the last net in list
-			elif i == len(el_sys_nets) - 1:
-				# get start-end points of the only one net
-				net = el_sys_nets[0]
-				#start_end = self.get_in_out(net, net_start, el_end)
-				#start, end = start_end[0].Id, start_end[1].Id
-				#path = net.graph.dijsktra(start, end)
-				#self.run_along_trays = [doc.GetElement(x) for x in path]
-				outlist.append(el_sys_nets[i].name)
-				self.run_along_trays = outlist
-				i += 1
+			net = el_sys_nets[i]
+			if i != len(el_sys_nets) - 1:
+				net_end = TrayNet.find_nearest_pnt(
+					net, el_sys_nets[i + 1])
 			else:
-				pass
+				net_end = el_end
+
+			start_end = self.get_in_out(net, net_start, net_end)
+			start, end = start_end[0].Id, start_end[1].Id
+			path = net.graph.dijsktra(start, end)
+			#map(lambda x: outlist.append(x), path)
+			outlist.append(net_start)
+			outlist.append(net_end)
+			net_start = net_end
+			i += 1
+		#self.run_along_trays = [doc.GetElement(x) for x in outlist]
+		self.run_along_trays = [vector.toPoint(x) for x in outlist]
 
 		# TODO #1
 		# # if it is not the last net - find connection to other net

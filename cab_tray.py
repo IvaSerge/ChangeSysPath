@@ -22,6 +22,7 @@ from collections import deque
 # ================ local imports
 import graph
 from graph import *
+import vector
 
 
 def _param_by_cat(_bic, _name):
@@ -188,17 +189,27 @@ class TrayNet():
 
 	@staticmethod
 	def get_shortest_distance(inst_from, inst_to):
-		pass
+		inst_from_points = TrayNet.get_connector_points(inst_from)
+		inst_to_points = TrayNet.get_connector_points(inst_to)
+		min_dist = 1000000
+		for from_point in inst_from_points:
+			for to_point in inst_to_points:
+				distance = from_point.DistanceTo(to_point)
+				if distance < min_dist:
+					min_dist = distance
+					nearest_pnt = from_point
+		return min_dist, nearest_pnt
 
 	@staticmethod
-	def find_nearest_inst(current_net, next_net):
+	def find_nearest_pnt(current_net, next_net):
 		"""Search for nearest instance to the next net
 
 		return:
-			FamilyInstance: nearest instance
+			nearest_pnt (XYZ): clothest to the next_net point
+
 		"""
 
-		nearest_inst = None
+		nearest_pnt = None
 		current_instances = current_net.instances
 		next_instances = next_net.instances
 
@@ -206,10 +217,11 @@ class TrayNet():
 		# not very optimiset all-to-all distances coparasion
 		for c_inst in current_instances:
 			for n_inst in next_instances:
-				s_dinst = TrayNet.get_shortest_distance(c_inst, n_inst)
-				if s_dinst < min_dist:
-					nearest_inst = c_inst
-		return nearest_inst
+				distance = TrayNet.get_shortest_distance(c_inst, n_inst)
+				if distance[0] < min_dist:
+					# nearest_inst = c_inst
+					nearest_pnt = distance[1]
+		return nearest_pnt
 
 
 global doc
