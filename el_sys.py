@@ -295,7 +295,8 @@ class ElSys():
 		map(lambda x: path_instances[2].append(x), inst_points)
 
 		flattened_path = flatten_list(path_instances)
-		self.path = self.add_z_points(flattened_path)
+		path_with_Z = self.add_z_points(flattened_path)
+		self.path = self.clear_near_points(path_with_Z)
 
 	@staticmethod
 	def add_z_points(path_points):

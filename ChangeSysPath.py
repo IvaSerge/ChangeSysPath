@@ -80,4 +80,5 @@ TransactionManager.Instance.TransactionTaskDone()
 
 
 # OUT = [x.name for x in el_system.run_along_trays]
-OUT = el_system.run_along_trays
+OUT = [vector.toPoint(x) for x in el_system.path]
+#OUT = el_system.run_along_trays
