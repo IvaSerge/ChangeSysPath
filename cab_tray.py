@@ -80,6 +80,8 @@ class TrayNet():
 		self.get_tray_relations()
 		if self.nodes:
 			self.graph = Graph(self.nodes)
+		else:
+			self.graph = None
 
 	@staticmethod
 	def get_connector_points(instance):
@@ -156,6 +158,7 @@ class TrayNet():
 			relation_list: list of pairs
 		"""
 
+		# if it is the only one element - no relations
 		inst_first = self._get_first_tray()
 		elems_to_ceck = collections.deque([])
 		elems_to_ceck.append(inst_first)

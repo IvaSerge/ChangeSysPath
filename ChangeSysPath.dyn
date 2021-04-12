@@ -20,7 +20,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": false,
+      "InputValue": true,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -285,71 +285,71 @@
     },
     "NodeViews": [
       {
+        "ShowGeometry": true,
+        "Name": "Boolean",
         "Id": "d4faef3825fc49ce8fedebdcd48067ca",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "Boolean",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 524.49894599422566,
         "Y": 697.18389579546511
       },
       {
+        "ShowGeometry": true,
+        "Name": "Python Script From String",
         "Id": "2d5996559be141609f0239af77174c49",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "Python Script From String",
-        "ShowGeometry": true,
         "Excluded": false,
-        "X": 991.24510593771572,
-        "Y": 468.4530332492489
+        "X": 871.24510593771572,
+        "Y": 613.253033249249
       },
       {
+        "ShowGeometry": true,
+        "Name": "FileSystem.ReadText",
         "Id": "049c9e4fe54243ae95472446422290a1",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "FileSystem.ReadText",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 508.76551481907165,
         "Y": 555.44225808811859
       },
       {
+        "ShowGeometry": true,
+        "Name": "File From Path",
         "Id": "d8be777a5f294a3fb93ed94ba6d6b87b",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "File From Path",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 273.91903276657411,
         "Y": 624.51198116686533
       },
       {
+        "ShowGeometry": true,
+        "Name": "String",
         "Id": "0eb69237dd0c4dc187884facd965d90a",
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
-        "Name": "String",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 8.7190327665745144,
         "Y": 624.51198116686533
       },
       {
+        "ShowGeometry": true,
+        "Name": "el_sys_id",
         "Id": "0580a1acd9b04173b246578c9cb4d17c",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "el_sys_id",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 564.72631720151116,
         "Y": 785.905260915247
       },
       {
+        "ShowGeometry": true,
+        "Name": "cable-tray_code",
         "Id": "0418453c3ab148dca7fce923ee728757",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "cable-tray_code",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 542.06220228885547,
         "Y": 906.77880585188291

@@ -212,8 +212,14 @@ class ElSys():
 
 			start_end = self.get_in_out(net, net_start, net_end)
 			start, end = start_end[0].Id, start_end[1].Id
-			path = net.graph.dijsktra(start, end)
-			map(lambda x: outlist.append(x), path)
+
+			if start == end:
+				# it is only one object in net
+				outlist.append(start)
+			else:
+				# path need to be calculated using graph
+				path = net.graph.dijsktra(start, end)
+				map(lambda x: outlist.append(x), path)
 			net_start = net_end
 			i += 1
 		self.run_along_trays = [doc.GetElement(x) for x in outlist]
