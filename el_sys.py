@@ -66,14 +66,11 @@ class ElSys():
 		"""
 		Extended electrical system class
 		"""
-		self.rvt_sys = doc.GetElement(ElementId(el_sys_id))
+		self.rvt_sys = doc.GetElement(el_sys_id)
 		self.rvt_board = self.rvt_sys.BaseEquipment
-		if not(self.rvt_sys.Elements.IsEmpty):
-			unsorted_members = [x for x in self.rvt_sys.Elements]
-			unsorted_members.insert(0, self.rvt_board)
-			self.rvt_members = self.sort_by_distance(unsorted_members)
-		else:
-			self.rvt_members = None
+		unsorted_members = [x for x in self.rvt_sys.Elements]
+		unsorted_members.insert(0, self.rvt_board)
+		self.rvt_members = self.sort_by_distance(unsorted_members)
 		self.run_along_trays = None
 		self.path = None
 

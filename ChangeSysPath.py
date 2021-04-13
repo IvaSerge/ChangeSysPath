@@ -44,14 +44,21 @@ el_sys.doc = doc
 graph.doc = doc
 
 reload = IN[1]
-elem_id = IN[2]
+# elem_id = IN[2]
 outlist = list()
 
 # Create electrical system objects
-# TODO #2
 # Get all systems in project
-# Filter out electrical systems with empty path
-el_system = ElSys(elem_id)
+all_systems = FilteredElementCollector(doc).\
+	OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_ElectricalCircuit).\
+	WhereElementIsNotElementType().\
+	ToElements()
+
+filtered_el_sys = list()
+for system in all_systems:
+	param = system.LookupParameter("MC Object Variable 1")
+	if param.HasValue:
+		filtered_el_sys.append(system)
 
 # find all connected cable-tray nets in project.
 # for each net create TrayNet object.
@@ -60,25 +67,34 @@ all_trays = FilteredElementCollector(doc).\
 	WhereElementIsNotElementType().\
 	ToElements()
 tray_names = set([
-	x.LookupParameter("""MC Object Variable 1""").AsString()
+	x.LookupParameter("MC Object Variable 1").AsString()
 	for x in all_trays
-	if x.LookupParameter("""MC Object Variable 1""").AsString()])
+	if x.LookupParameter("MC Object Variable 1").AsString()])
 list_of_nets = [TrayNet(x) for x in tray_names]
 el_sys.list_of_nets = list_of_nets
-el_system.find_trays_run()
-el_system.create_new_path()
 
+
+# create path for all systems in project
+list_of_systems = list()
+for system in filtered_el_sys:
+	sys_obj = ElSys(system.Id)
+	list_of_systems.append(sys_obj)
+	sys_obj.find_trays_run()
+	sys_obj.create_new_path()
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-el_system.rvt_sys.SetCircuitPath(el_system.path)
-
+# set path to all circuits
+for sys_obj in list_of_systems:
+	el_system = sys_obj.rvt_sys
+	path = sys_obj.path
+	el_system.SetCircuitPath(path)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
 
-# OUT = [x.name for x in el_system.run_along_trays]
-OUT = [vector.toPoint(x) for x in el_system.path]
-# OUT = el_system.path
+OUT = [x.path for x in list_of_systems]
+# OUT = [vector.toPoint(x) for x in el_system.path]
+# OUT = filtered_el_sys
