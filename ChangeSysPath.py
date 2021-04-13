@@ -89,7 +89,7 @@ TransactionManager.Instance.EnsureInTransaction(doc)
 for sys_obj in list_of_systems:
 	el_system = sys_obj.rvt_sys
 	path = sys_obj.path
-	el_system.SetCircuitPath(path)
+	#el_system.SetCircuitPath(path)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
@@ -98,3 +98,5 @@ TransactionManager.Instance.TransactionTaskDone()
 OUT = [x.path for x in list_of_systems]
 # OUT = [vector.toPoint(x) for x in el_system.path]
 # OUT = filtered_el_sys
+
+
