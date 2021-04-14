@@ -20,7 +20,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": false,
+      "InputValue": true,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -65,24 +65,6 @@
           "Id": "f1ced3c8000d4c729c4cdde79c88a77f",
           "Name": "IN[1]",
           "Description": "Input #1",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        },
-        {
-          "Id": "9e25795ebb394da0a3d639e7263c3960",
-          "Name": "IN[2]",
-          "Description": "Input #2",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        },
-        {
-          "Id": "2dec31ce0f69424b8767eb490ef2ba6c",
-          "Name": "IN[3]",
-          "Description": "Input #3",
           "UsingDefaultValue": false,
           "Level": 2,
           "UseLevels": false,
@@ -181,46 +163,6 @@
       ],
       "Replication": "Disabled",
       "Description": "Erstellt eine Zeichenfolge."
-    },
-    {
-      "ConcreteType": "Dynamo.Graph.Nodes.CodeBlockNodeModel, DynamoCore",
-      "NodeType": "CodeBlockNode",
-      "Code": "7784174;",
-      "Id": "0580a1acd9b04173b246578c9cb4d17c",
-      "Inputs": [],
-      "Outputs": [
-        {
-          "Id": "ffb680111fc94bc18da24220c6bd68a2",
-          "Name": "",
-          "Description": "Wert des Ausdrucks in Zeile 1",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        }
-      ],
-      "Replication": "Disabled",
-      "Description": "Ermöglicht die direkte Erstellung von DesignScript-Code."
-    },
-    {
-      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
-      "NodeType": "StringInputNode",
-      "InputValue": "test",
-      "Id": "0418453c3ab148dca7fce923ee728757",
-      "Inputs": [],
-      "Outputs": [
-        {
-          "Id": "2375d1cd4ec144f09ce73e2c3b9de271",
-          "Name": "",
-          "Description": "String",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        }
-      ],
-      "Replication": "Disabled",
-      "Description": "Erstellt eine Zeichenfolge."
     }
   ],
   "Connectors": [
@@ -248,16 +190,6 @@
       "Start": "24e320b0a8844744b7c6b6bf89539764",
       "End": "c1793981a2564442b958a5e8fbf8a6a3",
       "Id": "6c6625a2c4904cb2abd6e4db423d8c32"
-    },
-    {
-      "Start": "ffb680111fc94bc18da24220c6bd68a2",
-      "End": "9e25795ebb394da0a3d639e7263c3960",
-      "Id": "2304ee75892f434da50b7ccb348880b6"
-    },
-    {
-      "Start": "2375d1cd4ec144f09ce73e2c3b9de271",
-      "End": "2dec31ce0f69424b8767eb490ef2ba6c",
-      "Id": "d0b1a03c82644fbd92b2f6a72363c476"
     }
   ],
   "Dependencies": [],
@@ -301,8 +233,8 @@
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 804.04510593771568,
-        "Y": 655.653033249249
+        "X": 787.24510593771572,
+        "Y": 592.453033249249
       },
       {
         "ShowGeometry": true,
@@ -333,31 +265,11 @@
         "Excluded": false,
         "X": 8.7190327665745144,
         "Y": 624.51198116686533
-      },
-      {
-        "ShowGeometry": true,
-        "Name": "el_sys_id",
-        "Id": "0580a1acd9b04173b246578c9cb4d17c",
-        "IsSetAsInput": false,
-        "IsSetAsOutput": false,
-        "Excluded": false,
-        "X": 564.72631720151116,
-        "Y": 785.905260915247
-      },
-      {
-        "ShowGeometry": true,
-        "Name": "cable-tray_code",
-        "Id": "0418453c3ab148dca7fce923ee728757",
-        "IsSetAsInput": false,
-        "IsSetAsOutput": false,
-        "Excluded": false,
-        "X": 542.06220228885547,
-        "Y": 906.77880585188291
       }
     ],
     "Annotations": [],
-    "X": 23.43449368925824,
-    "Y": -269.21191508864194,
-    "Zoom": 0.75300856029712815
+    "X": 165.21793064785487,
+    "Y": -333.54764566868386,
+    "Zoom": 1.0
   }
 }

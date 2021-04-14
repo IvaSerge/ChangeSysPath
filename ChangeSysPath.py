@@ -44,7 +44,6 @@ el_sys.doc = doc
 graph.doc = doc
 
 reload = IN[1]
-# elem_id = IN[2]
 outlist = list()
 
 # Create electrical system objects
@@ -85,16 +84,17 @@ for system in filtered_el_sys:
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-# set path to all circuits
-for sys_obj in list_of_systems:
-	el_system = sys_obj.rvt_sys
-	path = sys_obj.path
-	#el_system.SetCircuitPath(path)
+# # set path to all circuits
+# for sys_obj in list_of_systems:
+# 	el_system = sys_obj.rvt_sys
+# 	path = sys_obj.path
+# 	el_system.SetCircuitPath(path)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
 
-OUT = [x.path for x in list_of_systems]
-# OUT = [vector.toPoint(x) for x in el_system.path]
-# OUT = filtered_el_sys
+# OUT = [x.path for x in list_of_systems]
+# OUT = [vector.toPoint(x) for x in list_of_systems[0].path]
+# OUT = list_of_systems[0].run_along_trays
+OUT = list_of_systems[0].path

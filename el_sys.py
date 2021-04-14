@@ -196,6 +196,8 @@ class ElSys():
 		net_start = el_start
 		outlist = list()
 		while i <= len(el_sys_nets) - 1:
+			outlist.append([])
+
 			# if it is not the last net - find nearest elem to next net
 			# in real life there is only one nearest point
 			# but unpredectable crazy situations are possible HERE!!!
@@ -212,17 +214,16 @@ class ElSys():
 
 			if start == end:
 				# it is only one object in net
-				outlist.append(start)
+				outlist[i].append(start)
 			else:
 				# path need to be calculated using graph
 				path = net.graph.dijsktra(start, end)
-				map(lambda x: outlist.append(x), path)
+				map(lambda x: outlist[i].append(x), path)
 			net_start = net_end
 			i += 1
 
-		# TODO
-		# change do not flat the list. Keep lists 
-		self.run_along_trays = [doc.GetElement(x) for x in outlist]
+		# TODO #8 #Do not flat the list with path instances!
+		self.run_along_trays = process_list(lambda x: doc.GetElement(x), outlist)
 
 	def _tray_path(self, start_pnt, end_pnt):
 		"""From tray instances get path points
@@ -280,16 +281,6 @@ class ElSys():
 		return vec.altitude_foot(check_pnt)
 
 	def create_new_path(self):
-		path_instances = [[], [], []]
-		# first of all instances need to be sorted
-		# Elements need to be sorted to calculate additional points
-		# between parts of instances
-
-		# first instance - is electrical board
-		brd_inst = self.rvt_members[0]
-		brd_point = TrayNet.get_connector_points(brd_inst)[0]
-		path_instances[0].append(brd_point)
-
 		# next - cable tray sorted by tray-nets.
 		# check if trays in parameter exist
 		self._get_rout_names
@@ -303,24 +294,45 @@ class ElSys():
 					% self.rvt_sys.LookupParameter(
 						"MC Object Variable 1").AsString())
 
-		from_pnt = path_instances[0][-1]
-		to_inst = self.rvt_members[1]
-		to_pnt = TrayNet.get_connector_points(to_inst)[0]
-		sorted_tray_points = self._tray_path(from_pnt, to_pnt)
+		path_instances = list()
 
-		# check if there are any cable-tray path
-		map(lambda x: path_instances[1].append(x), sorted_tray_points)
+		# first instance - is electrical board
+		brd_inst = self.rvt_members[0]
+		#brd_point = TrayNet.get_connector_points(brd_inst)[0]
+		path_instances.append([brd_inst])
 
-		# last instancees - list of electrical equipment points
+		# trays
+		map(lambda x: path_instances.append(x), self.run_along_trays)
+
+		# electrical elements
 		sys_inst = self.rvt_members[1:]
-		inst_points = flatten_list([
-			TrayNet.get_connector_points(x)
-			for x in sys_inst])
-		map(lambda x: path_instances[2].append(x), inst_points)
+		path_instances.append([])
+		map(lambda x: path_instances[-1].append(x), sys_inst)
+		points_list = process_list(lambda x: TrayNet.get_connector_points(x), path_instances)
 
-		flattened_path = flatten_list(path_instances)
-		path_with_Z = self.add_z_points(flattened_path)
-		self.path = self.clear_near_points(path_with_Z)
+		# first of all instances need to be sorted
+		# Elements need to be sorted to calculate additional points
+		# between parts of instances
+
+		# from_pnt = path_instances[0][-1]
+		# to_inst = self.rvt_members[1]
+		# to_pnt = TrayNet.get_connector_points(to_inst)[0]
+		# sorted_tray_points = self._tray_path(from_pnt, to_pnt)
+
+		# # check if there are any cable-tray path
+		# map(lambda x: path_instances[1].append(x), sorted_tray_points)
+
+		# # last instancees - list of electrical equipment points
+		# sys_inst = self.rvt_members[1:]
+		# inst_points = flatten_list([
+		# 	TrayNet.get_connector_points(x)
+		# 	for x in sys_inst])
+		# map(lambda x: path_instances[2].append(x), inst_points)
+
+		# flattened_path = flatten_list(path_instances)
+		# path_with_Z = self.add_z_points(flattened_path)
+		# self.path = self.clear_near_points(path_with_Z)
+		self.path = points_list
 
 	@staticmethod
 	def add_z_points(path_points):
