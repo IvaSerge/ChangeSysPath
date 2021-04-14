@@ -290,15 +290,16 @@ class ElSys():
 		# TODO #7
 		# next - cable tray sorted by tray-nets.
 		# check if trays in parameter exist
-		net_names_in_param = self.rvt_sys.LookupParameter(
-			"MC Object Variable 1").AsString()
+		self._get_rout_names
+		net_names_in_param = self._get_rout_names()
 		net_names = [x.name for x in list_of_nets]
-		name_check = [x in net_names_in_param for x in net_names]
 
-		# raise ValueError(
-		# 		"Tray not found \n check system name \"%s\""
-		# 		% self.rvt_sys.LookupParameter(
-		# 			"MC Object Variable 1").AsString())
+		for name in net_names_in_param:
+			if name not in net_names:
+				raise ValueError(
+					"Tray not found \n check system name \"%s\""
+					% self.rvt_sys.LookupParameter(
+						"MC Object Variable 1").AsString())
 
 		# from_pnt = path_instances[0][-1]
 		# to_inst = self.rvt_members[1]

@@ -98,5 +98,3 @@ TransactionManager.Instance.TransactionTaskDone()
 OUT = [x.path for x in list_of_systems]
 # OUT = [vector.toPoint(x) for x in el_system.path]
 # OUT = filtered_el_sys
-
-
