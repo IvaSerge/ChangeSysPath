@@ -219,6 +219,9 @@ class ElSys():
 				map(lambda x: outlist.append(x), path)
 			net_start = net_end
 			i += 1
+
+		# TODO
+		# change do not flat the list. Keep lists 
 		self.run_along_trays = [doc.GetElement(x) for x in outlist]
 
 	def _tray_path(self, start_pnt, end_pnt):
@@ -287,7 +290,6 @@ class ElSys():
 		brd_point = TrayNet.get_connector_points(brd_inst)[0]
 		path_instances[0].append(brd_point)
 
-		# TODO #7
 		# next - cable tray sorted by tray-nets.
 		# check if trays in parameter exist
 		self._get_rout_names
@@ -301,24 +303,24 @@ class ElSys():
 					% self.rvt_sys.LookupParameter(
 						"MC Object Variable 1").AsString())
 
-		# from_pnt = path_instances[0][-1]
-		# to_inst = self.rvt_members[1]
-		# to_pnt = TrayNet.get_connector_points(to_inst)[0]
-		# sorted_tray_points = self._tray_path(from_pnt, to_pnt)
-		# # check if there are any cable-tray path
-		# map(lambda x: path_instances[1].append(x), sorted_tray_points)
+		from_pnt = path_instances[0][-1]
+		to_inst = self.rvt_members[1]
+		to_pnt = TrayNet.get_connector_points(to_inst)[0]
+		sorted_tray_points = self._tray_path(from_pnt, to_pnt)
 
-		# # last instancees - list of electrical equipment points
-		# sys_inst = self.rvt_members[1:]
-		# inst_points = flatten_list([
-		# 	TrayNet.get_connector_points(x)
-		# 	for x in sys_inst])
-		# map(lambda x: path_instances[2].append(x), inst_points)
+		# check if there are any cable-tray path
+		map(lambda x: path_instances[1].append(x), sorted_tray_points)
 
-		# flattened_path = flatten_list(path_instances)
-		# path_with_Z = self.add_z_points(flattened_path)
-		# self.path = self.clear_near_points(path_with_Z)
-		self.path = net_names_in_param, net_names
+		# last instancees - list of electrical equipment points
+		sys_inst = self.rvt_members[1:]
+		inst_points = flatten_list([
+			TrayNet.get_connector_points(x)
+			for x in sys_inst])
+		map(lambda x: path_instances[2].append(x), inst_points)
+
+		flattened_path = flatten_list(path_instances)
+		path_with_Z = self.add_z_points(flattened_path)
+		self.path = self.clear_near_points(path_with_Z)
 
 	@staticmethod
 	def add_z_points(path_points):
