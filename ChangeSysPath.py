@@ -95,6 +95,6 @@ TransactionManager.Instance.TransactionTaskDone()
 
 
 # OUT = [x.path for x in list_of_systems]
-# OUT = [vector.toPoint(x) for x in list_of_systems[0].path]
+OUT = [vector.toPoint(x) for x in list_of_systems[0].path]
 # OUT = list_of_systems[0].run_along_trays
-OUT = list_of_systems[0].path
+# OUT = list_of_systems[0].path

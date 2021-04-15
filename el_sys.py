@@ -222,42 +222,37 @@ class ElSys():
 			net_start = net_end
 			i += 1
 
-		# TODO #8 #Do not flat the list with path instances!
+		outlist = flatten_list(outlist)
 		self.run_along_trays = process_list(lambda x: doc.GetElement(x), outlist)
 
-	def _tray_path(self, start_pnt, end_pnt):
-		"""From tray instances get path points
+	@staticmethod
+	def _tray_path(pnt_list):
+		"""From list of points create ordered path"""
+		sorted_points = list()
 
-		args:
-			start_pnt (XYZ) - start point to get sorted points
-		"""
-		unsorted_points = [
-			TrayNet.get_connector_points(x)
-			for x in self.run_along_trays]
-
-		# cable trays not found
-		if not(unsorted_points):
-			return None
-
-		# Points are need to be sorted because connectors are unsorted
-		sorted_path_points = list()
-		for i, pnt_list in enumerate(unsorted_points):
-			if i == 0:
-				# the last point of previous net
-				check_pnt = start_pnt
-			if i > 0:
-				check_pnt = sorted_path_points[-1]
-			sorted_list = sort_list_by_point(check_pnt, pnt_list)
-			map(lambda x: sorted_path_points.append(x), sorted_list)
-		# exit point from cable tray need to be calculated
-		last_points = list()
-		last_points.append(sorted_path_points[-2])
-		last_points.append(sorted_path_points[-1])
-		exit_point = self.get_exit_point(last_points, end_pnt)
-		if exit_point:
-			sorted_path_points.pop()
-			sorted_path_points.append(exit_point)
-		clean_path = self.clear_near_points(sorted_path_points)
+		for points in pnt_list:
+			# if it is only one point - nothing to sort.
+			if len(points) == 1:
+				sorted_points.append(points[0])
+			# it is cable tray. Points need to be sorted
+			elif len(points) == 2:
+				# check if it is an entrance to the cable tray
+				# if it is an entrance - we do not need 2 points, but only 1
+				# as the projection of the height on the base of the triangle
+				point_A = points[0]
+				point_B = points[1]
+				point_C = sorted_points[-1]
+				triangle_vector = Vec(point_A, point_B)
+				point_X = triangle_vector.altitude_foot(point_C)
+				if point_X:
+					sorted_points.append(point_X)
+				else:
+					points_by_distance = sort_list_by_point(point_C, points)
+					map(lambda x: sorted_points.append(x), points_by_distance)
+			else:
+				# not possible situation
+				raise ValueError("More than 3 poins in list")
+		clean_path = ElSys.clear_near_points(sorted_points)
 		return clean_path
 
 	@staticmethod
@@ -299,40 +294,22 @@ class ElSys():
 		# first instance - is electrical board
 		brd_inst = self.rvt_members[0]
 		#brd_point = TrayNet.get_connector_points(brd_inst)[0]
-		path_instances.append([brd_inst])
+		path_instances.append(brd_inst)
 
 		# trays
 		map(lambda x: path_instances.append(x), self.run_along_trays)
 
-		# electrical elements
-		sys_inst = self.rvt_members[1:]
-		path_instances.append([])
-		map(lambda x: path_instances[-1].append(x), sys_inst)
+		# get path on the tray
 		points_list = process_list(lambda x: TrayNet.get_connector_points(x), path_instances)
-
-		# first of all instances need to be sorted
-		# Elements need to be sorted to calculate additional points
-		# between parts of instances
-
-		# from_pnt = path_instances[0][-1]
-		# to_inst = self.rvt_members[1]
-		# to_pnt = TrayNet.get_connector_points(to_inst)[0]
-		# sorted_tray_points = self._tray_path(from_pnt, to_pnt)
-
-		# # check if there are any cable-tray path
-		# map(lambda x: path_instances[1].append(x), sorted_tray_points)
-
-		# # last instancees - list of electrical equipment points
+		tray_path = self._tray_path(points_list)
 		# sys_inst = self.rvt_members[1:]
-		# inst_points = flatten_list([
-		# 	TrayNet.get_connector_points(x)
-		# 	for x in sys_inst])
-		# map(lambda x: path_instances[2].append(x), inst_points)
+		# path_instances.append([])
+		# map(lambda x: path_instances[-1].append(x), sys_inst)
 
 		# flattened_path = flatten_list(path_instances)
 		# path_with_Z = self.add_z_points(flattened_path)
 		# self.path = self.clear_near_points(path_with_Z)
-		self.path = points_list
+		self.path = tray_path
 
 	@staticmethod
 	def add_z_points(path_points):
