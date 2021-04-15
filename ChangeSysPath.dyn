@@ -20,7 +20,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": true,
+      "InputValue": false,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -197,7 +197,7 @@
   "View": {
     "Dynamo": {
       "ScaleFactor": 10000.0,
-      "HasRunWithoutCrash": false,
+      "HasRunWithoutCrash": true,
       "IsVisibleInDynamoLibrary": true,
       "Version": "2.0.3.8810",
       "RunType": "Manual",
@@ -205,15 +205,15 @@
     },
     "Camera": {
       "Name": "Hintergrundvorschau",
-      "EyeX": 23755.684376853853,
-      "EyeY": 5816.2844564673151,
-      "EyeZ": -31264.843145542443,
-      "LookX": -2693.5102546697162,
-      "LookY": -5435.6014543389565,
-      "LookZ": 5599.3593996313466,
-      "UpX": -0.20883631006899353,
-      "UpY": 0.8763066800438577,
-      "UpZ": 0.43413592123581252
+      "EyeX": 9606.5267615584071,
+      "EyeY": 9827.53150234907,
+      "EyeZ": -22326.185610858473,
+      "LookX": 312.25539879210737,
+      "LookY": -7918.8002787163632,
+      "LookZ": -2312.7224347917036,
+      "UpX": 0.11725186088476922,
+      "UpY": 0.48175367410171061,
+      "UpZ": -0.86842696791874485
     },
     "NodeViews": [
       {
@@ -223,8 +223,8 @@
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 524.49894599422566,
-        "Y": 697.18389579546511
+        "X": 524.498945994226,
+        "Y": 697.183895795465
       },
       {
         "ShowGeometry": true,
@@ -233,7 +233,7 @@
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 851.24510593771572,
+        "X": 851.245105937716,
         "Y": 540.453033249249
       },
       {
@@ -268,8 +268,8 @@
       }
     ],
     "Annotations": [],
-    "X": -369.98206935214517,
-    "Y": -443.14764566868382,
-    "Zoom": 1.0
+    "X": -318.1591975739334,
+    "Y": -213.37553087926273,
+    "Zoom": 0.78911652680520361
   }
 }

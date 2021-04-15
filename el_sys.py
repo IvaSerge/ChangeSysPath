@@ -226,34 +226,69 @@ class ElSys():
 		self.run_along_trays = process_list(lambda x: doc.GetElement(x), outlist)
 
 	@staticmethod
+	def get_alt_foot_point(point_A, point_B, point_C):
+		triangle_vector = Vec(point_A, point_B)
+		point_X = triangle_vector.altitude_foot(point_C)
+		if point_X:
+			return point_X
+		else:
+			return None
+
+	@staticmethod
 	def _tray_path(pnt_list):
 		"""From list of points create ordered path"""
 		sorted_points = list()
+		test_list = list()
+		next_pnt = None
+		next_pnt_list = None
 
-		for points in pnt_list:
+		for i, points in enumerate(pnt_list):
 			# if it is only one point - nothing to sort.
 			if len(points) == 1:
 				sorted_points.append(points[0])
+
 			# it is cable tray. Points need to be sorted
 			elif len(points) == 2:
-				# check if it is an entrance to the cable tray
+				previous_point = sorted_points[-1]
+				points_by_distance = sort_list_by_point(previous_point, points)
+				if i > len(pnt_list) - 2:
+					next_pnt = None
+				else:
+					next_pnt_list = pnt_list[i + 1]
+					if len(next_pnt_list) == 1:
+						next_pnt = next_pnt_list[0]
+					else:
+						next_pnt = sort_list_by_point(
+							points_by_distance[1], next_pnt_list)[0]
+
+				# check entrance to the cable tray
 				# if it is an entrance - we do not need 2 points, but only 1
 				# as the projection of the height on the base of the triangle
-				point_A = points[0]
-				point_B = points[1]
-				point_C = sorted_points[-1]
-				triangle_vector = Vec(point_A, point_B)
-				point_X = triangle_vector.altitude_foot(point_C)
-				if point_X:
-					sorted_points.append(point_X)
+				pnt_A = points_by_distance[0]
+				pnt_B = points_by_distance[1]
+				in_X = ElSys.get_alt_foot_point(pnt_A, pnt_B, previous_point)
+				if next_pnt:
+					out_X = ElSys.get_alt_foot_point(pnt_A, pnt_B, next_pnt)
 				else:
-					points_by_distance = sort_list_by_point(point_C, points)
+					out_X = None
+
+				if in_X and not(out_X):
+					sorted_points.append(in_X)
+				elif out_X and not(in_X):
+					sorted_points.append(pnt_A)
+					sorted_points.append(out_X)
+				elif out_X and in_X:
+					sorted_points.append(in_X)
+					sorted_points.append(out_X)
+				else:
 					map(lambda x: sorted_points.append(x), points_by_distance)
+				test_list.append([previous_point, pnt_A, pnt_B, next_pnt])
 			else:
 				# not possible situation
 				raise ValueError("More than 3 poins in list")
-		clean_path = ElSys.clear_near_points(sorted_points)
-		return clean_path
+
+		sorted_points = ElSys.clear_near_points(sorted_points)
+		return sorted_points
 
 	@staticmethod
 	def clear_near_points(points):
@@ -288,12 +323,10 @@ class ElSys():
 					"Tray not found \n check system name \"%s\""
 					% self.rvt_sys.LookupParameter(
 						"MC Object Variable 1").AsString())
-
 		path_instances = list()
 
 		# first instance - is electrical board
 		brd_inst = self.rvt_members[0]
-		#brd_point = TrayNet.get_connector_points(brd_inst)[0]
 		path_instances.append(brd_inst)
 
 		# trays
@@ -302,7 +335,8 @@ class ElSys():
 		# get path on the tray
 		points_list = process_list(lambda x: TrayNet.get_connector_points(x), path_instances)
 		tray_path = self._tray_path(points_list)
-		# sys_inst = self.rvt_members[1:]
+
+		sys_inst = self.rvt_members[1:]
 		# path_instances.append([])
 		# map(lambda x: path_instances[-1].append(x), sys_inst)
 
