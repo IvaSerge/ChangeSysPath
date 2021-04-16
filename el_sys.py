@@ -310,6 +310,46 @@ class ElSys():
 		vec = Vec(line_points[0], line_points[1])
 		return vec.altitude_foot(check_pnt)
 
+	@staticmethod
+	def add_inst_points(tray_path, sys_inst):
+		new_path = list()
+		pnt_a = tray_path[-2]
+		pnt_b = tray_path[-1]
+
+		inst_points = [TrayNet.get_connector_points(x)[0] for x in sys_inst]
+		min_distance = 1000000
+		nearest_inst = None
+
+		#for each instance find nearest point to the last two points
+		# get the nearest instance to tray
+		for point in inst_points:
+			pnt_c = point
+			dist_ac = pnt_c.DistanceTo(pnt_a)
+			if dist_ac < min_distance:
+				min_distance = dist_ac
+				nearest_pnt = pnt_c
+				pnt_x = ElSys.get_alt_foot_point(pnt_a, pnt_b, nearest_pnt)
+
+		if pnt_x:
+			# Remove last point from tray path
+			new_path = tray_path[:-1]
+			new_path.append(pnt_x)
+		else:
+			new_path = tray_path
+
+		# sort instance points according new first instance
+		unsorted_inst_points = list(inst_points)
+		start_point = nearest_pnt
+		i = 0
+		while i != len(inst_points):
+			start_point = sort_list_by_point(start_point, unsorted_inst_points)[0]
+			list_index = unsorted_inst_points.index(start_point)
+			unsorted_inst_points.pop(list_index)
+			new_path.append(start_point)
+			i += 1
+
+		return new_path
+
 	def create_new_path(self):
 		# next - cable tray sorted by tray-nets.
 		# check if trays in parameter exist
@@ -337,13 +377,18 @@ class ElSys():
 		tray_path = self._tray_path(points_list)
 
 		sys_inst = self.rvt_members[1:]
+		inst_points = ElSys.add_inst_points(tray_path, sys_inst)
+		# inst_points = map(lambda x: self._find_connector_origin(x), sys_inst)
+		# last_tray_point = tray_path[-1]
+		# check_distance = lambda x: last_tray_point.DistanceTo(x)
+		# inst_points.sort(key=check_distance)
 		# path_instances.append([])
 		# map(lambda x: path_instances[-1].append(x), sys_inst)
 
 		# flattened_path = flatten_list(path_instances)
 		# path_with_Z = self.add_z_points(flattened_path)
 		# self.path = self.clear_near_points(path_with_Z)
-		self.path = tray_path
+		self.path = inst_points
 
 	@staticmethod
 	def add_z_points(path_points):
