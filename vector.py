@@ -24,10 +24,8 @@ clr.ImportExtensions(Revit.GeometryConversion)
 
 # ================ Python imports
 import operator
-from operator import itemgetter, attrgetter
-
-# ================ local imports
 import math
+from operator import itemgetter, attrgetter
 
 
 def mm_to_ft(mm):
@@ -68,6 +66,14 @@ class Vec():
 		pnt_B = self.end
 		pnt_C = point
 
+		# check if it is a vertical reiser
+		basis = Autodesk.Revit.DB.XYZ.BasisZ
+		angle_to_Z = round(basis.AngleTo(self.coord))
+		if angle_to_Z == 0:
+			pnt_ax, pnt_ay, pnt_az = pnt_A.X, pnt_A.Y, point.Z
+			pnt_X = XYZ(pnt_ax, pnt_ay, pnt_az)
+			return pnt_X
+
 		# check if points are on the same Z
 		if point.Z != pnt_A.Z:
 			pnt_cx, pnt_cy, pnt_cz = point.X, point.Y, pnt_A.Z
@@ -83,6 +89,7 @@ class Vec():
 		# no foot for obtuse triange requiered
 		if dist_AB < dist_AC or dist_AB < dist_CB:
 			return None
+
 		vec_ab = self.coord
 		vec_ac = Vec(pnt_A, pnt_C).coord
 		angle_BAC = vec_ab.AngleTo(vec_ac)

@@ -84,18 +84,21 @@ for system in filtered_el_sys:
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-# # set path to all circuits
-# for sys_obj in list_of_systems:
-# 	el_system = sys_obj.rvt_sys
-# 	path = sys_obj.path
-# 	el_system.SetCircuitPath(path)
+# set path to all circuits
+for sys_obj in list_of_systems:
+	el_system = sys_obj.rvt_sys
+	path = sys_obj.path
+	# el_system.SetCircuitPath(path)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-
 # OUT = [x.path for x in list_of_systems]
-OUT = [vector.toPoint(x) for x in list_of_systems[0].path]
+#OUT = [vector.toPoint(x) for x in list_of_systems[0].path], list_of_systems[0].run_along_trays
 #OUT = list_of_systems[0].run_along_trays
-#OUT = list_of_systems[0].path
+try:
+	OUT = el_sys.process_list(
+		lambda x: vector.toPoint(x), list_of_systems[0].path)
+except:
+	OUT = list_of_systems[0].path
 

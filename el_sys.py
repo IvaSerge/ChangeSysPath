@@ -234,8 +234,7 @@ class ElSys():
 		else:
 			return None
 
-	@staticmethod
-	def _tray_path(pnt_list):
+	def _tray_path(self, pnt_list):
 		"""From list of points create ordered path"""
 		sorted_points = list()
 		test_list = list()
@@ -243,7 +242,7 @@ class ElSys():
 		next_pnt_list = None
 
 		for i, points in enumerate(pnt_list):
-			# if it is only one point - nothing to sort.
+			# cable tray fitting, that have only one point - nothing to sort.
 			if len(points) == 1:
 				sorted_points.append(points[0])
 
@@ -251,8 +250,12 @@ class ElSys():
 			elif len(points) == 2:
 				previous_point = sorted_points[-1]
 				points_by_distance = sort_list_by_point(previous_point, points)
-				if i > len(pnt_list) - 2:
-					next_pnt = None
+				# next point - is instance that is outside tray
+				if i == len(pnt_list) - 1:
+					next_inst = self.rvt_members[1]
+					next_pnt = TrayNet.get_connector_points(next_inst)[0]
+
+				# next point - is the part of cable tray net
 				else:
 					next_pnt_list = pnt_list[i + 1]
 					if len(next_pnt_list) == 1:
@@ -274,6 +277,7 @@ class ElSys():
 
 				if in_X and not(out_X):
 					sorted_points.append(in_X)
+					sorted_points.append(pnt_B)
 				elif out_X and not(in_X):
 					sorted_points.append(pnt_A)
 					sorted_points.append(out_X)
@@ -282,7 +286,7 @@ class ElSys():
 					sorted_points.append(out_X)
 				else:
 					map(lambda x: sorted_points.append(x), points_by_distance)
-				test_list.append([previous_point, pnt_A, pnt_B, next_pnt])
+				# test_list.append([previous_point, pnt_A, pnt_B, next_pnt])
 			else:
 				# not possible situation
 				raise ValueError("More than 3 poins in list")
@@ -318,9 +322,7 @@ class ElSys():
 
 		inst_points = [TrayNet.get_connector_points(x)[0] for x in sys_inst]
 		min_distance = 1000000
-		nearest_inst = None
-
-		#for each instance find nearest point to the last two points
+		# for each instance find nearest point to the last two points
 		# get the nearest instance to tray
 		for point in inst_points:
 			pnt_c = point
@@ -377,18 +379,10 @@ class ElSys():
 		tray_path = self._tray_path(points_list)
 
 		sys_inst = self.rvt_members[1:]
-		inst_points = ElSys.add_inst_points(tray_path, sys_inst)
-		# inst_points = map(lambda x: self._find_connector_origin(x), sys_inst)
-		# last_tray_point = tray_path[-1]
-		# check_distance = lambda x: last_tray_point.DistanceTo(x)
-		# inst_points.sort(key=check_distance)
-		# path_instances.append([])
-		# map(lambda x: path_instances[-1].append(x), sys_inst)
-
-		# flattened_path = flatten_list(path_instances)
-		# path_with_Z = self.add_z_points(flattened_path)
-		# self.path = self.clear_near_points(path_with_Z)
-		self.path = inst_points
+		inst_path = ElSys.add_inst_points(tray_path, sys_inst)
+		path_with_Z = self.add_z_points(inst_path)
+		self.path = self.clear_near_points(path_with_Z)
+		# self.path = tray_path
 
 	@staticmethod
 	def add_z_points(path_points):
