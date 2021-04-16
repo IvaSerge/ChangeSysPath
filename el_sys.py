@@ -237,7 +237,7 @@ class ElSys():
 	def _tray_path(self, pnt_list):
 		"""From list of points create ordered path"""
 		sorted_points = list()
-		test_list = list()
+		# test_list = list()
 		next_pnt = None
 		next_pnt_list = None
 
@@ -250,6 +250,9 @@ class ElSys():
 			elif len(points) == 2:
 				previous_point = sorted_points[-1]
 				points_by_distance = sort_list_by_point(previous_point, points)
+				tray_start = points_by_distance[0]
+				tray_end = points_by_distance[1]
+
 				# next point - is instance that is outside tray
 				if i == len(pnt_list) - 1:
 					next_inst = self.rvt_members[1]
@@ -267,26 +270,27 @@ class ElSys():
 				# check entrance to the cable tray
 				# if it is an entrance - we do not need 2 points, but only 1
 				# as the projection of the height on the base of the triangle
-				pnt_A = points_by_distance[0]
-				pnt_B = points_by_distance[1]
-				in_X = ElSys.get_alt_foot_point(pnt_A, pnt_B, previous_point)
-				if next_pnt:
-					out_X = ElSys.get_alt_foot_point(pnt_A, pnt_B, next_pnt)
-				else:
-					out_X = None
+				in_X = ElSys.get_alt_foot_point(tray_start, tray_end, previous_point)
+				out_X = ElSys.get_alt_foot_point(tray_start, tray_end, next_pnt)
 
 				if in_X and not(out_X):
 					sorted_points.append(in_X)
-					sorted_points.append(pnt_B)
+					# find nearest end to in point
+					near = sort_list_by_point(next_pnt, [tray_start, tray_end])[0]
+					sorted_points.append(near)
 				elif out_X and not(in_X):
-					sorted_points.append(pnt_A)
+					# find  end to in point
+					near = sort_list_by_point(next_pnt, [tray_start, tray_end])[0]
+					sorted_points.append(near)
 					sorted_points.append(out_X)
+
 				elif out_X and in_X:
 					sorted_points.append(in_X)
 					sorted_points.append(out_X)
 				else:
-					map(lambda x: sorted_points.append(x), points_by_distance)
-				# test_list.append([previous_point, pnt_A, pnt_B, next_pnt])
+					sorted_points.append(tray_start)
+					sorted_points.append(tray_end)
+
 			else:
 				# not possible situation
 				raise ValueError("More than 3 poins in list")
