@@ -237,7 +237,7 @@ class ElSys():
 	def _tray_path(self, pnt_list):
 		"""From list of points create ordered path"""
 		sorted_points = list()
-		# test_list = list()
+		test_list = list()
 		next_pnt = None
 		next_pnt_list = None
 
@@ -248,8 +248,8 @@ class ElSys():
 
 			# it is cable tray. Points need to be sorted
 			elif len(points) == 2:
-				previous_point = sorted_points[-1]
-				points_by_distance = sort_list_by_point(previous_point, points)
+				previous_pnt = sorted_points[-1]
+				points_by_distance = sort_list_by_point(previous_pnt, points)
 				tray_start = points_by_distance[0]
 				tray_end = points_by_distance[1]
 
@@ -268,10 +268,10 @@ class ElSys():
 							points_by_distance[1], next_pnt_list)[0]
 
 				# check entrance to the cable tray
-				# if it is an entrance - we do not need 2 points, but only 1
-				# as the projection of the height on the base of the triangle
-				in_X = ElSys.get_alt_foot_point(tray_start, tray_end, previous_point)
+				in_X = ElSys.get_alt_foot_point(tray_start, tray_end, previous_pnt)
 				out_X = ElSys.get_alt_foot_point(tray_start, tray_end, next_pnt)
+
+				test_list.append([in_X, out_X])
 
 				if in_X and not(out_X):
 					sorted_points.append(in_X)
@@ -283,7 +283,6 @@ class ElSys():
 					near = sort_list_by_point(next_pnt, [tray_start, tray_end])[0]
 					sorted_points.append(near)
 					sorted_points.append(out_X)
-
 				elif out_X and in_X:
 					sorted_points.append(in_X)
 					sorted_points.append(out_X)

@@ -68,8 +68,10 @@ class Vec():
 
 		# check if it is a vertical reiser
 		basis = Autodesk.Revit.DB.XYZ.BasisZ
-		angle_to_Z = round(basis.AngleTo(self.coord))
-		if angle_to_Z == 0:
+		angle_to_Z = round(math.degrees(basis.AngleTo(self.coord)))
+		# return angle_to_Z
+
+		if any([angle_to_Z == 0, angle_to_Z == 180, not angle_to_Z]):
 			pnt_ax, pnt_ay, pnt_az = pnt_A.X, pnt_A.Y, point.Z
 			pnt_X = XYZ(pnt_ax, pnt_ay, pnt_az)
 			return pnt_X
