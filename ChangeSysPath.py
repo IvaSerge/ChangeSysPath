@@ -88,14 +88,13 @@ TransactionManager.Instance.EnsureInTransaction(doc)
 for sys_obj in list_of_systems:
 	el_system = sys_obj.rvt_sys
 	path = sys_obj.path
-	#el_system.SetCircuitPath(path)
+	el_system.SetCircuitPath(path)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
 try:
 	OUT = el_sys.process_list(
-		lambda x: vector.toPoint(x), list_of_systems[0].path)
+		lambda x: vector.toPoint(x), list_of_systems[1].path)
 except:
 	OUT = list_of_systems[0].path
-               

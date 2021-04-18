@@ -300,17 +300,22 @@ class ElSys():
 	@staticmethod
 	def clear_near_points(points):
 		list_to_check = points
-		clean_list = list()
-		clean_list.append(list_to_check.pop(0))
 
-		while list_to_check:
-			current_point = clean_list[-1]
-			next_point = list_to_check.pop(0)
-			if current_point.IsAlmostEqualTo(next_point):
-				pass
-			else:
-				clean_list.append(next_point)
-		return clean_list
+		# clean list by bubble method
+		start_len = len(list_to_check)
+		new_len = start_len + 1
+		while start_len != new_len:
+			start_len = len(list_to_check)
+			for i in range(start_len - 2):
+				current_point = list_to_check[i]
+				next_point = list_to_check[i + 1]
+				dist = current_point.DistanceTo(next_point)
+				if dist < 0.1:
+					list_to_check.pop(i + 1)
+					break
+			new_len = len(list_to_check)
+
+		return list_to_check
 
 	@staticmethod
 	def get_exit_point(line_points, check_pnt):

@@ -217,59 +217,59 @@
     },
     "NodeViews": [
       {
+        "ShowGeometry": true,
+        "Name": "Boolean",
         "Id": "d4faef3825fc49ce8fedebdcd48067ca",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "Boolean",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 523.48515402203293,
         "Y": 694.14251987888576
       },
       {
+        "ShowGeometry": true,
+        "Name": "Python Script From String",
         "Id": "2d5996559be141609f0239af77174c49",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "Python Script From String",
-        "ShowGeometry": true,
         "Excluded": false,
-        "X": 853.27173789622634,
-        "Y": 592.13214819126335
+        "X": 1075.7917201556743,
+        "Y": 530.65872503840546
       },
       {
+        "ShowGeometry": true,
+        "Name": "FileSystem.ReadText",
         "Id": "049c9e4fe54243ae95472446422290a1",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "FileSystem.ReadText",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 508.76551481907165,
         "Y": 555.44225808811859
       },
       {
+        "ShowGeometry": true,
+        "Name": "File From Path",
         "Id": "d8be777a5f294a3fb93ed94ba6d6b87b",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "File From Path",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 273.91903276657411,
         "Y": 624.51198116686533
       },
       {
+        "ShowGeometry": true,
+        "Name": "String",
         "Id": "0eb69237dd0c4dc187884facd965d90a",
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
-        "Name": "String",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 8.7190327665745144,
         "Y": 624.51198116686533
       }
     ],
     "Annotations": [],
-    "X": -299.98553096361923,
-    "Y": -268.17728155010559,
-    "Zoom": 0.6471376250059544
+    "X": -463.39172015567431,
+    "Y": -474.65872503840552,
+    "Zoom": 1.0
   }
 }
