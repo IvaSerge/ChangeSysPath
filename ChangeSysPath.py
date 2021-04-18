@@ -95,6 +95,6 @@ TransactionManager.Instance.TransactionTaskDone()
 
 try:
 	OUT = el_sys.process_list(
-		lambda x: vector.toPoint(x), list_of_systems[1].path)
+		lambda x: vector.toPoint(x), list_of_systems[0].path)
 except:
 	OUT = list_of_systems[0].path

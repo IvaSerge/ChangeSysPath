@@ -242,6 +242,7 @@ class ElSys():
 		next_pnt_list = None
 
 		for i, points in enumerate(pnt_list):
+			test_list.append([])
 			# cable tray fitting, that have only one point - nothing to sort.
 			if len(points) == 1:
 				sorted_points.append(points[0])
@@ -253,6 +254,7 @@ class ElSys():
 				tray_start = points_by_distance[0]
 				tray_end = points_by_distance[1]
 
+				next_inst = None
 				# next point - is instance that is outside tray
 				if i == len(pnt_list) - 1:
 					next_inst = self.rvt_members[1]
@@ -271,31 +273,31 @@ class ElSys():
 				in_X = ElSys.get_alt_foot_point(tray_start, tray_end, previous_pnt)
 				out_X = ElSys.get_alt_foot_point(tray_start, tray_end, next_pnt)
 
-				test_list.append([in_X, out_X])
-
 				if in_X and not(out_X):
-					sorted_points.append(in_X)
-					# find nearest end to in point
-					near = sort_list_by_point(next_pnt, [tray_start, tray_end])[0]
-					sorted_points.append(near)
+					sorted_lst = sort_list_by_point(next_pnt, [tray_start, tray_end, in_X])
+					sorted_points.append(sorted_lst[1])
+					sorted_points.append(sorted_lst[0])
+
 				elif out_X and not(in_X):
-					# find  end to in point
-					near = sort_list_by_point(next_pnt, [tray_start, tray_end])[0]
-					sorted_points.append(near)
-					sorted_points.append(out_X)
+					sorted_lst = sort_list_by_point(previous_pnt, [tray_start, tray_end, out_X])
+					sorted_points.append(sorted_lst[0])
+					sorted_points.append(sorted_lst[1])
+
 				elif out_X and in_X:
-					sorted_points.append(in_X)
-					sorted_points.append(out_X)
+					sorted_lst = sort_list_by_point(previous_pnt, [in_X, out_X])
+					sorted_points.append(sorted_lst[0])
+					sorted_points.append(sorted_lst[1])
 				else:
 					sorted_points.append(tray_start)
 					sorted_points.append(tray_end)
-
+					pass
 			else:
 				# not possible situation
 				raise ValueError("More than 3 poins in list")
 
 		sorted_points = ElSys.clear_near_points(sorted_points)
 		return sorted_points
+		# return sorted_points
 
 	@staticmethod
 	def clear_near_points(points):
