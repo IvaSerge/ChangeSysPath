@@ -35,6 +35,8 @@ import graph
 from graph import *
 import vector
 from vector import *
+import calc_cab_tray
+from calc_cab_tray import *
 
 # ================ GLOBAL VARIABLES
 global doc
@@ -42,6 +44,7 @@ doc = DocumentManager.Instance.CurrentDBDocument
 cab_tray.doc = doc
 el_sys.doc = doc
 graph.doc = doc
+calc_cab_tray.doc = doc
 
 reload = IN[1]
 outlist = list()
