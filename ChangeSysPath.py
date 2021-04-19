@@ -84,6 +84,9 @@ for system in filtered_el_sys:
 	sys_obj.find_trays_run()
 	sys_obj.create_new_path()
 
+# cable tray size calculation
+trays_with_sys = tray_find_systems(list_of_systems)
+
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
@@ -96,8 +99,10 @@ for sys_obj in list_of_systems:
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-try:
-	OUT = el_sys.process_list(
-		lambda x: vector.toPoint(x), list_of_systems[0].path)
-except:
-	OUT = list_of_systems[0].path
+OUT = trays_with_sys
+# try:
+# 	OUT = el_sys.process_list(
+# 		lambda x: vector.toPoint(x), list_of_systems[0].path)
+# except:
+# 	OUT = list_of_systems[0].path
+            
