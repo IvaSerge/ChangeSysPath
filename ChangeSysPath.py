@@ -56,11 +56,11 @@ all_systems = FilteredElementCollector(doc).\
 	WhereElementIsNotElementType().\
 	ToElements()
 
-filtered_el_sys = list()
-for system in all_systems:
-	param = system.LookupParameter("MC Object Variable 1")
-	if param.HasValue:
-		filtered_el_sys.append(system)
+# filtered_el_sys = list()
+# for system in all_systems:
+# 	param = system.LookupParameter("MC Object Variable 1")
+# 	if param.HasValue:
+# 		filtered_el_sys.append(system)
 
 # find all connected cable-tray nets in project.
 # for each net create TrayNet object.
@@ -78,14 +78,15 @@ el_sys.list_of_nets = list_of_nets
 
 # create path for all systems in project
 list_of_systems = list()
-for system in filtered_el_sys:
+# for system in filtered_el_sys:
+for system in all_systems:
 	sys_obj = ElSys(system.Id)
 	list_of_systems.append(sys_obj)
 	sys_obj.find_trays_run()
 	sys_obj.create_new_path()
 
 # cable tray size calculation
-trays_with_sys = tray_find_systems(list_of_systems)
+# trays_with_sys = tray_find_systems(list_of_systems)
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
@@ -99,10 +100,9 @@ for sys_obj in list_of_systems:
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-OUT = trays_with_sys
-# try:
-# 	OUT = el_sys.process_list(
-# 		lambda x: vector.toPoint(x), list_of_systems[0].path)
-# except:
-# 	OUT = list_of_systems[0].path
-            
+# OUT = [x.path for x in list_of_systems]
+try:
+	OUT = el_sys.process_list(
+		lambda x: vector.toPoint(x), list_of_systems[4].path)
+except:
+	OUT = list_of_systems[0].path

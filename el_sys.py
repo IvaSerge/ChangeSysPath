@@ -186,6 +186,9 @@ class ElSys():
 		# find a net in net list
 		el_sys_nets = list()
 		rout_names = self._get_rout_names()
+		if not(rout_names):
+			self.run_along_trays = None
+			return None
 		for rout in rout_names:
 			for net in list_of_nets:
 				if net.name == rout:
@@ -363,36 +366,42 @@ class ElSys():
 		return new_path
 
 	def create_new_path(self):
-		# next - cable tray sorted by tray-nets.
 		# check if trays in parameter exist
-		self._get_rout_names
 		net_names_in_param = self._get_rout_names()
-		net_names = [x.name for x in list_of_nets]
-
-		for name in net_names_in_param:
-			if name not in net_names:
-				raise ValueError(
-					"Tray not found \n check system name \"%s\""
-					% self.rvt_sys.LookupParameter(
-						"MC Object Variable 1").AsString())
-		path_instances = list()
-
-		# first instance - is electrical board
-		brd_inst = self.rvt_members[0]
-		path_instances.append(brd_inst)
+		if net_names_in_param:
+			net_names = [x.name for x in list_of_nets]
+			for name in net_names_in_param:
+				if name not in net_names:
+					raise ValueError(
+						"Tray not found \n check system name \"%s\""
+						% self.rvt_sys.LookupParameter(
+							"MC Object Variable 1").AsString())
 
 		# trays
-		map(lambda x: path_instances.append(x), self.run_along_trays)
+		if self.run_along_trays:
+			path_instances = list()
+			# first instance - is electrical board
+			brd_inst = self.rvt_members[0]
+			path_instances.append(brd_inst)
+			map(lambda x: path_instances.append(x), self.run_along_trays)
+			# get path on the tray
+			points_list = process_list(lambda x: TrayNet.get_connector_points(x), path_instances)
+			tray_path = self._tray_path(points_list)
+			# other instances
+			sys_inst = self.rvt_members[1:]
+			inst_path = ElSys.add_inst_points(tray_path, sys_inst)
 
-		# get path on the tray
-		points_list = process_list(lambda x: TrayNet.get_connector_points(x), path_instances)
-		tray_path = self._tray_path(points_list)
+		# no trays
+		else:
+			path_instances = self.rvt_members
+			inst_path = flatten_list(
+				process_list(
+					lambda x: TrayNet.get_connector_points(x),
+					path_instances))
 
-		sys_inst = self.rvt_members[1:]
-		inst_path = ElSys.add_inst_points(tray_path, sys_inst)
 		path_with_Z = self.add_z_points(inst_path)
 		self.path = self.clear_near_points(path_with_Z)
-		# self.path = tray_path
+		#self.path = inst_path
 
 	@staticmethod
 	def add_z_points(path_points):
