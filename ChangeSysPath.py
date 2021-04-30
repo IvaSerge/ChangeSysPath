@@ -56,12 +56,6 @@ all_systems = FilteredElementCollector(doc).\
 	WhereElementIsNotElementType().\
 	ToElements()
 
-# filtered_el_sys = list()
-# for system in all_systems:
-# 	param = system.LookupParameter("MC Object Variable 1")
-# 	if param.HasValue:
-# 		filtered_el_sys.append(system)
-
 # find all connected cable-tray nets in project.
 # for each net create TrayNet object.
 all_trays = FilteredElementCollector(doc).\
@@ -91,19 +85,24 @@ for system in all_systems:
 # test_sys = [x for x in list_of_systems][4]
 test_sys = [
 	x for x in list_of_systems
-	if x.rvt_sys.Id.IntegerValue == 7826360][0]
+	if x.rvt_sys.Id.IntegerValue == 7842961][0]
+
+# set path to test
+el_system = test_sys.rvt_sys
+path = test_sys.path#[:-2]
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
+el_system.SetCircuitPath(path)
 # set path to all circuits
-for sys_obj in list_of_systems:
-	el_system = sys_obj.rvt_sys
-	path = sys_obj.path
-	try:
-		el_system.SetCircuitPath(path)
-	except:
-		raise ValueError("%s" % el_system.Id)
+# for sys_obj in list_of_systems:
+# 	el_system = sys_obj.rvt_sys
+# 	path = sys_obj.path
+# 	try:
+# 		el_system.SetCircuitPath(path)
+# 	except:
+# 		raise ValueError("%s" % el_system.Id)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
@@ -111,6 +110,6 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = [x.path for x in list_of_systems]
 try:
 	OUT = el_sys.process_list(
-		lambda x: vector.toPoint(x), test_sys.path)
+		lambda x: vector.toPoint(x), test_sys.path), test_sys.rvt_members
 except:
 	OUT = test_sys.path
