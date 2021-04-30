@@ -78,7 +78,7 @@ el_sys.list_of_nets = list_of_nets
 
 # create path for all systems in project
 list_of_systems = list()
-# for system in filtered_el_sys:
+
 for system in all_systems:
 	sys_obj = ElSys(system.Id)
 	list_of_systems.append(sys_obj)
@@ -88,6 +88,11 @@ for system in all_systems:
 # cable tray size calculation
 # trays_with_sys = tray_find_systems(list_of_systems)
 
+# test_sys = [x for x in list_of_systems][4]
+test_sys = [
+	x for x in list_of_systems
+	if x.rvt_sys.Id.IntegerValue == 7826360][0]
+
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
@@ -95,7 +100,10 @@ TransactionManager.Instance.EnsureInTransaction(doc)
 for sys_obj in list_of_systems:
 	el_system = sys_obj.rvt_sys
 	path = sys_obj.path
-	el_system.SetCircuitPath(path)
+	try:
+		el_system.SetCircuitPath(path)
+	except:
+		raise ValueError("%s" % el_system.Id)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
@@ -103,6 +111,6 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = [x.path for x in list_of_systems]
 try:
 	OUT = el_sys.process_list(
-		lambda x: vector.toPoint(x), list_of_systems[4].path)
+		lambda x: vector.toPoint(x), test_sys.path)
 except:
-	OUT = list_of_systems[0].path
+	OUT = test_sys.path

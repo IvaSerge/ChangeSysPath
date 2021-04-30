@@ -20,7 +20,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": true,
+      "InputValue": false,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -205,20 +205,20 @@
     },
     "Camera": {
       "Name": "Hintergrundvorschau",
-      "EyeX": 11732.639035064367,
-      "EyeY": 5768.8674506542957,
-      "EyeZ": -18053.529567330937,
-      "LookX": -3410.5414809840913,
-      "LookY": -2465.7224252141386,
-      "LookZ": -4779.5267529033445,
-      "UpX": -0.10485526742587438,
-      "UpY": 0.98357147081333807,
-      "UpZ": -0.14694398488893134
+      "EyeX": 9841.6056522242052,
+      "EyeY": 11377.757110925939,
+      "EyeZ": -13191.794762120186,
+      "LookX": -2824.749404572105,
+      "LookY": -1687.305044105944,
+      "LookZ": -2214.0402346665433,
+      "UpX": -0.17436963317717877,
+      "UpY": 0.97514935430551308,
+      "UpZ": -0.13667102042165002
     },
     "NodeViews": [
       {
         "ShowGeometry": true,
-        "Name": "Boolean",
+        "Name": "Reload",
         "Id": "d4faef3825fc49ce8fedebdcd48067ca",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
@@ -233,8 +233,8 @@
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 767.72473028695777,
-        "Y": 600.134006853656
+        "X": 886.71477308709882,
+        "Y": 605.39905299525526
       },
       {
         "ShowGeometry": true,
@@ -268,8 +268,8 @@
       }
     ],
     "Annotations": [],
-    "X": 23.275484856877,
-    "Y": -201.02922634185526,
-    "Zoom": 0.7712455410079726
+    "X": -330.67577803441634,
+    "Y": -315.35831543675522,
+    "Zoom": 0.70288412970443948
   }
 }
