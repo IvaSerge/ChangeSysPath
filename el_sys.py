@@ -66,6 +66,7 @@ class ElSys():
 		"""
 		Extended electrical system class
 		"""
+		self.Id = el_sys_id
 		self.rvt_sys = doc.GetElement(el_sys_id)
 		self.rvt_board = self.rvt_sys.BaseEquipment
 		unsorted_members = [x for x in self.rvt_sys.Elements]

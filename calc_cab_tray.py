@@ -80,33 +80,42 @@ def dict_get_value(dict, key_name):
 	return value
 
 
-def tray_find_systems(list_of_systems):
+def get_tray_sys_link(list_of_systems):
+	"""
+		Find relation cable tray - electrical system.
+
+		Search how much systems run through this cable tray
+		OUT - tray, str(system1, system2...)
+	"""
 	outlist = list()
 	tray_dict = dict()
 	for sys in list_of_systems:
-		sys_id = sys.rvt_sys.Id
 		used_trays = sys.run_along_trays
 		for tray in used_trays:
 			tray_id = tray.Id
 			dict_value = dict_get_value(tray_dict, tray_id)
 			if dict_value:
-				dict_value.append(sys_id)
+				dict_value.append(sys)
 			else:
-				dict_update = {tray_id: [sys_id]}
+				dict_update = {tray_id: [sys]}
 				tray_dict.update(dict_update)
 
 	tray_id_list = tray_dict.items()
 	for tray_id in tray_id_list:
 		tray = doc.GetElement(tray_id[0])
-		# sys_str = ",".join(tray_id[1])
-		if len(tray_id[1]) == 1:
-			outlist.append([tray, tray_id[1][0]])
-		else:
-			elem_str = [str(x) for x in tray_id[1]]
-			sys_str = ", ".join(elem_str)
-			outlist.append([tray, sys_str])
-
+		outlist.append([tray, tray_id[1]])
 	return outlist
+
+
+def calc_tray_filling(link):
+	"""Calculate cable tray filling in % """
+	tray = lint[0]
+	el_systems = link[1]
+	
+	# get tray size
+	# calc tray cross-section
+	return None
+
 
 
 global doc

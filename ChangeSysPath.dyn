@@ -20,7 +20,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": true,
+      "InputValue": false,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -193,13 +193,14 @@
     }
   ],
   "Dependencies": [],
+  "NodeLibraryDependencies": [],
   "Bindings": [],
   "View": {
     "Dynamo": {
       "ScaleFactor": 10000.0,
       "HasRunWithoutCrash": true,
       "IsVisibleInDynamoLibrary": true,
-      "Version": "2.0.3.8810",
+      "Version": "2.3.0.5885",
       "RunType": "Manual",
       "RunPeriod": "1000"
     },
@@ -217,59 +218,59 @@
     },
     "NodeViews": [
       {
-        "ShowGeometry": true,
-        "Name": "Reload",
         "Id": "d4faef3825fc49ce8fedebdcd48067ca",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
+        "Name": "Reload",
+        "ShowGeometry": true,
         "Excluded": false,
-        "X": 493.70659643965752,
+        "X": 493.706596439658,
         "Y": 741.554890918679
       },
       {
-        "ShowGeometry": true,
-        "Name": "Python Script From String",
         "Id": "2d5996559be141609f0239af77174c49",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
+        "Name": "Python Script From String",
+        "ShowGeometry": true,
         "Excluded": false,
-        "X": 886.71477308709882,
-        "Y": 605.39905299525526
+        "X": 886.714773087099,
+        "Y": 605.399052995255
       },
       {
-        "ShowGeometry": true,
-        "Name": "FileSystem.ReadText",
         "Id": "049c9e4fe54243ae95472446422290a1",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
+        "Name": "FileSystem.ReadText",
+        "ShowGeometry": true,
         "Excluded": false,
         "X": 508.76551481907165,
         "Y": 555.44225808811859
       },
       {
-        "ShowGeometry": true,
-        "Name": "File From Path",
         "Id": "d8be777a5f294a3fb93ed94ba6d6b87b",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
+        "Name": "File From Path",
+        "ShowGeometry": true,
         "Excluded": false,
         "X": 273.91903276657411,
         "Y": 624.51198116686533
       },
       {
-        "ShowGeometry": true,
-        "Name": "String",
         "Id": "0eb69237dd0c4dc187884facd965d90a",
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
+        "Name": "String",
+        "ShowGeometry": true,
         "Excluded": false,
         "X": 8.7190327665745144,
         "Y": 624.51198116686533
       }
     ],
     "Annotations": [],
-    "X": -293.16532788824327,
-    "Y": -372.05478585331383,
-    "Zoom": 0.67386167874059533
+    "X": -188.19564832537867,
+    "Y": -262.99894595451576,
+    "Zoom": 0.67803200224554716
   }
 }

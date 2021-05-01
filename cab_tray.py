@@ -94,7 +94,16 @@ class TrayNet():
 			return points
 
 		if location_str == "LocationPoint":
-			return [instance.Location.Point]
+			inst_cat = instance.Category.Id.IntegerValue
+			# for not standsrd lighting fixtures for WeWork
+			if inst_cat == -2001120:
+				con_manager = instance.MEPModel.ConnectorManager
+				cons = con_manager.Connectors
+				con = [x for x in cons if x.Domain == Domain.DomainElectrical]
+				point = [x.Origin for x in con]
+				return point
+			else:
+				return [instance.Location.Point]
 		return None
 
 	def _get_first_tray(self):

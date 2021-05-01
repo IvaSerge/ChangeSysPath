@@ -69,7 +69,6 @@ tray_names = set([
 list_of_nets = [TrayNet(x) for x in tray_names]
 el_sys.list_of_nets = list_of_nets
 
-
 # create path for all systems in project
 list_of_systems = list()
 
@@ -79,37 +78,40 @@ for system in all_systems:
 	sys_obj.find_trays_run()
 	sys_obj.create_new_path()
 
+	systems_in_tray = [
+		x for x in list_of_systems
+		if x.run_along_trays]
+
+
 # cable tray size calculation
-# trays_with_sys = tray_find_systems(list_of_systems)
+tray_sys_link = get_tray_sys_link(systems_in_tray)
+tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
 
-# test_sys = [x for x in list_of_systems][4]
-test_sys = [
-	x for x in list_of_systems
-	if x.rvt_sys.Id.IntegerValue == 7842961][0]
 
-# set path to test
-el_system = test_sys.rvt_sys
-path = test_sys.path#[:-2]
+# test_sys = [x for x in list_of_systems][0]
+# test_sys = [
+# 	x for x in list_of_systems
+# 	if x.rvt_sys.Id.IntegerValue == 7826360][0]
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-el_system.SetCircuitPath(path)
-# set path to all circuits
-# for sys_obj in list_of_systems:
-# 	el_system = sys_obj.rvt_sys
-# 	path = sys_obj.path
-# 	try:
-# 		el_system.SetCircuitPath(path)
-# 	except:
-# 		raise ValueError("%s" % el_system.Id)
+for sys_obj in list_of_systems:
+	el_system = sys_obj.rvt_sys
+	path = sys_obj.path
+	try:
+		el_system.SetCircuitPath(path)
+	except:
+		pass
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
+OUT = tray_filling
 # OUT = [x.path for x in list_of_systems]
-try:
-	OUT = el_sys.process_list(
-		lambda x: vector.toPoint(x), test_sys.path), test_sys.rvt_members
-except:
-	OUT = test_sys.path
+# try:
+# 	OUT = el_sys.process_list(
+# 		lambda x: vector.toPoint(x), test_sys.path), test_sys.rvt_members
+# except:
+# 	OUT = test_sys.path
+ 
