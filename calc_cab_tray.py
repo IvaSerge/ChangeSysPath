@@ -109,13 +109,21 @@ def get_tray_sys_link(list_of_systems):
 
 def calc_tray_filling(link):
 	"""Calculate cable tray filling in % """
-	tray = lint[0]
-	el_systems = link[1]
-	
+	# tray = lint[0]
+	# el_systems = link[1]
+
 	# get tray size
 	# calc tray cross-section
+	# get cable size for system
+	# sum results
 	return None
 
+
+def get_cable_section(sys):
+	"""Get cable cross-section of the system"""
+	# read system parameter
+	# get info from catalogue
+	return None
 
 
 global doc

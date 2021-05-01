@@ -402,7 +402,7 @@ class ElSys():
 
 		path_with_Z = self.add_z_points(inst_path)
 		self.path = self.clear_near_points(path_with_Z)
-		#self.path = inst_path
+		# self.path = inst_path
 
 	@staticmethod
 	def add_z_points(path_points):
