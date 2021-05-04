@@ -19,6 +19,11 @@ from Autodesk.Revit.DB.Category import GetCategory
 import collections
 from collections import defaultdict
 
+# ================ local imports
+import vector
+from vector import *
+import cab_tray
+from cab_tray import *
 
 def GetParVal(elem, name):
 	value = None
@@ -109,21 +114,60 @@ def get_tray_sys_link(list_of_systems):
 
 def calc_tray_filling(link):
 	"""Calculate cable tray filling in % """
-	# tray = lint[0]
-	# el_systems = link[1]
+	tray = link[0]
+	el_systems = link[1]
 
 	# get tray size
+	tray_size = get_tray_size(tray)
 	# calc tray cross-section
+	# tray_cross_section = tray_size[0] * tray_size[1]
 	# get cable size for system
+	cab_cross_section_list = [get_wire_crossection(x) for x in el_systems]
 	# sum results
-	return None
+	return cab_cross_section_list
 
 
-def get_cable_section(sys):
+def get_wire_crossection(sys):
 	"""Get cable cross-section of the system"""
 	# read system parameter
+	wire_type = sys.wire_type
+	wire_size = sys.wire_size
+
 	# get info from catalogue
+
 	return None
+
+
+def get_tray_size(tray):
+	"""
+	Get size of cable tray or fitting
+
+	args:
+		tray (FamilyInstance): tray or fitting
+	return:
+		width, height
+	"""
+	t_width_list = list()
+	t_height_list = list()
+	category_elem = tray.Category.Id
+	category_tray = cab_tray.category_by_bic_name("OST_CableTray").Id
+	category_fitting = cab_tray.category_by_bic_name("OST_CableTrayFitting").Id
+
+	# for cable tray
+	if category_elem == category_tray:
+		elem_con_manager = tray.ConnectorManager
+	# for cable tray fitting
+	if category_elem == category_fitting:
+		elem_mep_model = tray.MEPModel
+		elem_con_manager = elem_mep_model.ConnectorManager
+
+	elem_cons = elem_con_manager.Connectors
+	for con in elem_cons:
+		t_width_list.append(con.Width)
+		t_height_list.append(con.Height)
+	t_width = vector.ft_to_mm(min(t_width_list))
+	t_height = vector.ft_to_mm(min(t_height_list))
+	return t_width, t_height
 
 
 global doc

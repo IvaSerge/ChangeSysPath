@@ -74,6 +74,9 @@ class ElSys():
 		self.rvt_members = self.sort_by_distance(unsorted_members)
 		self.run_along_trays = None
 		self.path = None
+		self.wire_type = self.rvt_sys.get_Parameter(
+			BuiltInParameter.RBS_ELEC_CIRCUIT_WIRE_TYPE_PARAM).AsValueString()
+		self.wire_size = self.rvt_sys.LookupParameter("E_CableSize").AsString()
 
 	def sort_by_distance(self, _unsorted):
 		"""Sort families by nearest distance
@@ -247,7 +250,7 @@ class ElSys():
 
 		for i, points in enumerate(pnt_list):
 			test_list.append([])
-			# cable tray fitting, that have only one point - nothing to sort.
+			# # cable tray fitting, that have only one point - nothing to sort.
 			if len(points) == 1:
 				sorted_points.append(points[0])
 
@@ -301,7 +304,6 @@ class ElSys():
 
 		sorted_points = ElSys.clear_near_points(sorted_points)
 		return sorted_points
-		# return sorted_points
 
 	@staticmethod
 	def clear_near_points(points):
@@ -316,7 +318,7 @@ class ElSys():
 				current_point = list_to_check[i]
 				next_point = list_to_check[i + 1]
 				dist = current_point.DistanceTo(next_point)
-				if dist < 0.1:
+				if dist < 0.01:
 					list_to_check.pop(i + 1)
 					break
 			new_len = len(list_to_check)
@@ -369,6 +371,7 @@ class ElSys():
 	def create_new_path(self):
 		# check if trays in parameter exist
 		net_names_in_param = self._get_rout_names()
+		tray_path = None
 		if net_names_in_param:
 			net_names = [x.name for x in list_of_nets]
 			for name in net_names_in_param:
@@ -402,7 +405,7 @@ class ElSys():
 
 		path_with_Z = self.add_z_points(inst_path)
 		self.path = self.clear_near_points(path_with_Z)
-		# self.path = inst_path
+		# self.path = tray_path
 
 	@staticmethod
 	def add_z_points(path_points):

@@ -58,7 +58,7 @@ def _param_by_cat(_bic, _name):
 	return None
 
 
-def _category_by_bic_name(_bicString):
+def category_by_bic_name(_bicString):
 	bicList = System.Enum.GetValues(BuiltInCategory)
 	bic = [i for i in bicList if _bicString == i.ToString()][0]
 	return GetCategory(doc, bic)
@@ -135,8 +135,8 @@ class TrayNet():
 		reference_list = list()
 		elem = _inst
 		category_elem = elem.Category.Id
-		category_tray = _category_by_bic_name("OST_CableTray").Id
-		category_fitting = _category_by_bic_name("OST_CableTrayFitting").Id
+		category_tray = category_by_bic_name("OST_CableTray").Id
+		category_fitting = category_by_bic_name("OST_CableTrayFitting").Id
 
 		# for cable tray
 		if category_elem == category_tray:

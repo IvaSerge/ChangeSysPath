@@ -1,0 +1,2 @@
+nym = dict()
+num.update(["", ])
