@@ -89,37 +89,36 @@ tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
 
 
 # test_sys = [x for x in list_of_systems][0]
-test_sys = [
-	x for x in list_of_systems
-	if x.rvt_sys.Id.IntegerValue == 7849435][0]
+# test_sys = [
+# 	x for x in list_of_systems
+# 	if x.rvt_sys.Id.IntegerValue == 8610496][0]
 
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
 # TEST
-el_system = test_sys.rvt_sys
-path = test_sys.path
-try:
-	el_system.SetCircuitPath(test_sys.path)
-except:
-	None
+# el_system = test_sys.rvt_sys
+# path = test_sys.path
+# try:
+# 	el_system.SetCircuitPath(test_sys.path)
+# except:
+# 	None
 
-# for sys_obj in list_of_systems:
-# 	el_system = sys_obj.rvt_sys
-# 	path = sys_obj.path
-# 	try:
-# 		el_system.SetCircuitPath(path)
-# 	except:
-# 		pass
+for sys_obj in list_of_systems:
+	el_system = sys_obj.rvt_sys
+	path = sys_obj.path
+	try:
+		el_system.SetCircuitPath(path)
+	except:
+		pass
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
 # OUT = tray_filling
-try:
-	OUT = el_sys.process_list(
-		lambda x: vector.toPoint(x), test_sys.path)
-except:
-	OUT = test_sys.path
- 
+# try:
+# 	OUT = el_sys.process_list(
+# 		lambda x: vector.toPoint(x), test_sys.path)
+# except:
+# 	OUT = test_sys.path
