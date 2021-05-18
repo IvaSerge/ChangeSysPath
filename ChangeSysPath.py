@@ -86,7 +86,7 @@ for system in all_systems:
 
 
 # cable tray size calculation
-tray_sys_link = get_tray_sys_link(systems_in_tray)
+# tray_sys_link = get_tray_sys_link(systems_in_tray)
 # tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
 
 
@@ -99,7 +99,7 @@ tray_sys_link = get_tray_sys_link(systems_in_tray)
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-# TEST
+# # TEST
 # el_system = test_sys.rvt_sys
 # path = test_sys.path
 # try:
@@ -107,22 +107,22 @@ TransactionManager.Instance.EnsureInTransaction(doc)
 # except:
 # 	None
 
-# for sys_obj in list_of_systems:
-# 	el_system = sys_obj.rvt_sys
-# 	path = sys_obj.path
-# 	try:
-# 		el_system.SetCircuitPath(path)
-# 	except:
-# 		pass
+for sys_obj in list_of_systems:
+	el_system = sys_obj.rvt_sys
+	path = sys_obj.path
+	try:
+		el_system.SetCircuitPath(path)
+	except:
+		pass
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-# OUT = tray_filling
+# OUT = [x.rvt_sys.CircuitNumber for x in list_of_systems if x.rvt_members == "Error"]
 # try:
 # 	OUT = el_sys.process_list(
 # 		lambda x: vector.toPoint(x), test_sys.path)
 # except:
 # 	OUT = test_sys.path
-Cable.create_catalogue()
-OUT = tray_sys_link
+# Cable.create_catalogue()
+# OUT = tray_sys_link
