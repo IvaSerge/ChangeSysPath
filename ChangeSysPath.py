@@ -86,9 +86,10 @@ for system in all_systems:
 
 
 # cable tray size calculation
-# tray_sys_link = get_tray_sys_link(systems_in_tray)
-# tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
-
+Cable.create_catalogue()
+tray_sys_link = get_tray_sys_link(systems_in_tray)
+tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
+tray_filling = [x for x in tray_filling if x]
 
 # test_sys = [x for x in list_of_systems][0]
 # test_sys = [
@@ -115,6 +116,9 @@ for sys_obj in list_of_systems:
 	except:
 		pass
 
+for tray_fill in tray_filling:
+	set_tray_size(tray_fill)
+
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
@@ -125,4 +129,4 @@ TransactionManager.Instance.TransactionTaskDone()
 # except:
 # 	OUT = test_sys.path
 # Cable.create_catalogue()
-# OUT = tray_sys_link
+OUT = tray_filling

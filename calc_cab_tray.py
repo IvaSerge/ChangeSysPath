@@ -24,6 +24,9 @@ import vector
 from vector import *
 import cab_tray
 from cab_tray import *
+import cable_catalogue
+from cable_catalogue import *
+
 
 def GetParVal(elem, name):
 	value = None
@@ -116,15 +119,18 @@ def calc_tray_filling(link):
 	"""Calculate cable tray filling in % """
 	tray = link[0]
 	el_systems = link[1]
-
-	# get tray size
 	tray_size = get_tray_size(tray)
-	# calc tray cross-section
-	# tray_cross_section = tray_size[0] * tray_size[1]
+	tray_cross_section = tray_size[0] * tray_size[1]
 	# get cable size for system
 	cab_cross_section_list = [get_wire_crossection(x) for x in el_systems]
-	# sum results
-	return cab_cross_section_list
+	cab_cross_section_list = [x for x in cab_cross_section_list if x]
+	if cab_cross_section_list:
+		total_cs = sum(cab_cross_section_list)
+		# sum results
+		fill_percent = total_cs / tray_cross_section * 100
+		return tray, fill_percent
+	else:
+		return None
 
 
 def get_wire_crossection(sys):
@@ -134,8 +140,11 @@ def get_wire_crossection(sys):
 	wire_size = sys.wire_size
 
 	# get info from catalogue
-
-	return None
+	cab = Cable.get_cable(wire_type, wire_size)
+	if cab:
+		return cab.diameter * cab.diameter
+	else:
+		return None
 
 
 def get_tray_size(tray):
@@ -168,6 +177,13 @@ def get_tray_size(tray):
 	t_width = vector.ft_to_mm(min(t_width_list))
 	t_height = vector.ft_to_mm(min(t_height_list))
 	return t_width, t_height
+
+
+def set_tray_size(info_list):
+	tray = info_list[0]
+	tray_fill = str(info_list[1])
+	p_name = "MC Object Variable 2"
+	tray.LookupParameter(p_name).Set(tray_fill)
 
 
 global doc

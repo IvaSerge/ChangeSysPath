@@ -79,7 +79,6 @@ class Cable():
 			cab_type (str): cable type
 			section (str): cross-section of cable
 		"""
-
 		cables = cls.cable_list
 		type_list = [x for x in cables if x.type == cab_type]
 		if not type_list:
