@@ -71,7 +71,10 @@ class ElSys():
 		self.rvt_board = self.rvt_sys.BaseEquipment
 		unsorted_members = [x for x in self.rvt_sys.Elements]
 		unsorted_members.insert(0, self.rvt_board)
-		self.rvt_members = self.sort_by_distance(unsorted_members)
+		try:
+			self.rvt_members = self.sort_by_distance(unsorted_members)
+		except:
+			self.rvt_members = "Error"
 		self.run_along_trays = None
 		self.path = None
 		self.wire_type = self.rvt_sys.get_Parameter(
