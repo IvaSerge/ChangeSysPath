@@ -72,11 +72,11 @@ class ElSys():
 		unsorted_members = [x for x in self.rvt_sys.Elements]
 		unsorted_members.insert(0, self.rvt_board)
 		self.rvt_members = self.sort_by_distance(unsorted_members)
-		# self.run_along_trays = None
-		# self.path = None
-		# self.wire_type = self.rvt_sys.get_Parameter(
-		# 	BuiltInParameter.RBS_ELEC_CIRCUIT_WIRE_TYPE_PARAM).AsValueString()
-		# self.wire_size = self.rvt_sys.LookupParameter("E_CableSize").AsString()
+		self.run_along_trays = None
+		self.path = None
+		self.wire_type = self.rvt_sys.get_Parameter(
+			BuiltInParameter.RBS_ELEC_CIRCUIT_WIRE_TYPE_PARAM).AsValueString()
+		self.wire_size = self.rvt_sys.LookupParameter("E_CableSize").AsString()
 
 	def sort_by_distance(self, _unsorted):
 		"""Sort families by nearest distance
@@ -87,26 +87,22 @@ class ElSys():
 			sort_list - sorted list of instances
 		"""
 
-		# for i in range(len(_unsorted) - 1):
-		# 	if i == 0:
-		# 		sorted_list = [x for x in _unsorted]
-		# 	else:
-		# 		sorted_part = sorted_list[:i]
-		# 		not_sorted_part = sorted_list[i:]
-		# 		start_inst = sorted_part[-1]
-		# 		distances = [self._get_distance(
-		# 			start_inst,
-		# 			check_inst)
-		# 			for check_inst in not_sorted_part]
-		# 		temp_list = list(zip(not_sorted_part, distances))
-		# 		temp_list.sort(key=operator.itemgetter(1))
-		# 		filtered_items = [x[0] for x in temp_list]
-		# 		sorted_list = sorted_part + not_sorted_part
-		start_inst = _unsorted[0]
-		distances = [[elem, self._find_connector_origin(elem)] for elem in _unsorted]
-		return distances
-
-
+		for i in range(len(_unsorted) - 1):
+			if i == 0:
+				sorted_list = [x for x in _unsorted]
+			else:
+				sorted_part = sorted_list[:i]
+				not_sorted_part = sorted_list[i:]
+				start_inst = sorted_part[-1]
+				distances = [self._get_distance(
+					start_inst,
+					check_inst)
+					for check_inst in not_sorted_part]
+				temp_list = list(zip(not_sorted_part, distances))
+				temp_list.sort(key=operator.itemgetter(1))
+				filtered_items = [x[0] for x in temp_list]
+				sorted_list = sorted_part + filtered_items
+		return sorted_list
 
 	def _get_distance(self, inst_start, inst_to_check):
 		start_pnt = self._find_connector_origin(inst_start)
@@ -116,22 +112,38 @@ class ElSys():
 
 	def _find_connector_origin(self, inst):
 		el_system = self.rvt_sys
+		el_sys_board = el_system.BaseEquipment
 		con_set = inst.MEPModel.ConnectorManager.Connectors
+		outlist = list()
+		# is it BaseEquipment?
+		if el_sys_board.Id == inst.Id:
+			# find Electrical connector
+			# ATTENTION! Tested only for 1 connector in family
+			
+			board_connector = [
+				con for con in con_set
+				if con.Domain == Domain.DomainElectrical][0]
+			return board_connector.Origin
+
 		for connector in con_set:
+			# filter out only not logical connectors
+			# filter out connectors without references
 			con_type = connector.ConnectorType
 			type_is_logic = con_type == ConnectorType.Logical
-			if not(connector.AllRefs.IsEmpty):
-				con_allRefs = [x for x in connector.AllRefs]
-				el_system_owner = con_allRefs[0].Owner
-				check_sys = el_system_owner.Id == el_system.Id
-				if check_sys and not(type_is_logic):
-					return connector.Origin
-				if check_sys and type_is_logic:
+			con_allRefs = [x for x in connector.AllRefs]
+			if not type_is_logic:
+				ref_connectors = connector.AllRefs
+				if ref_connectors:
+					# OST_ElectricalCircuit.Id == -2008037
+					owners = [
+						x.Owner.Id
+						for x in ref_connectors
+						if x.Owner.Category.Id == ElementId(-2008037)]
+				if el_system.Id in owners:
 					# connector is found
-					# but logic connector have no Origin
-					# so FamilyInstance coordinate would be taken
-					# may lead to mistakes while path creation!!!
-					return connector.Owner.Location.Point
+					return connector.Origin
+				else:
+					continue
 		return None
 
 	def _get_rout_names(self):
