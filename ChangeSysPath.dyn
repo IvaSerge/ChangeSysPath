@@ -105,7 +105,7 @@
         {
           "Id": "0c0f3de7a008471d9c3e3aa4859858d0",
           "Name": "str",
-          "Description": "Inhalte der Textdatei.",
+          "Description": "Contents of the text file.",
           "UsingDefaultValue": false,
           "Level": 2,
           "UseLevels": false,
@@ -113,7 +113,7 @@
         }
       ],
       "Replication": "Auto",
-      "Description": "Liest eine Textdatei und gibt die Inhalte als Zeichenfolge zurück.\n\nFileSystem.ReadText (file: var): string"
+      "Description": "Reads a text file and returns the contents as a string.\n\nFileSystem.ReadText (file: var): string"
     },
     {
       "ConcreteType": "CoreNodeModels.Input.FileObject, CoreNodeModels",
@@ -193,19 +193,18 @@
     }
   ],
   "Dependencies": [],
-  "NodeLibraryDependencies": [],
   "Bindings": [],
   "View": {
     "Dynamo": {
       "ScaleFactor": 10000.0,
       "HasRunWithoutCrash": true,
       "IsVisibleInDynamoLibrary": true,
-      "Version": "2.3.0.5885",
+      "Version": "2.0.3.8810",
       "RunType": "Manual",
       "RunPeriod": "1000"
     },
     "Camera": {
-      "Name": "Hintergrundvorschau",
+      "Name": "Background Preview",
       "EyeX": 49017.01946386401,
       "EyeY": 24970.721604067941,
       "EyeZ": -17161.925179968428,

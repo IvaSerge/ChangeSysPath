@@ -77,8 +77,8 @@ list_of_systems = list()
 for system in all_systems:
 	sys_obj = ElSys(system.Id)
 	list_of_systems.append(sys_obj)
-	#sys_obj.find_trays_run()
-	#sys_obj.create_new_path()
+	# sys_obj.find_trays_run()
+	# sys_obj.create_new_path()
 
 	# systems_in_tray = [
 	# 	x for x in list_of_systems
@@ -131,4 +131,4 @@ for system in all_systems:
 # # Cable.create_catalogue()
 # OUT = list_of_systems
 OUT = [x.rvt_members for x in list_of_systems]
- 
+     

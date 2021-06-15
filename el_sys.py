@@ -71,15 +71,12 @@ class ElSys():
 		self.rvt_board = self.rvt_sys.BaseEquipment
 		unsorted_members = [x for x in self.rvt_sys.Elements]
 		unsorted_members.insert(0, self.rvt_board)
-		#try:
 		self.rvt_members = self.sort_by_distance(unsorted_members)
-		#except:
-		#	self.rvt_members = "Error"
-		self.run_along_trays = None
-		self.path = None
-		self.wire_type = self.rvt_sys.get_Parameter(
-			BuiltInParameter.RBS_ELEC_CIRCUIT_WIRE_TYPE_PARAM).AsValueString()
-		self.wire_size = self.rvt_sys.LookupParameter("E_CableSize").AsString()
+		# self.run_along_trays = None
+		# self.path = None
+		# self.wire_type = self.rvt_sys.get_Parameter(
+		# 	BuiltInParameter.RBS_ELEC_CIRCUIT_WIRE_TYPE_PARAM).AsValueString()
+		# self.wire_size = self.rvt_sys.LookupParameter("E_CableSize").AsString()
 
 	def sort_by_distance(self, _unsorted):
 		"""Sort families by nearest distance
@@ -90,38 +87,24 @@ class ElSys():
 			sort_list - sorted list of instances
 		"""
 
-		for i in range(len(_unsorted) - 1):
-			if i == 0:
-				sorted_list = [x for x in _unsorted]
-			else:
-				sorted_part = sorted_list[:i]
-				not_sorted_part = sorted_list[i:]
-				start_inst = sorted_part[-1]
-				distances = [self._get_distance(
-					start_inst,
-					check_inst)
-					for check_inst in not_sorted_part]
-				temp_list = list(zip(not_sorted_part, distances))
-				temp_list.sort(key=operator.itemgetter(1))
-				filtered_items = [x[0] for x in temp_list]
-				sorted_list = sorted_part + not_sorted_part
-
-		#while unsorted_list:
-		#	if len(unsorted_list) == 1:
-		#		sorted_list.append(unsorted_list.pop(0))
-		#	else:
-		#		start_inst = sorted_list[-1]
-		#		distances = [self._get_distance(
-		#			start_inst,
-		#			check_inst)
-		#			for check_inst in unsorted_list]
-		# 		temp_list = zip(unsorted_list, distances)
+		# for i in range(len(_unsorted) - 1):
+		# 	if i == 0:
+		# 		sorted_list = [x for x in _unsorted]
+		# 	else:
+		# 		sorted_part = sorted_list[:i]
+		# 		not_sorted_part = sorted_list[i:]
+		# 		start_inst = sorted_part[-1]
+		# 		distances = [self._get_distance(
+		# 			start_inst,
+		# 			check_inst)
+		# 			for check_inst in not_sorted_part]
+		# 		temp_list = list(zip(not_sorted_part, distances))
 		# 		temp_list.sort(key=operator.itemgetter(1))
-		# 		next_pnt = temp_list[0][0]
-		# 		pop_index = unsorted_list.index(next_pnt)
-		#		unsorted_list.pop(pop_index)
-		# 		sorted_list.append(next_pnt)
-		return sorted_list
+		# 		filtered_items = [x[0] for x in temp_list]
+		# 		sorted_list = sorted_part + not_sorted_part
+		start_inst = _unsorted[0]
+		distances = [[elem, self._find_connector_origin(elem)] for elem in _unsorted]
+		return distances
 
 
 
@@ -198,55 +181,54 @@ class ElSys():
 	def find_trays_run(self):
 		"""Find cable trays witin cable runs"""
 		el_system_start = self.rvt_members[0]
-		# el_start = self._find_connector_origin(el_system_start)
-		# el_system_end = self.rvt_members[1]
-		# el_end = self._find_connector_origin(el_system_end)
+		el_start = self._find_connector_origin(el_system_start)
+		el_system_end = self.rvt_members[1]
+		el_end = self._find_connector_origin(el_system_end)
 
-		# # find a net in net list
-		# el_sys_nets = list()
-		# rout_names = self._get_rout_names()
-		# if not(rout_names):
-		# 	self.run_along_trays = None
-		# 	return None
-		# for rout in rout_names:
-		# 	for net in list_of_nets:
-		# 		if net.name == rout:
-		# 			el_sys_nets.append(net)
+		# find a net in net list
+		el_sys_nets = list()
+		rout_names = self._get_rout_names()
+		if not(rout_names):
+			self.run_along_trays = None
+			return None
+		for rout in rout_names:
+			for net in list_of_nets:
+				if net.name == rout:
+					el_sys_nets.append(net)
 
-		# # with cycle check all nets
-		# i = 0
-		# net_start = el_start
-		# outlist = list()
-		# while i <= len(el_sys_nets) - 1:
-		# 	outlist.append([])
+		# with cycle check all nets
+		i = 0
+		net_start = el_start
+		outlist = list()
+		while i <= len(el_sys_nets) - 1:
+			outlist.append([])
 
-		# 	# if it is not the last net - find nearest elem to next net
-		# 	# in real life there is only one nearest point
-		# 	# but unpredectable crazy situations are possible HERE!!!
+			# if it is not the last net - find nearest elem to next net
+			# in real life there is only one nearest point
+			# but unpredectable crazy situations are possible HERE!!!
 
-		# 	net = el_sys_nets[i]
-		# 	if i != len(el_sys_nets) - 1:
-		# 		net_end = TrayNet.find_nearest_pnt(
-		# 			net, el_sys_nets[i + 1])
-		# 	else:
-		# 		net_end = el_end
+			net = el_sys_nets[i]
+			if i != len(el_sys_nets) - 1:
+				net_end = TrayNet.find_nearest_pnt(
+					net, el_sys_nets[i + 1])
+			else:
+				net_end = el_end
 
-		# 	start_end = self.get_in_out(net, net_start, net_end)
-		# 	start, end = start_end[0].Id, start_end[1].Id
+			start_end = self.get_in_out(net, net_start, net_end)
+			start, end = start_end[0].Id, start_end[1].Id
 
-		# 	if start == end:
-		# 		# it is only one object in net
-		# 		outlist[i].append(start)
-		# 	else:
-		# 		# path need to be calculated using graph
-		# 		path = net.graph.dijsktra(start, end)
-		# 		map(lambda x: outlist[i].append(x), path)
-		# 	net_start = net_end
-		# 	i += 1
+			if start == end:
+				# it is only one object in net
+				outlist[i].append(start)
+			else:
+				# path need to be calculated using graph
+				path = net.graph.dijsktra(start, end)
+				map(lambda x: outlist[i].append(x), path)
+			net_start = net_end
+			i += 1
 
-		# outlist = flatten_list(outlist)
-		# self.run_along_trays = process_list(lambda x: doc.GetElement(x), outlist)
-		self.run_along_trays = self.rvt_members[0]
+		outlist = flatten_list(outlist)
+		self.run_along_trays = process_list(lambda x: doc.GetElement(x), outlist)
 
 	@staticmethod
 	def get_alt_foot_point(point_A, point_B, point_C):
