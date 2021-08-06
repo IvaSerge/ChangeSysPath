@@ -114,12 +114,12 @@ class ElSys():
 		el_system = self.rvt_sys
 		el_sys_board = el_system.BaseEquipment
 		con_set = inst.MEPModel.ConnectorManager.Connectors
-		outlist = list()
+		# outlist = list()
 		# is it BaseEquipment?
 		if el_sys_board.Id == inst.Id:
 			# find Electrical connector
 			# ATTENTION! Tested only for 1 connector in family
-			
+
 			board_connector = [
 				con for con in con_set
 				if con.Domain == Domain.DomainElectrical][0]
@@ -130,7 +130,6 @@ class ElSys():
 			# filter out connectors without references
 			con_type = connector.ConnectorType
 			type_is_logic = con_type == ConnectorType.Logical
-			con_allRefs = [x for x in connector.AllRefs]
 			if not type_is_logic:
 				ref_connectors = connector.AllRefs
 				if ref_connectors:
