@@ -53,10 +53,12 @@ outlist = list()
 
 # Create electrical system objects
 # Get all systems in project
-all_systems = FilteredElementCollector(doc).\
+not_filtered_systems = FilteredElementCollector(doc).\
 	OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_ElectricalCircuit).\
 	WhereElementIsNotElementType().\
 	ToElements()
+# filter out not connected systems
+all_systems = [sys for sys in not_filtered_systems if sys.BaseEquipment]
 
 # find all connected cable-tray nets in project.
 # for each net create TrayNet object.
@@ -80,16 +82,16 @@ for system in all_systems:
 	sys_obj.find_trays_run()
 	sys_obj.create_new_path()
 
-	systems_in_tray = [
-		x for x in list_of_systems
-		if x.run_along_trays]
+# 	systems_in_tray = [
+# 		x for x in list_of_systems
+# 		if x.run_along_trays]
 
 
 # cable tray size calculation
-Cable.create_catalogue()
-tray_sys_link = get_tray_sys_link(systems_in_tray)
-tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
-tray_filling = [x for x in tray_filling if x]
+# Cable.create_catalogue()
+# tray_sys_link = get_tray_sys_link(systems_in_tray)
+# tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
+# tray_filling = [x for x in tray_filling if x]
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
@@ -102,11 +104,11 @@ for sys_obj in list_of_systems:
 	except:
 		pass
 
-for tray_fill in tray_filling:
-	set_tray_size(tray_fill)
+# for tray_fill in tray_filling:
+# 	set_tray_size(tray_fill)
 
-# # =========End transaction
-# TransactionManager.Instance.TransactionTaskDone()
+# =========End transaction
+TransactionManager.Instance.TransactionTaskDone()
 
 # # OUT = [x.rvt_sys.CircuitNumber for x in list_of_systems if x.rvt_members == "Error"]
 # # try:
@@ -115,5 +117,5 @@ for tray_fill in tray_filling:
 # # except:
 # # 	OUT = test_sys.path
 # # Cable.create_catalogue()
-OUT = list_of_systems
-# OUT = [x.run_along_trays for x in list_of_systems]
+# OUT = list_of_nets
+OUT = [x.run_along_trays for x in list_of_systems]
