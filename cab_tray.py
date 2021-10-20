@@ -71,7 +71,7 @@ class TrayNet():
 		args:
 			net_name (str):
 			The name of the net, that can be found in
-			"MC Object Variable 1" parameter
+			"Cable Tray ID" parameter
 		"""
 		self.name = net_name
 		self.instances = None
@@ -109,14 +109,14 @@ class TrayNet():
 	def _get_first_tray(self):
 		"""Get first-in cable tray instance.
 
-		Cable tray will be selected by "MC Object Variable 1" parameter value
+		Cable tray will be selected by "Cable Tray ID" parameter value
 		"""
 
 		name = self.name
-		# tray system name is in "MC Object Variable 1" parameter
+		# tray system name is in "Cable Tray ID" parameter
 		param = _param_by_cat(
 			Autodesk.Revit.DB.BuiltInCategory.OST_CableTray,
-			"MC Object Variable 1")
+			"Cable Tray ID")
 
 		fnrvStr = FilterStringEquals()
 		pvp = ParameterValueProvider(param.Id)

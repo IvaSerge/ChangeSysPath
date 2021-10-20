@@ -152,7 +152,7 @@ class ElSys():
 		# TO DO. Automatical ordering to be done later
 
 		el_sys = self.rvt_sys
-		tray_net_str = el_sys.LookupParameter("MC Object Variable 1")
+		tray_net_str = el_sys.LookupParameter("Cable Tray ID")
 		tray_net_str = tray_net_str.AsString()
 
 		# tray-net names shoud be separated by koma and white space
@@ -388,7 +388,7 @@ class ElSys():
 					raise ValueError(
 						"Tray not found \n check system name \"%s\""
 						% self.rvt_sys.LookupParameter(
-							"MC Object Variable 1").AsString())
+							"Cable Tray ID").AsString())
 
 		# trays
 		if self.run_along_trays:

@@ -75,9 +75,9 @@ all_trays = FilteredElementCollector(doc).\
 	ToElements()
 
 tray_names = set([
-	x.LookupParameter("MC Object Variable 1").AsString()
+	x.LookupParameter("Cable Tray ID").AsString()
 	for x in all_trays
-	if x.LookupParameter("MC Object Variable 1").AsString()])
+	if x.LookupParameter("Cable Tray ID").AsString()])
 list_of_nets = [TrayNet(x) for x in tray_names]
 el_sys.list_of_nets = list_of_nets
 
