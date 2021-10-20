@@ -42,59 +42,50 @@ import calc_cab_tray
 from calc_cab_tray import *
 import cable_catalogue
 from cable_catalogue import *
+import element_provider
+from element_provider import *
 
 # ================ GLOBAL VARIABLES
 uiapp = DocumentManager.Instance.CurrentUIApplication
 uidoc = DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument
 app = uiapp.Application
 
-global doc
+# global doc
 doc = DocumentManager.Instance.CurrentDBDocument
 cab_tray.doc = doc
 el_sys.doc = doc
 graph.doc = doc
 calc_cab_tray.doc = doc
+element_provider.doc = doc
+element_provider.uidoc = uidoc
 
 reload = IN[1]
 outlist = list()
 
-# # Create electrical system objects
-# # Get all systems in project
-# not_filtered_systems = FilteredElementCollector(doc).\
-# 	OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_ElectricalCircuit).\
+all_systems = ElementProvider.get_sys_by_selection()
+
+# all_trays = FilteredElementCollector(doc).\
+# 	OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_CableTray).\
 # 	WhereElementIsNotElementType().\
 # 	ToElements()
-# # filter out not connected systems
-# all_systems = [sys for sys in not_filtered_systems if sys.BaseEquipment]
 
-# find all connected cable-tray nets in project.
-# for each net create TrayNet object.
-all_trays = FilteredElementCollector(doc).\
-	OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_CableTray).\
-	WhereElementIsNotElementType().\
-	ToElements()
+# tray_names = set([
+# 	x.LookupParameter("Cable Tray ID").AsString()
+# 	for x in all_trays
+# 	if x.LookupParameter("Cable Tray ID").AsString()])
+# list_of_nets = [TrayNet(x) for x in tray_names]
+# el_sys.list_of_nets = list_of_nets
 
-tray_names = set([
-	x.LookupParameter("Cable Tray ID").AsString()
-	for x in all_trays
-	if x.LookupParameter("Cable Tray ID").AsString()])
-list_of_nets = [TrayNet(x) for x in tray_names]
-el_sys.list_of_nets = list_of_nets
+# # create path for all systems in project
+# list_of_systems = list()
 
-# create path for all systems in project
-list_of_systems = list()
 
-# get system by selected object
-ref1 = uidoc.Selection.PickObject(
-	Autodesk.Revit.UI.Selection.ObjectType.Element, "")
-ob1 = doc.GetElement(ref1.ElementId)
-all_systems = ob1.MEPModel.ElectricalSystems
-
-for system in all_systems:
-	sys_obj = ElSys(system.Id)
-	list_of_systems.append(sys_obj)
-	sys_obj.find_trays_run()
-	sys_obj.create_new_path()
+# # Create electrical system objects
+# for system in all_systems:
+# 	sys_obj = ElSys(system.Id)
+# 	list_of_systems.append(sys_obj)
+# 	sys_obj.find_trays_run()
+# 	sys_obj.create_new_path()
 
 # 	systems_in_tray = [
 # 		x for x in list_of_systems
@@ -109,13 +100,13 @@ for system in all_systems:
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-for sys_obj in list_of_systems:
-	el_system = sys_obj.rvt_sys
-	path = sys_obj.path
-	try:
-		el_system.SetCircuitPath(path)
-	except:
-		pass
+# for sys_obj in list_of_systems:
+# 	el_system = sys_obj.rvt_sys
+# 	path = sys_obj.path
+# 	try:
+# 		el_system.SetCircuitPath(path)
+# 	except:
+# 		pass
 
 # for tray_fill in tray_filling:
 # 	set_tray_size(tray_fill)
@@ -123,11 +114,12 @@ for sys_obj in list_of_systems:
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-# # OUT = [x.rvt_sys.CircuitNumber for x in list_of_systems if x.rvt_members == "Error"]
-# # try:
-# # 	OUT = el_sys.process_list(
-# # 		lambda x: vector.toPoint(x), test_sys.path)
-# # except:
-# # 	OUT = test_sys.path
-# # Cable.create_catalogue()
-OUT = [x.run_along_trays for x in list_of_systems]
+# OUT = [x.rvt_sys.CircuitNumber for x in list_of_systems if x.rvt_members == "Error"]
+# try:
+# 	OUT = el_sys.process_list(
+# 		lambda x: vector.toPoint(x), test_sys.path)
+# except:
+# 	OUT = test_sys.path
+# Cable.create_catalogue()
+# OUT = [x.run_along_trays for x in list_of_systems]
+OUT = all_systems

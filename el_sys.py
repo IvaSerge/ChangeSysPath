@@ -26,6 +26,8 @@ import graph
 from graph import *
 import vector
 from vector import *
+import element_provider
+from element_provider import *
 
 
 def process_list(_func, _list):
