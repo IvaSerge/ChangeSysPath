@@ -20,7 +20,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": false,
+      "InputValue": true,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -105,7 +105,7 @@
         {
           "Id": "0c0f3de7a008471d9c3e3aa4859858d0",
           "Name": "str",
-          "Description": "Inhalte der Textdatei.",
+          "Description": "Contents of the text file.",
           "UsingDefaultValue": false,
           "Level": 2,
           "UseLevels": false,
@@ -113,7 +113,7 @@
         }
       ],
       "Replication": "Auto",
-      "Description": "Liest eine Textdatei und gibt die Inhalte als Zeichenfolge zurück.\n\nFileSystem.ReadText (file: var): string"
+      "Description": "Reads a text file and returns the contents as a string.\n\nFileSystem.ReadText (file: var): string"
     },
     {
       "ConcreteType": "CoreNodeModels.Input.FileObject, CoreNodeModels",
@@ -205,7 +205,7 @@
       "RunPeriod": "1000"
     },
     "Camera": {
-      "Name": "Hintergrundvorschau",
+      "Name": "Background Preview",
       "EyeX": 49017.01946386401,
       "EyeY": 24970.721604067941,
       "EyeZ": -17161.925179968428,
@@ -218,59 +218,59 @@
     },
     "NodeViews": [
       {
+        "ShowGeometry": true,
+        "Name": "Reload",
         "Id": "d4faef3825fc49ce8fedebdcd48067ca",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "Reload",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 493.706596439658,
         "Y": 744.17991342143921
       },
       {
+        "ShowGeometry": true,
+        "Name": "Python Script From String",
         "Id": "2d5996559be141609f0239af77174c49",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "Python Script From String",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 886.714773087099,
         "Y": 605.399052995255
       },
       {
+        "ShowGeometry": true,
+        "Name": "FileSystem.ReadText",
         "Id": "049c9e4fe54243ae95472446422290a1",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "FileSystem.ReadText",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 508.76551481907165,
         "Y": 555.44225808811859
       },
       {
+        "ShowGeometry": true,
+        "Name": "File From Path",
         "Id": "d8be777a5f294a3fb93ed94ba6d6b87b",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "File From Path",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 273.91903276657411,
         "Y": 624.51198116686533
       },
       {
+        "ShowGeometry": true,
+        "Name": "String",
         "Id": "0eb69237dd0c4dc187884facd965d90a",
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
-        "Name": "String",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 8.7190327665745144,
         "Y": 624.51198116686533
       }
     ],
     "Annotations": [],
-    "X": 29.210618402149436,
-    "Y": -29.575022962993216,
-    "Zoom": 0.53128433513168971
+    "X": -257.99541908062531,
+    "Y": -90.474059072296086,
+    "Zoom": 0.67067217140899171
   }
 }

@@ -12,6 +12,9 @@ from System import Array
 from System.Collections.Generic import *
 
 # ================ Revit imports
+clr.AddReference('RevitAPIUI')
+from Autodesk.Revit.UI import *
+
 clr.AddReference('RevitAPI')
 import Autodesk
 from Autodesk.Revit.DB import *
@@ -41,6 +44,10 @@ import cable_catalogue
 from cable_catalogue import *
 
 # ================ GLOBAL VARIABLES
+uiapp = DocumentManager.Instance.CurrentUIApplication
+uidoc = DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument
+app = uiapp.Application
+
 global doc
 doc = DocumentManager.Instance.CurrentDBDocument
 cab_tray.doc = doc
@@ -51,14 +58,14 @@ calc_cab_tray.doc = doc
 reload = IN[1]
 outlist = list()
 
-# Create electrical system objects
-# Get all systems in project
-not_filtered_systems = FilteredElementCollector(doc).\
-	OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_ElectricalCircuit).\
-	WhereElementIsNotElementType().\
-	ToElements()
-# filter out not connected systems
-all_systems = [sys for sys in not_filtered_systems if sys.BaseEquipment]
+# # Create electrical system objects
+# # Get all systems in project
+# not_filtered_systems = FilteredElementCollector(doc).\
+# 	OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_ElectricalCircuit).\
+# 	WhereElementIsNotElementType().\
+# 	ToElements()
+# # filter out not connected systems
+# all_systems = [sys for sys in not_filtered_systems if sys.BaseEquipment]
 
 # find all connected cable-tray nets in project.
 # for each net create TrayNet object.
@@ -66,6 +73,7 @@ all_trays = FilteredElementCollector(doc).\
 	OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_CableTray).\
 	WhereElementIsNotElementType().\
 	ToElements()
+
 tray_names = set([
 	x.LookupParameter("MC Object Variable 1").AsString()
 	for x in all_trays
@@ -76,6 +84,12 @@ el_sys.list_of_nets = list_of_nets
 # create path for all systems in project
 list_of_systems = list()
 
+# get system by selected object
+ref1 = uidoc.Selection.PickObject(
+	Autodesk.Revit.UI.Selection.ObjectType.Element, "")
+ob1 = doc.GetElement(ref1.ElementId)
+all_systems = ob1.MEPModel.ElectricalSystems
+
 for system in all_systems:
 	sys_obj = ElSys(system.Id)
 	list_of_systems.append(sys_obj)
@@ -85,7 +99,6 @@ for system in all_systems:
 # 	systems_in_tray = [
 # 		x for x in list_of_systems
 # 		if x.run_along_trays]
-
 
 # cable tray size calculation
 # Cable.create_catalogue()
@@ -117,5 +130,4 @@ TransactionManager.Instance.TransactionTaskDone()
 # # except:
 # # 	OUT = test_sys.path
 # # Cable.create_catalogue()
-# OUT = list_of_nets
 OUT = [x.run_along_trays for x in list_of_systems]
