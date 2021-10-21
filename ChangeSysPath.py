@@ -60,36 +60,29 @@ element_provider.doc = doc
 element_provider.uidoc = uidoc
 
 reload = IN[1]
+calc_all = False
 outlist = list()
 
-all_systems = ElementProvider.get_sys_by_selection()
+if calc_all:
+	pass
+else:
+	all_systems = ElementProvider.get_sys_by_selection()
+	tray_names = ElementProvider.get_tray_names_by_system(all_systems[0])
 
-# all_trays = FilteredElementCollector(doc).\
-# 	OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_CableTray).\
-# 	WhereElementIsNotElementType().\
-# 	ToElements()
+list_of_nets = [TrayNet(x) for x in tray_names]
+el_sys.list_of_nets = list_of_nets
 
-# tray_names = set([
-# 	x.LookupParameter("Cable Tray ID").AsString()
-# 	for x in all_trays
-# 	if x.LookupParameter("Cable Tray ID").AsString()])
-# list_of_nets = [TrayNet(x) for x in tray_names]
-# el_sys.list_of_nets = list_of_nets
+# Create electrical system objects
+list_of_systems = list()
+for system in all_systems:
+	sys_obj = ElSys(system.Id)
+	list_of_systems.append(sys_obj)
+	sys_obj.find_trays_run()
+	sys_obj.create_new_path()
 
-# # create path for all systems in project
-# list_of_systems = list()
-
-
-# # Create electrical system objects
-# for system in all_systems:
-# 	sys_obj = ElSys(system.Id)
-# 	list_of_systems.append(sys_obj)
-# 	sys_obj.find_trays_run()
-# 	sys_obj.create_new_path()
-
-# 	systems_in_tray = [
-# 		x for x in list_of_systems
-# 		if x.run_along_trays]
+	systems_in_tray = [
+		x for x in list_of_systems
+		if x.run_along_trays]
 
 # cable tray size calculation
 # Cable.create_catalogue()
@@ -100,13 +93,13 @@ all_systems = ElementProvider.get_sys_by_selection()
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-# for sys_obj in list_of_systems:
-# 	el_system = sys_obj.rvt_sys
-# 	path = sys_obj.path
-# 	try:
-# 		el_system.SetCircuitPath(path)
-# 	except:
-# 		pass
+for sys_obj in list_of_systems:
+	el_system = sys_obj.rvt_sys
+	path = sys_obj.path
+	try:
+		el_system.SetCircuitPath(path)
+	except:
+		pass
 
 # for tray_fill in tray_filling:
 # 	set_tray_size(tray_fill)
@@ -116,10 +109,15 @@ TransactionManager.Instance.TransactionTaskDone()
 
 # OUT = [x.rvt_sys.CircuitNumber for x in list_of_systems if x.rvt_members == "Error"]
 # try:
-# 	OUT = el_sys.process_list(
-# 		lambda x: vector.toPoint(x), test_sys.path)
+OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].path)
 # except:
 # 	OUT = test_sys.path
 # Cable.create_catalogue()
 # OUT = [x.run_along_trays for x in list_of_systems]
-OUT = all_systems
+# OUT = tray_names
+
+# substation = list_of_systems[0].rvt_members[0]
+# inst_vector = list_of_systems[0]._find_connector_origin(substation)
+
+# OUT = list_of_systems[0].run_along_trays
+# OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].run_along_trays)

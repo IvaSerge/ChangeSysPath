@@ -160,7 +160,7 @@ class ElSys():
 		# tray-net names shoud be separated by koma and white space
 		# Example: aaaa, bbbb
 		if tray_net_str:
-			return tray_net_str.split(", ")
+			return tray_net_str.split("-")
 		else:
 			return None
 
@@ -241,7 +241,7 @@ class ElSys():
 			i += 1
 
 		outlist = flatten_list(outlist)
-		self.run_along_trays = process_list(lambda x: doc.GetElement(x), outlist)		
+		self.run_along_trays = process_list(lambda x: doc.GetElement(x), outlist)
 
 	@staticmethod
 	def get_alt_foot_point(point_A, point_B, point_C):
@@ -414,7 +414,8 @@ class ElSys():
 					lambda x: TrayNet.get_connector_points(x),
 					path_instances))
 
-		path_with_Z = self.add_z_points(inst_path)
+		clean_path = self.clear_near_points(inst_path)
+		path_with_Z = self.add_z_points(clean_path)
 		self.path = self.clear_near_points(path_with_Z)
 		# self.path = tray_path
 

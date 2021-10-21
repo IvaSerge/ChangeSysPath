@@ -95,14 +95,15 @@ class TrayNet():
 
 		if location_str == "LocationPoint":
 			inst_cat = instance.Category.Id.IntegerValue
-			# for not standsrd lighting fixtures for WeWork
-			if inst_cat == -2001120:
+			# for not cable tray fitting
+			if inst_cat != -2008126:
 				con_manager = instance.MEPModel.ConnectorManager
 				cons = con_manager.Connectors
 				con = [x for x in cons if x.Domain == Domain.DomainElectrical]
 				point = [x.Origin for x in con]
 				return point
 			else:
+				# for fitting - location point
 				return [instance.Location.Point]
 		return None
 
