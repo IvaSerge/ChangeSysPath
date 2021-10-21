@@ -52,7 +52,7 @@ class ElementProvider():
 		return el_sys_list
 
 	@staticmethod
-	def get_all_tray_ids():
+	def get_all_tray_names():
 		"""
 		Get the list of all tray IDs in the project
 		"""

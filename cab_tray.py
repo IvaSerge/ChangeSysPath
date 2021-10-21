@@ -91,21 +91,24 @@ class TrayNet():
 			con_manager = instance.ConnectorManager
 			con = con_manager.Connectors
 			points = [x.Origin for x in con]
-			return points
 
 		if location_str == "LocationPoint":
-			inst_cat = instance.Category.Id.IntegerValue
+			# make it easy! No connector check. Takes only location point
+			# inst_cat = instance.Category.Id.IntegerValue
 			# for not cable tray fitting
-			if inst_cat != -2008126:
-				con_manager = instance.MEPModel.ConnectorManager
-				cons = con_manager.Connectors
-				con = [x for x in cons if x.Domain == Domain.DomainElectrical]
-				point = [x.Origin for x in con]
-				return point
-			else:
-				# for fitting - location point
-				return [instance.Location.Point]
-		return None
+			# if inst_cat != -2008126:
+			# 	con_manager = instance.MEPModel.ConnectorManager
+			# 	cons = con_manager.Connectors
+			# 	con = [x for x in cons if x.Domain == Domain.DomainElectrical]
+			# 					points = [x.Origin for x in con]
+			# else:
+			# 	# for fitting - location point
+			points = [instance.Location.Point]
+
+		if len(points) > 2:
+			raise ValueError(
+				"More than 3 connectors found \n check instanse \"%s\"" % instance.Id)
+		return points
 
 	def _get_first_tray(self):
 		"""Get first-in cable tray instance.

@@ -69,6 +69,15 @@
           "Level": 2,
           "UseLevels": false,
           "KeepListStructure": false
+        },
+        {
+          "Id": "2d03435a82aa4dbab0989bdd2277ec20",
+          "Name": "IN[2]",
+          "Description": "Input #2",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
         }
       ],
       "Outputs": [
@@ -163,6 +172,26 @@
       ],
       "Replication": "Disabled",
       "Description": "Erstellt eine Zeichenfolge."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
+      "NodeType": "BooleanInputNode",
+      "InputValue": true,
+      "Id": "7723666bfec34752926ee4c5f0865a37",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "0423f94afde948d1b08ddb1f99d72344",
+          "Name": "",
+          "Description": "Boolean",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Selection between a true and false."
     }
   ],
   "Connectors": [
@@ -190,6 +219,11 @@
       "Start": "24e320b0a8844744b7c6b6bf89539764",
       "End": "c1793981a2564442b958a5e8fbf8a6a3",
       "Id": "6c6625a2c4904cb2abd6e4db423d8c32"
+    },
+    {
+      "Start": "0423f94afde948d1b08ddb1f99d72344",
+      "End": "2d03435a82aa4dbab0989bdd2277ec20",
+      "Id": "784d178ec2be46ea908c1d8de6e81750"
     }
   ],
   "Dependencies": [],
@@ -266,11 +300,21 @@
         "Excluded": false,
         "X": 8.7190327665745144,
         "Y": 624.51198116686533
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Calculate_all",
+        "Id": "7723666bfec34752926ee4c5f0865a37",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 500.14266050292042,
+        "Y": 878.40913308957852
       }
     ],
     "Annotations": [],
-    "X": -319.03041079811419,
-    "Y": -275.42249147459484,
-    "Zoom": 0.77344661983487961
+    "X": -411.1807472928665,
+    "Y": -346.09471192436672,
+    "Zoom": 0.8520912019102912
   }
 }

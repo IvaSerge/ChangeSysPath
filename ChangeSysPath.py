@@ -60,11 +60,12 @@ element_provider.doc = doc
 element_provider.uidoc = uidoc
 
 reload = IN[1]
-calc_all = False
+calc_all = IN[2]
 outlist = list()
 
 if calc_all:
-	pass
+	all_systems = ElementProvider.get_all_systems()
+	tray_names = ElementProvider.get_all_tray_names()
 else:
 	all_systems = ElementProvider.get_sys_by_selection()
 	tray_names = ElementProvider.get_tray_names_by_system(all_systems[0])
@@ -86,20 +87,20 @@ for system in all_systems:
 
 # cable tray size calculation
 # Cable.create_catalogue()
-# tray_sys_link = get_tray_sys_link(systems_in_tray)
+tray_sys_link = get_tray_sys_link(systems_in_tray)
 # tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
 # tray_filling = [x for x in tray_filling if x]
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-for sys_obj in list_of_systems:
-	el_system = sys_obj.rvt_sys
-	path = sys_obj.path
-	try:
-		el_system.SetCircuitPath(path)
-	except:
-		pass
+# for sys_obj in list_of_systems:
+# 	el_system = sys_obj.rvt_sys
+# 	path = sys_obj.path
+# 	try:
+# 		el_system.SetCircuitPath(path)
+# 	except:
+# 		pass
 
 # for tray_fill in tray_filling:
 # 	set_tray_size(tray_fill)
@@ -109,7 +110,7 @@ TransactionManager.Instance.TransactionTaskDone()
 
 # OUT = [x.rvt_sys.CircuitNumber for x in list_of_systems if x.rvt_members == "Error"]
 # try:
-OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].path)
+# OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].path)
 # except:
 # 	OUT = test_sys.path
 # Cable.create_catalogue()
@@ -121,3 +122,5 @@ OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].path)
 
 # OUT = list_of_systems[0].run_along_trays
 # OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].run_along_trays)
+
+OUT = tray_names
