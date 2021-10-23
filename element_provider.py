@@ -72,8 +72,7 @@ class ElementProvider():
 		Get the list of trays in system by selection
 		"""
 		param_as_text = _sys.LookupParameter("Cable Tray ID").AsString()
-		return 
-param_as_text.split("-")
+		return param_as_text.split("-")
 
 global doc
 global uidoc

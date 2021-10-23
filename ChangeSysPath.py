@@ -61,7 +61,10 @@ element_provider.uidoc = uidoc
 
 reload = IN[1]
 calc_all = IN[2]
+param_reverse = IN[3]
+
 outlist = list()
+error_list = list()
 
 if calc_all:
 	all_systems = ElementProvider.get_all_systems()
@@ -70,16 +73,24 @@ else:
 	all_systems = ElementProvider.get_sys_by_selection()
 	tray_names = ElementProvider.get_tray_names_by_system(all_systems[0])
 
+
 list_of_nets = [TrayNet(x) for x in tray_names]
 el_sys.list_of_nets = list_of_nets
 
 # Create electrical system objects
 list_of_systems = list()
 for system in all_systems:
-	sys_obj = ElSys(system.Id)
+	sys_obj = ElSys(system.Id, param_reverse)
 	list_of_systems.append(sys_obj)
 	sys_obj.find_trays_run()
-	sys_obj.create_new_path()
+
+	try:
+		sys_obj.create_new_path()
+	except:
+		# create error list
+		tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
+		tray_net_str = tray_net_str.AsString()
+		error_list.append(tray_net_str)
 
 	systems_in_tray = [
 		x for x in list_of_systems
@@ -94,13 +105,22 @@ tray_sys_link = get_tray_sys_link(systems_in_tray)
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-# for sys_obj in list_of_systems:
-# 	el_system = sys_obj.rvt_sys
-# 	path = sys_obj.path
-# 	try:
-# 		el_system.SetCircuitPath(path)
-# 	except:
-# 		pass
+for sys_obj in list_of_systems:
+	el_system = sys_obj.rvt_sys
+	path = sys_obj.path
+	try:
+		el_system.SetCircuitPath(path)
+	except:
+		pass
+
+	if param_reverse:
+		tray_net_param = el_system .LookupParameter("Cable Tray ID")
+		tray_net_str = tray_net_param.AsString()
+		not_reversed = tray_net_str.split("-")
+		reversed = not_reversed[::-1]
+		new_value = "-".join(reversed)
+		tray_net_param.Set(new_value)
+
 
 # for tray_fill in tray_filling:
 # 	set_tray_size(tray_fill)
@@ -123,4 +143,4 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = list_of_systems[0].run_along_trays
 # OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].run_along_trays)
 
-OUT = tray_names
+OUT = tray_sys_link

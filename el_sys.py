@@ -64,13 +64,14 @@ def sort_list_by_point(start_point, point_list):
 
 
 class ElSys():
-	def __init__(self, el_sys_id):
+	def __init__(self, el_sys_id, _is_reversed):
 		"""
 		Extended electrical system class
 		"""
 		self.Id = el_sys_id
 		self.rvt_sys = doc.GetElement(el_sys_id)
 		self.rvt_board = self.rvt_sys.BaseEquipment
+		self.is_reversed = _is_reversed
 		unsorted_members = [x for x in self.rvt_sys.Elements]
 		unsorted_members.insert(0, self.rvt_board)
 		self.rvt_members = self.sort_by_distance(unsorted_members)
@@ -159,8 +160,12 @@ class ElSys():
 
 		# tray-net names shoud be separated by koma and white space
 		# Example: aaaa, bbbb
-		if tray_net_str:
+		if tray_net_str and not(self.is_reversed):
 			return tray_net_str.split("-")
+		elif tray_net_str and self.is_reversed:
+			not_reversed = tray_net_str.split("-")
+			reversed = not_reversed[::-1]
+			return reversed
 		else:
 			return None
 
