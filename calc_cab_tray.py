@@ -189,7 +189,7 @@ def get_tray_size(tray):
 def set_tray_size(info_list):
 	tray = info_list[0]
 	tray_fill = str(info_list[1])
-	p_name = "MC Object Variable 2"
+	p_name = "MC Object Variable 1"
 	tray.LookupParameter(p_name).Set(tray_fill)
 
 
