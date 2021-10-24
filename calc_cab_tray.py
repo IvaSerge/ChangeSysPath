@@ -80,6 +80,13 @@ def SetupParVal(elem, name, pValue):
 	return elem
 
 
+def category_by_bic_name(_bicString):
+	global doc
+	bicList = System.Enum.GetValues(BuiltInCategory)
+	bic = [i for i in bicList if _bicString == i.ToString()][0]
+	return Category.GetCategory(doc, bic)
+
+
 def dict_get_value(dict, key_name):
 	try:
 		value = dict[key_name]
@@ -96,22 +103,22 @@ def get_tray_sys_link(list_of_systems):
 		OUT - tray, str(system1, system2...)
 	"""
 	outlist = list()
-	tray_dict = dict()
+	all_used_trays = list()
 	for sys in list_of_systems:
-		used_trays = sys.run_along_trays
-		for tray in used_trays:
-			tray_id = tray.Id
-			dict_value = dict_get_value(tray_dict, tray_id)
-			if dict_value:
-				dict_value.append(sys)
-			else:
-				dict_update = {tray_id: [sys]}
-				tray_dict.update(dict_update)
-
-	tray_id_list = tray_dict.items()
-	for tray_id in tray_id_list:
-		tray = doc.GetElement(tray_id[0])
-		outlist.append([tray, tray_id[1]])
+		used_trays_fittings = sys.run_along_trays
+		# filter out fitting elements. We need cable trays only
+		fit_category = category_by_bic_name("OST_CableTrayFitting")
+		used_trays = [x for x in used_trays_fittings if x.Category.Id != fit_category.Id]
+		add_tray = lambda x: all_used_trays.append(x)
+		map(add_tray, used_trays)
+	for tray in all_used_trays:
+		sys_dependend = list()
+		tray_id = tray.Id
+		for sys in list_of_systems:
+			ids_in_sys = [x.Id for x in sys.run_along_trays]
+			if tray_id in ids_in_sys:
+				sys_dependend.append(sys.rvt_sys)
+		outlist.append([tray, sys_dependend])
 	return outlist
 
 
@@ -136,11 +143,11 @@ def calc_tray_filling(link):
 def get_wire_crossection(sys):
 	"""Get cable cross-section of the system"""
 	# read system parameter
-	wire_type = sys.wire_type
-	wire_size = sys.wire_size
+	# wire_type = sys.wire_type
+	wire_size = sys.WireSizeString
 
 	# get info from catalogue
-	cab = Cable.get_cable(wire_type, wire_size)
+	cab = Cable.get_cable(wire_size)
 	if cab:
 		return cab.diameter * cab.diameter
 	else:

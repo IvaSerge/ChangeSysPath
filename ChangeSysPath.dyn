@@ -18,7 +18,7 @@
       "Id": "7723666bfec34752926ee4c5f0865a37",
       "Name": "Calculate_all",
       "Type": "boolean",
-      "Value": "false",
+      "Value": "true",
       "Description": "Selection between a true and false."
     },
     {
@@ -34,7 +34,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": false,
+      "InputValue": true,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -199,7 +199,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": false,
+      "InputValue": true,
       "Id": "7723666bfec34752926ee4c5f0865a37",
       "Inputs": [],
       "Outputs": [
@@ -215,66 +215,6 @@
       ],
       "Replication": "Disabled",
       "Description": "Selection between a true and false."
-    },
-    {
-      "ConcreteType": "CoreNodeModels.Input.Filename, CoreNodeModels",
-      "HintPath": "C:\\03 SI\\errors.txt",
-      "InputValue": "..\\..\\03 SI\\errors.txt",
-      "NodeType": "ExtensionNode",
-      "Id": "c6f96c28f56848b8ae40e77116a60e0a",
-      "Inputs": [],
-      "Outputs": [
-        {
-          "Id": "194eb89bc77245999dcb8cd8aca3e293",
-          "Name": "",
-          "Description": "Filename",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        }
-      ],
-      "Replication": "Disabled",
-      "Description": "Allows you to select a file on the system to get its filename"
-    },
-    {
-      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
-      "NodeType": "FunctionNode",
-      "FunctionSignature": "DSOffice.Data.ExportCSV@string,var[][]",
-      "Id": "8257ff9942d34e9e9b7c7efda57b5b29",
-      "Inputs": [
-        {
-          "Id": "e56d83c230514e0b8a9acf314d34d80a",
-          "Name": "filePath",
-          "Description": "Path to write to\n\nstring",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        },
-        {
-          "Id": "ac11345907324ee1a7348dd5dcf93ab2",
-          "Name": "data",
-          "Description": "List of lists to write into CSV\n\nvar[][]",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        }
-      ],
-      "Outputs": [
-        {
-          "Id": "422036fc67c444fab9aa98600fa70a3a",
-          "Name": "void",
-          "Description": "void",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        }
-      ],
-      "Replication": "Auto",
-      "Description": "Write a list of lists into a file using a comma-separated values format. Outer list represents rows, inner lists represent columns.\n\nData.ExportCSV (filePath: string, data: var[][]): void"
     },
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
@@ -295,6 +235,66 @@
       ],
       "Replication": "Disabled",
       "Description": "Selection between a true and false."
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSOffice.Data.ExportCSV@string,var[][]",
+      "Id": "d7d0ea96cedf4455973caab2e3a6ee3c",
+      "Inputs": [
+        {
+          "Id": "d2dfe7458f974c4288a82fbd90732a82",
+          "Name": "filePath",
+          "Description": "Path to write to\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "bfc36aaecf7b4b4a95b1c723a041abb9",
+          "Name": "data",
+          "Description": "List of lists to write into CSV\n\nvar[][]",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "433b78c0e13a46e2b40560b137f58c27",
+          "Name": "void",
+          "Description": "void",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Write a list of lists into a file using a comma-separated values format. Outer list represents rows, inner lists represent columns.\n\nData.ExportCSV (filePath: string, data: var[][]): void"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.Filename, CoreNodeModels",
+      "HintPath": "C:\\03 SI\\errors.txt",
+      "InputValue": "..\\..\\03 SI\\errors.txt",
+      "NodeType": "ExtensionNode",
+      "Id": "92f548e4ba6e491b94e446cb2358e27e",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "4cdb0fc406794119a8db8e1f20e3e1f7",
+          "Name": "",
+          "Description": "Filename",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Allows you to select a file on the system to get its filename"
     }
   ],
   "Connectors": [
@@ -302,6 +302,11 @@
       "Start": "ef9d7fd5abed4398b74fdbba5f356c6c",
       "End": "f1ced3c8000d4c729c4cdde79c88a77f",
       "Id": "4734e1badb1143e599f226e5a3253696"
+    },
+    {
+      "Start": "e338fe7403ae470eb5206baf5fed837a",
+      "End": "bfc36aaecf7b4b4a95b1c723a041abb9",
+      "Id": "fb3a58adfa0f453d94a7858941aebfa4"
     },
     {
       "Start": "0c0f3de7a008471d9c3e3aa4859858d0",
@@ -332,6 +337,11 @@
       "Start": "61debfda3c524e3fac28050d43c30fa0",
       "End": "0a74d9c6d0ad4388ab711991d9f3d711",
       "Id": "21c23cf876324fb68b2713891886d85a"
+    },
+    {
+      "Start": "4cdb0fc406794119a8db8e1f20e3e1f7",
+      "End": "d2dfe7458f974c4288a82fbd90732a82",
+      "Id": "ba4e968e7ccf4e869fc23c4507afa22f"
     }
   ],
   "Dependencies": [],
@@ -360,99 +370,99 @@
     },
     "NodeViews": [
       {
+        "ShowGeometry": true,
+        "Name": "Reload",
         "Id": "d4faef3825fc49ce8fedebdcd48067ca",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "Reload",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 493.79287031428908,
         "Y": 741.50636382788332
       },
       {
+        "ShowGeometry": true,
+        "Name": "Python Script From String",
         "Id": "2d5996559be141609f0239af77174c49",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "Python Script From String",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 886.714773087099,
         "Y": 605.399052995255
       },
       {
+        "ShowGeometry": true,
+        "Name": "FileSystem.ReadText",
         "Id": "049c9e4fe54243ae95472446422290a1",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "FileSystem.ReadText",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 508.76551481907165,
         "Y": 555.44225808811859
       },
       {
+        "ShowGeometry": true,
+        "Name": "File From Path",
         "Id": "d8be777a5f294a3fb93ed94ba6d6b87b",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
-        "Name": "File From Path",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 273.91903276657411,
         "Y": 624.51198116686533
       },
       {
+        "ShowGeometry": true,
+        "Name": "String",
         "Id": "0eb69237dd0c4dc187884facd965d90a",
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
-        "Name": "String",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 8.7190327665745144,
         "Y": 624.51198116686533
       },
       {
+        "ShowGeometry": true,
+        "Name": "Calculate_all",
         "Id": "7723666bfec34752926ee4c5f0865a37",
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
-        "Name": "Calculate_all",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 478.81109896143181,
         "Y": 874.47244967192114
       },
       {
-        "Id": "c6f96c28f56848b8ae40e77116a60e0a",
-        "IsSetAsInput": false,
-        "IsSetAsOutput": false,
-        "Name": "File Path",
         "ShowGeometry": true,
-        "Excluded": false,
-        "X": 1014.8031979199786,
-        "Y": 363.1206329761344
-      },
-      {
-        "Id": "8257ff9942d34e9e9b7c7efda57b5b29",
-        "IsSetAsInput": false,
-        "IsSetAsOutput": false,
-        "Name": "Data.ExportCSV",
-        "ShowGeometry": true,
-        "Excluded": false,
-        "X": 1221.7957187830432,
-        "Y": 577.8268071877543
-      },
-      {
+        "Name": "Reverse",
         "Id": "9b631ce189fa4de5a2e7c622b1b7e5b4",
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
-        "Name": "Reverse",
-        "ShowGeometry": true,
         "Excluded": false,
         "X": 483.16176099804136,
         "Y": 977.83352412378565
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Data.ExportCSV",
+        "Id": "d7d0ea96cedf4455973caab2e3a6ee3c",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1152.2408904164658,
+        "Y": 536.83892337364659
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "File Path",
+        "Id": "92f548e4ba6e491b94e446cb2358e27e",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 881.11969734175239,
+        "Y": 425.0014312303274
       }
     ],
     "Annotations": [],
-    "X": -357.04872551676362,
-    "Y": -390.21646695964091,
-    "Zoom": 0.87947443602786324
+    "X": -341.23924455230264,
+    "Y": -341.47743373519074,
+    "Zoom": 0.88521298271899718
   }
 }

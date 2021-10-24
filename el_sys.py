@@ -79,7 +79,12 @@ class ElSys():
 		self.path = None
 		self.wire_type = self.rvt_sys.get_Parameter(
 			BuiltInParameter.RBS_ELEC_CIRCUIT_WIRE_TYPE_PARAM).AsValueString()
-		# self.wire_size = self.rvt_sys.LookupParameter("E_CableSize").AsString()
+
+		if self.rvt_sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
+			self.wire_size = self.rvt_sys.WireSizeString
+		else:
+			self.wire_size = None
+
 
 	def sort_by_distance(self, _unsorted):
 		"""Sort families by nearest distance

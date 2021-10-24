@@ -92,34 +92,34 @@ for system in all_systems:
 		tray_net_str = tray_net_str.AsString()
 		error_list.append(tray_net_str)
 
-	systems_in_tray = [
-		x for x in list_of_systems
-		if x.run_along_trays]
+systems_in_tray = [
+	x for x in list_of_systems
+	if x.run_along_trays]
 
 # cable tray size calculation
-# Cable.create_catalogue()
+Cable.create_catalogue()
 tray_sys_link = get_tray_sys_link(systems_in_tray)
-# tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
+tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
 # tray_filling = [x for x in tray_filling if x]
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-for sys_obj in list_of_systems:
-	el_system = sys_obj.rvt_sys
-	path = sys_obj.path
-	try:
-		el_system.SetCircuitPath(path)
-	except:
-		pass
+# for sys_obj in list_of_systems:
+	# el_system = sys_obj.rvt_sys
+	# path = sys_obj.path
+	# try:
+	# 	el_system.SetCircuitPath(path)
+	# except:
+	# 	pass
 
-	if param_reverse:
-		tray_net_param = el_system .LookupParameter("Cable Tray ID")
-		tray_net_str = tray_net_param.AsString()
-		not_reversed = tray_net_str.split("-")
-		reversed = not_reversed[::-1]
-		new_value = "-".join(reversed)
-		tray_net_param.Set(new_value)
+	# if param_reverse:
+	# 	tray_net_param = el_system .LookupParameter("Cable Tray ID")
+	# 	tray_net_str = tray_net_param.AsString()
+	# 	not_reversed = tray_net_str.split("-")
+	# 	reversed = not_reversed[::-1]
+	# 	new_value = "-".join(reversed)
+	# 	tray_net_param.Set(new_value)
 
 
 # for tray_fill in tray_filling:
@@ -137,10 +137,7 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = [x.run_along_trays for x in list_of_systems]
 # OUT = tray_names
 
-# substation = list_of_systems[0].rvt_members[0]
-# inst_vector = list_of_systems[0]._find_connector_origin(substation)
-
 # OUT = list_of_systems[0].run_along_trays
 # OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].run_along_trays)
 
-OUT = tray_sys_link
+OUT = tray_filling
