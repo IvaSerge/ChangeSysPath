@@ -125,8 +125,11 @@ TransactionManager.Instance.EnsureInTransaction(doc)
 	# 	tray_net_param.Set(new_value)
 
 
-# for tray_fill in tray_filling:
-# 	set_tray_size(tray_fill)
+for tray_fill in tray_filling:
+	set_tray_size(tray_fill)
+
+for tw in tray_weight:
+	set_tray_weight(tw)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()

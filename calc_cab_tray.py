@@ -144,8 +144,15 @@ def calc_tray_filling(link):
 
 def calc_tray_weight(link):
 	"""Calculate cable tray weight in kg/m """
-	weight_tray = Tray.get_tray_weight(link[0])
-	return link[0], weight_tray
+	tray = link[0]
+	el_systems = link[1]
+	weight_tray = Tray.get_tray_weight(tray)
+	weight_cables = weight_tray
+	for sys in el_systems:
+		wire_size = sys.WireSizeString
+		cab = Cable.get_cable(wire_size)
+		weight_cables += cab.weight
+	return tray, weight_cables
 
 
 def get_wire_crossection(sys):
@@ -200,5 +207,11 @@ def set_tray_size(info_list):
 	p_name = "MC Object Variable 1"
 	tray.LookupParameter(p_name).Set(tray_fill)
 
+
+def set_tray_weight(info_list):
+	tray = info_list[0]
+	tray_weight = str(info_list[1])
+	p_name = "MC Object Variable 2"
+	tray.LookupParameter(p_name).Set(tray_weight)
 
 global doc

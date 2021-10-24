@@ -70,13 +70,6 @@ class Tray():
 		filter_by_width = [x for x in filter_by_type if x[1] == round(ft_to_mm(tray.Width))]
 		filter_by_height = [x for x in filter_by_width if x[2] == round(ft_to_mm(tray.Height))]
 
-		# if all(
-		# 	[tray.Name == "WSL - Wide Span Cable Ladder (WSL XXX/110_150)",
-		# 	tray.Width == 500,
-		# 	tray.Height == 150]):
-		# 	return short_type, filter_by_type, filter_by_width, filter_by_height
-		# else:
-		# 	return None
 		try:
 			weight_tray = filter_by_height[0][3]
 			return weight_tray
