@@ -34,7 +34,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": true,
+      "InputValue": false,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -237,45 +237,6 @@
       "Description": "Selection between a true and false."
     },
     {
-      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
-      "NodeType": "FunctionNode",
-      "FunctionSignature": "DSOffice.Data.ExportCSV@string,var[][]",
-      "Id": "d7d0ea96cedf4455973caab2e3a6ee3c",
-      "Inputs": [
-        {
-          "Id": "d2dfe7458f974c4288a82fbd90732a82",
-          "Name": "filePath",
-          "Description": "Path to write to\n\nstring",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        },
-        {
-          "Id": "bfc36aaecf7b4b4a95b1c723a041abb9",
-          "Name": "data",
-          "Description": "List of lists to write into CSV\n\nvar[][]",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        }
-      ],
-      "Outputs": [
-        {
-          "Id": "433b78c0e13a46e2b40560b137f58c27",
-          "Name": "void",
-          "Description": "void",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        }
-      ],
-      "Replication": "Auto",
-      "Description": "Write a list of lists into a file using a comma-separated values format. Outer list represents rows, inner lists represent columns.\n\nData.ExportCSV (filePath: string, data: var[][]): void"
-    },
-    {
       "ConcreteType": "CoreNodeModels.Input.Filename, CoreNodeModels",
       "HintPath": "C:\\03 SI\\errors.txt",
       "InputValue": "..\\..\\03 SI\\errors.txt",
@@ -295,6 +256,45 @@
       ],
       "Replication": "Disabled",
       "Description": "Allows you to select a file on the system to get its filename"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSOffice.Data.ExportCSV@string,var[][]",
+      "Id": "c91f1700d22f4f05a0d6e80b7c2446c7",
+      "Inputs": [
+        {
+          "Id": "f52e1d1084a2456f9ba2e25996ee3caa",
+          "Name": "filePath",
+          "Description": "Path to write to\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "5517e8ac49d146f5a11f76db45459813",
+          "Name": "data",
+          "Description": "List of lists to write into CSV\n\nvar[][]",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "d18dc70635f143359ae338a788dcf5c5",
+          "Name": "void",
+          "Description": "void",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Write a list of lists into a file using a comma-separated values format. Outer list represents rows, inner lists represent columns.\n\nData.ExportCSV (filePath: string, data: var[][]): void"
     }
   ],
   "Connectors": [
@@ -305,8 +305,8 @@
     },
     {
       "Start": "e338fe7403ae470eb5206baf5fed837a",
-      "End": "bfc36aaecf7b4b4a95b1c723a041abb9",
-      "Id": "fb3a58adfa0f453d94a7858941aebfa4"
+      "End": "5517e8ac49d146f5a11f76db45459813",
+      "Id": "e05a1ecc53bc404ba03894a2ce15e34f"
     },
     {
       "Start": "0c0f3de7a008471d9c3e3aa4859858d0",
@@ -340,8 +340,8 @@
     },
     {
       "Start": "4cdb0fc406794119a8db8e1f20e3e1f7",
-      "End": "d2dfe7458f974c4288a82fbd90732a82",
-      "Id": "ba4e968e7ccf4e869fc23c4507afa22f"
+      "End": "f52e1d1084a2456f9ba2e25996ee3caa",
+      "Id": "13be812df75c4a9e90c5f180d79f04f8"
     }
   ],
   "Dependencies": [],
@@ -386,8 +386,8 @@
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 886.714773087099,
-        "Y": 605.399052995255
+        "X": 882.19608653585385,
+        "Y": 625.73314247585859
       },
       {
         "ShowGeometry": true,
@@ -441,28 +441,28 @@
       },
       {
         "ShowGeometry": true,
-        "Name": "Data.ExportCSV",
-        "Id": "d7d0ea96cedf4455973caab2e3a6ee3c",
-        "IsSetAsInput": false,
-        "IsSetAsOutput": false,
-        "Excluded": false,
-        "X": 1152.2408904164658,
-        "Y": 536.83892337364659
-      },
-      {
-        "ShowGeometry": true,
         "Name": "File Path",
         "Id": "92f548e4ba6e491b94e446cb2358e27e",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 881.11969734175239,
-        "Y": 425.0014312303274
+        "X": 542.21820599836087,
+        "Y": 403.53767011191263
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Data.ExportCSV",
+        "Id": "c91f1700d22f4f05a0d6e80b7c2446c7",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1175.3991589915972,
+        "Y": 550.3949830273823
       }
     ],
     "Annotations": [],
-    "X": -341.23924455230264,
-    "Y": -341.47743373519074,
-    "Zoom": 0.88521298271899718
+    "X": -102.73039949959593,
+    "Y": -349.31240118221626,
+    "Zoom": 0.76738277002749622
   }
 }

@@ -44,6 +44,8 @@ import cable_catalogue
 from cable_catalogue import *
 import element_provider
 from element_provider import *
+import tray_catalogue
+from tray_catalogue import *
 
 # ================ GLOBAL VARIABLES
 uiapp = DocumentManager.Instance.CurrentUIApplication
@@ -100,7 +102,8 @@ systems_in_tray = [
 Cable.create_catalogue()
 tray_sys_link = get_tray_sys_link(systems_in_tray)
 tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
-# tray_filling = [x for x in tray_filling if x]
+tray_weight = [calc_tray_weight(link) for link in tray_sys_link]
+
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
@@ -136,8 +139,7 @@ TransactionManager.Instance.TransactionTaskDone()
 # Cable.create_catalogue()
 # OUT = [x.run_along_trays for x in list_of_systems]
 # OUT = tray_names
-
 # OUT = list_of_systems[0].run_along_trays
 # OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].run_along_trays)
 
-OUT = tray_filling
+OUT = tray_weight

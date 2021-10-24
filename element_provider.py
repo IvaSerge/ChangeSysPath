@@ -74,5 +74,19 @@ class ElementProvider():
 		param_as_text = _sys.LookupParameter("Cable Tray ID").AsString()
 		return param_as_text.split("-")
 
+
+	@staticmethod
+	def get_obj_by_selection():
+		"""
+		Get any object by selection
+		"""
+		sel = uidoc.Selection.PickObject(
+			Autodesk.Revit.UI.Selection.ObjectType.Element, "")
+		sel_obj = doc.GetElement(sel.ElementId)
+		# check if selection is electrical board
+		# OST_ElectricalEquipment.Id == -2001040
+		return sel_obj
+
+
 global doc
 global uidoc

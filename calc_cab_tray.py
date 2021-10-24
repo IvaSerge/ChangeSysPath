@@ -26,6 +26,8 @@ import cab_tray
 from cab_tray import *
 import cable_catalogue
 from cable_catalogue import *
+import tray_catalogue
+from tray_catalogue import *
 
 
 def GetParVal(elem, name):
@@ -138,6 +140,12 @@ def calc_tray_filling(link):
 		return tray, fill_percent
 	else:
 		return None
+
+
+def calc_tray_weight(link):
+	"""Calculate cable tray weight in kg/m """
+	weight_tray = Tray.get_tray_weight(link[0])
+	return link[0], weight_tray
 
 
 def get_wire_crossection(sys):
