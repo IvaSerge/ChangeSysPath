@@ -131,6 +131,8 @@ for tray_fill in tray_filling:
 for tw in tray_weight:
 	set_tray_weight(tw)
 
+# !!!CLEAN INFO IN EMPTY TRAYS
+
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
