@@ -13,7 +13,7 @@ clr.AddReference('RevitAPI')
 import Autodesk
 from Autodesk.Revit.DB import *
 from Autodesk.Revit.DB import BuiltInCategory
-from Autodesk.Revit.DB.Category import GetCategory
+from Autodesk.Revit.DB.Category import GetCategory  # type: ignore
 
 # ================ Python imports
 import collections
@@ -215,6 +215,14 @@ def set_tray_weight(info_list):
 	tray.LookupParameter(p_name).Set(tray_weight)
 
 
+def set_tag(info_list):
+	tray = info_list[0]
+	from_to = info_list[1]
+	wire_size = info_list[2]
+	tray.LookupParameter("Multi_Tag_1").Set(wire_size)
+	tray.LookupParameter("Multi_Tag_2").Set(from_to)
+
+
 def clean_tray_parameters(tray_list):
 	"""
 		Put \\s symbol to pre-defined parameters
@@ -222,11 +230,25 @@ def clean_tray_parameters(tray_list):
 	p_value = " "
 	map(lambda x: SetupParVal(
 		x, "MC Object Variable 1", p_value), tray_list)
-
 	map(lambda x: SetupParVal(
 		x, "MC Object Variable 2", p_value), tray_list)
-
 	map(lambda x: SetupParVal(
-		x, "Beschriftung 1", p_value), tray_list)
+		x, "Multi_Tag_1", p_value), tray_list)
+	map(lambda x: SetupParVal(
+		x, "Multi_Tag_2", p_value), tray_list)
 
-global doc
+
+def get_tags(link):
+	tray = link[0]
+	el_systems = link[1]
+	# get ElSys info
+	from_to = [x.PanelName +
+		"->" + x.LoadName
+		for x in el_systems]
+	cable_sise = [x.WireSizeString for x in el_systems]
+	from_to_string = '\n'.join(from_to)
+	size_string = '\n'.join(cable_sise)
+	return tray, from_to_string, size_string
+
+
+global doc  # type: ignore

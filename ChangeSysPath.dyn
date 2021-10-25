@@ -25,7 +25,7 @@
       "Id": "9b631ce189fa4de5a2e7c622b1b7e5b4",
       "Name": "Reverse",
       "Type": "boolean",
-      "Value": "true",
+      "Value": "false",
       "Description": "Selection between a true and false."
     }
   ],
@@ -34,7 +34,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": false,
+      "InputValue": true,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -219,7 +219,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": true,
+      "InputValue": false,
       "Id": "9b631ce189fa4de5a2e7c622b1b7e5b4",
       "Inputs": [],
       "Outputs": [
@@ -461,8 +461,8 @@
       }
     ],
     "Annotations": [],
-    "X": -544.67263547618256,
-    "Y": -669.63286557735887,
-    "Zoom": 1.2583113066727836
+    "X": -749.41874558078393,
+    "Y": -729.715464487897,
+    "Zoom": 1.1672198664441393
   }
 }

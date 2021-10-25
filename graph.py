@@ -14,7 +14,7 @@ clr.AddReference('RevitAPI')
 import Autodesk
 from Autodesk.Revit.DB import *
 from Autodesk.Revit.DB import BuiltInCategory
-from Autodesk.Revit.DB.Category import GetCategory
+from Autodesk.Revit.DB.Category import GetCategory  # type: ignore
 
 # ================ Python imports
 import collections

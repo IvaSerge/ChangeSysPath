@@ -5,7 +5,7 @@ import sys
 # sys.path.append(r"C:\Program Files\Dynamo 0.8")
 pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
 sys.path.append(pyt_path)
-sys.path.append(IN[0].DirectoryName)
+sys.path.append(IN[0].DirectoryName)  # type: ignore
 
 import System
 from System import Array
@@ -52,7 +52,7 @@ uiapp = DocumentManager.Instance.CurrentUIApplication
 uidoc = DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument
 app = uiapp.Application
 
-global doc
+global doc  # type: ignore
 doc = DocumentManager.Instance.CurrentDBDocument
 cab_tray.doc = doc
 el_sys.doc = doc
@@ -61,9 +61,9 @@ calc_cab_tray.doc = doc
 element_provider.doc = doc
 element_provider.uidoc = uidoc
 
-reload = IN[1]
-calc_all = IN[2]
-param_reverse = IN[3]
+reload = IN[1]  # type: ignore
+calc_all = IN[2]  # type: ignore
+param_reverse = IN[3]  # type: ignore
 
 outlist = list()
 error_list = list()
@@ -114,7 +114,7 @@ Cable.create_catalogue()
 tray_sys_link = get_tray_sys_link(systems_in_tray)
 tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
 tray_weight = [calc_tray_weight(link) for link in tray_sys_link]
-
+tray_tags = [get_tags(link) for link in tray_sys_link]
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
@@ -142,6 +142,9 @@ for tray_fill in tray_filling:
 for tw in tray_weight:
 	set_tray_weight(tw)
 
+for tag in tray_tags:
+	set_tag(tag)
+
 # !!!CLEAN INFO IN EMPTY TRAYS
 clean_tray_parameters(empty_trays)
 
@@ -159,4 +162,4 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = list_of_systems[0].run_along_trays
 # OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].run_along_trays)
 
-OUT = ray_filling
+OUT = tray_tags

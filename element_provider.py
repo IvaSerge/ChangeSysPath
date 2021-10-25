@@ -1,3 +1,4 @@
+# pyright: reportUnusedVariables=false
 """Provide elements for script"""
 
 __author__ = "IvaSerge"
@@ -38,9 +39,9 @@ class ElementProvider():
 		"""
 		el_sys_list = list()
 		# get system by selected object
-		sel = uidoc.Selection.PickObject(
+		sel = uidoc.Selection.PickObject(  # type: ignore
 			Autodesk.Revit.UI.Selection.ObjectType.Element, "")
-		sel_obj = doc.GetElement(sel.ElementId)
+		sel_obj = doc.GetElement(sel.ElementId)  # type: ignore
 		# check if selection is electrical board
 		# OST_ElectricalEquipment.Id == -2001040
 		if sel_obj.Category.Id == ElementId(-2001040):
@@ -74,15 +75,14 @@ class ElementProvider():
 		param_as_text = _sys.LookupParameter("Cable Tray ID").AsString()
 		return param_as_text.split("-")
 
-
 	@staticmethod
 	def get_obj_by_selection():
 		"""
 		Get any object by selection
 		"""
-		sel = uidoc.Selection.PickObject(
+		sel = uidoc.Selection.PickObject(  # type: ignore
 			Autodesk.Revit.UI.Selection.ObjectType.Element, "")
-		sel_obj = doc.GetElement(sel.ElementId)
+		sel_obj = doc.GetElement(sel.ElementId)  # type: ignore
 		# check if selection is electrical board
 		# OST_ElectricalEquipment.Id == -2001040
 		return sel_obj

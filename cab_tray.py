@@ -13,7 +13,7 @@ clr.AddReference('RevitAPI')
 import Autodesk
 from Autodesk.Revit.DB import *
 from Autodesk.Revit.DB import BuiltInCategory
-from Autodesk.Revit.DB.Category import GetCategory
+from Autodesk.Revit.DB.Category import GetCategory  # type: ignore
 
 # ================ Python imports
 import collections
@@ -240,4 +240,4 @@ class TrayNet():
 		return nearest_pnt[1]
 
 
-global doc
+global doc  # type: ignore

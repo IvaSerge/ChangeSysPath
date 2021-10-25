@@ -13,7 +13,7 @@ clr.AddReference('RevitAPI')
 import Autodesk
 from Autodesk.Revit.DB import *
 from Autodesk.Revit.DB import BuiltInCategory
-from Autodesk.Revit.DB.Category import GetCategory
+from Autodesk.Revit.DB.Category import GetCategory  # type: ignore
 
 # ================ Python imports
 import operator
@@ -84,7 +84,6 @@ class ElSys():
 			self.wire_size = self.rvt_sys.WireSizeString
 		else:
 			self.wire_size = None
-
 
 	def sort_by_distance(self, _unsorted):
 		"""Sort families by nearest distance
@@ -215,7 +214,7 @@ class ElSys():
 			self.run_along_trays = None
 			return None
 		for rout in rout_names:
-			for net in list_of_nets:
+			for net in list_of_nets:  # type: ignore
 				if net.name == rout:
 					el_sys_nets.append(net)
 
@@ -394,7 +393,7 @@ class ElSys():
 		net_names_in_param = self._get_rout_names()
 		tray_path = None
 		if net_names_in_param:
-			net_names = [x.name for x in list_of_nets]
+			net_names = [x.name for x in list_of_nets]  # type: ignore
 			for name in net_names_in_param:
 				if name not in net_names:
 					raise ValueError(
@@ -465,5 +464,5 @@ class ElSys():
 		return updated_list
 
 
-global doc
+global doc  # type: ignore
 global list_of_nets
