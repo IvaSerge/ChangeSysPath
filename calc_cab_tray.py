@@ -214,4 +214,19 @@ def set_tray_weight(info_list):
 	p_name = "MC Object Variable 2"
 	tray.LookupParameter(p_name).Set(tray_weight)
 
+
+def clean_tray_parameters(tray_list):
+	"""
+		Put \\s symbol to pre-defined parameters
+	"""
+	p_value = " "
+	map(lambda x: SetupParVal(
+		x, "MC Object Variable 1", p_value), tray_list)
+
+	map(lambda x: SetupParVal(
+		x, "MC Object Variable 2", p_value), tray_list)
+
+	map(lambda x: SetupParVal(
+		x, "Beschriftung 1", p_value), tray_list)
+
 global doc

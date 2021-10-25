@@ -52,7 +52,7 @@ uiapp = DocumentManager.Instance.CurrentUIApplication
 uidoc = DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument
 app = uiapp.Application
 
-# global doc
+global doc
 doc = DocumentManager.Instance.CurrentDBDocument
 cab_tray.doc = doc
 el_sys.doc = doc
@@ -67,6 +67,17 @@ param_reverse = IN[3]
 
 outlist = list()
 error_list = list()
+
+fnrvStr = FilterStringEquals()
+# "Cable Tray ID" - id of parameter is 8961921
+pvp = ParameterValueProvider(ElementId(8961921))
+frule = FilterStringRule(pvp, fnrvStr, "", False)
+filter = ElementParameterFilter(frule)
+empty_trays = FilteredElementCollector(doc).\
+	OfCategory(BuiltInCategory.OST_CableTray).\
+	WhereElementIsNotElementType().\
+	WherePasses(filter).\
+	ToElements()
 
 if calc_all:
 	all_systems = ElementProvider.get_all_systems()
@@ -132,6 +143,7 @@ for tw in tray_weight:
 	set_tray_weight(tw)
 
 # !!!CLEAN INFO IN EMPTY TRAYS
+clean_tray_parameters(empty_trays)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
@@ -147,4 +159,4 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = list_of_systems[0].run_along_trays
 # OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].run_along_trays)
 
-OUT = tray_weight
+OUT = ray_filling
