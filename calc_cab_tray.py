@@ -136,8 +136,8 @@ def calc_tray_filling(link):
 	if cab_cross_section_list:
 		total_cs = sum(cab_cross_section_list)
 		# sum results
-		fill_percent = total_cs / tray_cross_section * 100
-		return tray, fill_percent
+		fill_percent = int(round(total_cs / tray_cross_section * 100))
+		return tray, str(fill_percent)
 	else:
 		return None
 
@@ -152,7 +152,7 @@ def calc_tray_weight(link):
 		wire_size = sys.WireSizeString
 		cab = Cable.get_cable(wire_size)
 		weight_cables += cab.weight
-	return tray, weight_cables
+	return tray, str(int(round(weight_cables)))
 
 
 def get_wire_crossection(sys):
@@ -227,15 +227,10 @@ def clean_tray_parameters(tray_list):
 	"""
 		Put \\s symbol to pre-defined parameters
 	"""
-	p_value = " "
-	map(lambda x: SetupParVal(
-		x, "MC Object Variable 1", p_value), tray_list)
-	map(lambda x: SetupParVal(
-		x, "MC Object Variable 2", p_value), tray_list)
-	map(lambda x: SetupParVal(
-		x, "Multi_Tag_1", p_value), tray_list)
-	map(lambda x: SetupParVal(
-		x, "Multi_Tag_2", p_value), tray_list)
+	map(lambda x: x.LookupParameter("MC Object Variable 1").Set(""), tray_list)
+	map(lambda x: x.LookupParameter("MC Object Variable 2").Set(""), tray_list)
+	map(lambda x: x.LookupParameter("Multi_Tag_1").Set(""), tray_list)
+	map(lambda x: x.LookupParameter("Multi_Tag_2").Set(""), tray_list)
 
 
 def get_tags(link):

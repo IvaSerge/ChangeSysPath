@@ -61,23 +61,16 @@ calc_cab_tray.doc = doc
 element_provider.doc = doc
 element_provider.uidoc = uidoc
 
-reload = IN[1]  # type: ignore
+reload = IN[1]  # type: ignore[reportUndefinedVariable]
 calc_all = IN[2]  # type: ignore
 param_reverse = IN[3]  # type: ignore
 
 outlist = list()
 error_list = list()
 
-fnrvStr = FilterStringEquals()
-# "Cable Tray ID" - id of parameter is 8961921
-pvp = ParameterValueProvider(ElementId(8961921))
-frule = FilterStringRule(pvp, fnrvStr, "", False)
-filter = ElementParameterFilter(frule)
-empty_trays = FilteredElementCollector(doc).\
+all_trays = FilteredElementCollector(doc).\
 	OfCategory(BuiltInCategory.OST_CableTray).\
-	WhereElementIsNotElementType().\
-	WherePasses(filter).\
-	ToElements()
+	WhereElementIsNotElementType()
 
 if calc_all:
 	all_systems = ElementProvider.get_all_systems()
@@ -116,6 +109,10 @@ tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
 tray_weight = [calc_tray_weight(link) for link in tray_sys_link]
 tray_tags = [get_tags(link) for link in tray_sys_link]
 
+# find empty trays
+trays_ID_in_use = [x[0].Id for x in tray_sys_link]
+trays_not_in_use = [x for x in all_trays if x.Id not in trays_ID_in_use]
+
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
@@ -146,7 +143,7 @@ for tag in tray_tags:
 	set_tag(tag)
 
 # !!!CLEAN INFO IN EMPTY TRAYS
-clean_tray_parameters(empty_trays)
+clean_tray_parameters(trays_not_in_use)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
