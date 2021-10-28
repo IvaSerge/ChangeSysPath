@@ -79,15 +79,10 @@ class ElSys():
 		self.path = None
 		self.wire_type = self.rvt_sys.get_Parameter(
 			BuiltInParameter.RBS_ELEC_CIRCUIT_WIRE_TYPE_PARAM).AsValueString()
-
-		if self.rvt_sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
-			self.wire_size = self.rvt_sys.WireSizeString
-		else:
-			self.wire_size = None
+		# self.wire_size = self.rvt_sys.LookupParameter("E_CableSize").AsString()
 
 	def sort_by_distance(self, _unsorted):
 		"""Sort families by nearest distance
-
 		args:
 			instances - list of instances
 		return:
@@ -176,11 +171,9 @@ class ElSys():
 	def get_in_out(self, tray_net, start, end):
 		"""
 		For each graph it is necessery to find IN-OUT elements
-
 		args:
 			tray_net (TrayNet instance)
 			start, end (XYZ) - end points
-
 		return:
 			start_tray, end_tray - IN, OUT instances
 		"""
@@ -322,28 +315,79 @@ class ElSys():
 				# not possible situation
 				raise ValueError("More than 3 poins in list")
 
-		sorted_points = ElSys.clear_near_points(sorted_points)
 		return sorted_points
 
 	@staticmethod
+	def test_points(first_pnt, next_pnt):
+		distance = first_pnt.DistanceTo(next_pnt)
+		first_z = XYZ(0, 0, first_pnt.Z)
+		next_z = XYZ(0, 0, next_pnt.Z)
+
+		# parameters to check
+		distance_is_ok = distance > 0.01
+		level_is_changed = not(Autodesk.Revit.DB.XYZ.IsAlmostEqualTo(first_z, next_z))
+		is_above = all([
+			first_pnt.X == next_pnt.X,
+			first_pnt.Y == next_pnt.Y])
+
+		# situatioh 1. On the same level. Distance Ok
+		if distance_is_ok and not(level_is_changed):
+			return [next_pnt]
+
+		# situatioh 2. On the same level. Distance is wrong
+		if not(distance_is_ok) and not(level_is_changed):
+			return None
+
+		# situation 3. Above. Distance is Ok.
+		if level_is_changed and is_above and distance_is_ok:
+			return [next_pnt]
+			# return 3
+
+		# situation 4. Above. Distance is wrong
+		if level_is_changed and is_above and not(distance_is_ok):
+			# return None
+			return distance > 0.01, distance * 100
+
+		# situation 5. Diagonal. Distance is wrong
+		if level_is_changed and not(is_above) and not(distance_is_ok):
+			new_pnt = XYZ(next_pnt.X, next_pnt.Y, first_pnt.Z)
+			return [new_pnt]
+
+		# situation 5. Diagonal. Distance is Ok
+		if level_is_changed and not(is_above) and distance_is_ok:
+			new_pnt = XYZ(next_pnt.X, next_pnt.Y, first_pnt.Z)
+			# check if new point is close to first point
+			if first_pnt.DistanceTo(new_pnt) > 0.01 and next_pnt.DistanceTo(new_pnt) > 0.01:  # Ok
+				return new_pnt, next_pnt
+			elif first_pnt.DistanceTo(new_pnt) < 0.01 and next_pnt.DistanceTo(new_pnt) < 0.01:
+				return None
+			elif first_pnt.DistanceTo(new_pnt) > 0.01 and next_pnt.DistanceTo(new_pnt) < 0.01:
+				return [new_pnt]
+			elif first_pnt.DistanceTo(new_pnt) < 0.01 and next_pnt.DistanceTo(new_pnt) > 0.01:
+				under_point = [first_pnt.X, first_pnt.Y, next_pnt.Z]
+				return under_point
+
+	@staticmethod
 	def clear_near_points(points):
-		list_to_check = points
+		checked_list = list()
 
-		# clean list by bubble method
-		start_len = len(list_to_check)
-		new_len = start_len + 1
-		while start_len != new_len:
-			start_len = len(list_to_check)
-			for i in range(start_len - 2):
-				current_point = list_to_check[i]
-				next_point = list_to_check[i + 1]
-				dist = current_point.DistanceTo(next_point)
-				if dist < 0.01:
-					list_to_check.pop(i + 1)
-					break
-			new_len = len(list_to_check)
+		for point in points:
+			if checked_list:
+				first_pnt = checked_list[-1]
+				next_pnt = point
+				test_list = ElSys.test_points(first_pnt, next_pnt)
+				if test_list:
+					[checked_list.append(x) for x in test_list]
+			# start point
+			else:
+				first_pnt = points[0]
+				next_pnt = points[1]
+				test_list = ElSys.test_points(first_pnt, next_pnt)
+				checked_list.append(first_pnt)
+				if test_list:
+					[checked_list.append(x) for x in test_list]
 
-		return list_to_check
+		return checked_list
 
 	@staticmethod
 	def get_exit_point(line_points, check_pnt):
@@ -423,46 +467,8 @@ class ElSys():
 					lambda x: TrayNet.get_connector_points(x),
 					path_instances))
 
-		clean_path = self.clear_near_points(inst_path)
-		path_with_Z = self.add_z_points(clean_path)
-		self.path = self.clear_near_points(path_with_Z)
-		# self.path = tray_path
-
-	@staticmethod
-	def add_z_points(path_points):
-		"""Add or remove additional points to path
-
-		new horisontal points to be add when Z changes,
-		remove points in reisers, remove dublicates
-		"""
-		updated_list = list()
-		for i, point in enumerate(path_points):
-			if i == len(path_points) - 1:
-				updated_list.append(point)
-				continue
-
-			point_next = path_points[i + 1]
-			# no changes in Z
-			if point.Z == point_next.Z:
-				updated_list.append(point)
-
-			# Z is changed
-			# add new point on the same level as current
-			if point.Z != point_next.Z:
-				point_new = XYZ(
-					point_next.X,
-					point_next.Y,
-					point.Z)
-				# check if new point is not the same point as next point
-				if point_new.IsAlmostEqualTo(point_next):
-					# there is no need to make dublicate of the point
-					updated_list.append(point)
-				else:
-					# new point will be added to list
-					updated_list.append(point)
-					updated_list.append(point_new)
-		return updated_list
+		self.path = self.clear_near_points(inst_path)
 
 
 global doc  # type: ignore
-global list_of_nets
+global list_of_nets  # type: ignore
