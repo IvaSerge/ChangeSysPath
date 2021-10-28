@@ -85,9 +85,11 @@ el_sys.list_of_nets = list_of_nets
 list_of_systems = list()
 
 # get system by selected object
-ref1 = uidoc.Selection.PickObject(
-	Autodesk.Revit.UI.Selection.ObjectType.Element, "")
-ob1 = doc.GetElement(ref1.ElementId)
+# ref1 = uidoc.Selection.PickObject(
+# 	Autodesk.Revit.UI.Selection.ObjectType.Element, "")
+
+# ob1 = doc.GetElement(ref1.ElementId)
+ob1 = UnwrapElement(IN[2])
 all_systems = ob1.MEPModel.ElectricalSystems
 
 for system in all_systems:
@@ -112,10 +114,7 @@ TransactionManager.Instance.EnsureInTransaction(doc)
 for sys_obj in list_of_systems:
 	el_system = sys_obj.rvt_sys
 	path = sys_obj.path
-	try:
-		el_system.SetCircuitPath(path)
-	except:
-		pass
+	el_system.SetCircuitPath(path)
 
 # for tray_fill in tray_filling:
 # 	set_tray_size(tray_fill)
@@ -130,4 +129,9 @@ TransactionManager.Instance.TransactionTaskDone()
 # # except:
 # # 	OUT = test_sys.path
 # # Cable.create_catalogue()
-OUT = [x.run_along_trays for x in list_of_systems]
+# OUT = [x.run_along_trays for x in list_of_systems]
+
+try:
+	OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].path)
+except:
+	OUT = list_of_systems[0].path

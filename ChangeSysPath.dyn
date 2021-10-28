@@ -69,6 +69,15 @@
           "Level": 2,
           "UseLevels": false,
           "KeepListStructure": false
+        },
+        {
+          "Id": "9aad2c851ce3423987ef23f4122642b0",
+          "Name": "IN[2]",
+          "Description": "Input #2",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
         }
       ],
       "Outputs": [
@@ -163,6 +172,27 @@
       ],
       "Replication": "Disabled",
       "Description": "Erstellt eine Zeichenfolge."
+    },
+    {
+      "ConcreteType": "Dynamo.Nodes.DSModelElementSelection, DSRevitNodesUI",
+      "NodeType": "ExtensionNode",
+      "InstanceId": [
+        "4e292a51-b421-4ba6-a329-cdd9982e5994-0076b238"
+      ],
+      "Id": "d25abee40bdb45d5830bb9489758174c",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "cd23073b2cb14bda9502ff3e157f410e",
+          "Name": "Element",
+          "Description": "The selected elements.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled"
     }
   ],
   "Connectors": [
@@ -190,6 +220,11 @@
       "Start": "24e320b0a8844744b7c6b6bf89539764",
       "End": "c1793981a2564442b958a5e8fbf8a6a3",
       "Id": "6c6625a2c4904cb2abd6e4db423d8c32"
+    },
+    {
+      "Start": "cd23073b2cb14bda9502ff3e157f410e",
+      "End": "9aad2c851ce3423987ef23f4122642b0",
+      "Id": "073a5150fa674ec9adcdb5433d97ffd4"
     }
   ],
   "Dependencies": [],
@@ -266,11 +301,21 @@
         "Excluded": false,
         "X": 8.7190327665745144,
         "Y": 624.51198116686533
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Select Model Element",
+        "Id": "d25abee40bdb45d5830bb9489758174c",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 621.63618299147049,
+        "Y": 888.71729638253885
       }
     ],
     "Annotations": [],
-    "X": -257.99541908062531,
-    "Y": -90.474059072296086,
-    "Zoom": 0.67067217140899171
+    "X": -592.0336344571183,
+    "Y": -569.21429415574357,
+    "Zoom": 1.4662279851586744
   }
 }
