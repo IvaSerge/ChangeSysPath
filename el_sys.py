@@ -338,7 +338,6 @@ class ElSys():
 		# situation 3. Above. Distance is Ok.
 		if level_is_changed and is_above and distance_is_ok:
 			return [next_pnt]
-			# return 3
 
 		# situation 4. Above. Distance is wrong
 		if level_is_changed and is_above and not(distance_is_ok):
@@ -350,17 +349,18 @@ class ElSys():
 			new_pnt = XYZ(next_pnt.X, next_pnt.Y, first_pnt.Z)
 			return [new_pnt]
 
-		# situation 5. Diagonal. Distance is Ok
+		# situation 6. Diagonal. Distance is Ok
 		if level_is_changed and not(is_above) and distance_is_ok:
 			new_pnt = XYZ(next_pnt.X, next_pnt.Y, first_pnt.Z)
 			# check if new point is close to first point
+			# return first_pnt.DistanceTo(new_pnt) > 0.01  # and first_pnt.DistanceTo(new_pnt) < 0.01
 			if first_pnt.DistanceTo(new_pnt) > 0.01 and next_pnt.DistanceTo(new_pnt) > 0.01:  # Ok
 				return new_pnt, next_pnt
-			elif first_pnt.DistanceTo(new_pnt) < 0.01 and first_pnt.DistanceTo(new_pnt) < 0.01:
+			elif first_pnt.DistanceTo(new_pnt) < 0.01 and next_pnt.DistanceTo(new_pnt) < 0.01:
 				return None
-			elif first_pnt.DistanceTo(new_pnt) > 0.01 and first_pnt.DistanceTo(new_pnt) < 0.01:
+			elif first_pnt.DistanceTo(new_pnt) > 0.01 and next_pnt.DistanceTo(new_pnt) < 0.01:
 				return [new_pnt]
-			elif first_pnt.DistanceTo(new_pnt) < 0.01 and first_pnt.DistanceTo(new_pnt) > 0.01:
+			elif first_pnt.DistanceTo(new_pnt) < 0.01 and next_pnt.DistanceTo(new_pnt) > 0.01:
 				return None
 
 	@staticmethod
@@ -383,10 +383,7 @@ class ElSys():
 				checked_list.append(first_pnt)
 				if test_list:
 					[checked_list.append(x) for x in test_list]
-
 		return checked_list
-		# return points, checked_list, \
-		# 	ElSys.test_points(checked_list[0:-4][5], checked_list[0:-4][6]), checked_list[0:-4][5].DistanceTo(checked_list[0:-4][6])
 
 	@staticmethod
 	def get_exit_point(line_points, check_pnt):
@@ -466,45 +463,9 @@ class ElSys():
 					lambda x: TrayNet.get_connector_points(x),
 					path_instances))
 
-		# path_with_Z = self.add_z_points(inst_path)
 		self.path = self.clear_near_points(inst_path)
 		# self.path = inst_path
 
-	@staticmethod
-	def add_z_points(path_points):
-		"""Add or remove additional points to path
-
-		new horisontal points to be add when Z changes,
-		remove points in reisers, remove dublicates
-		"""
-		updated_list = list()
-		for i, point in enumerate(path_points):
-			if i == len(path_points) - 1:
-				updated_list.append(point)
-				continue
-
-			point_next = path_points[i + 1]
-			# no changes in Z
-			if point.Z == point_next.Z:
-				updated_list.append(point)
-
-			# Z is changed
-			# add new point on the same level as current
-			if point.Z != point_next.Z:
-				point_new = XYZ(
-					point_next.X,
-					point_next.Y,
-					point.Z)
-				# check if new point is not the same point as next point
-				if point_new.IsAlmostEqualTo(point_next):
-					# there is no need to make dublicate of the point
-					updated_list.append(point)
-				else:
-					# new point will be added to list
-					updated_list.append(point)
-					updated_list.append(point_new)
-		return updated_list
-
 
 global doc  # type: ignore
-global list_of_nets
+global list_of_nets  # type: ignore
