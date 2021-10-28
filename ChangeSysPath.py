@@ -5,7 +5,7 @@ import sys
 # sys.path.append(r"C:\Program Files\Dynamo 0.8")
 pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
 sys.path.append(pyt_path)
-sys.path.append(IN[0].DirectoryName)
+sys.path.append(IN[0].DirectoryName)  # type: ignore
 
 import System
 from System import Array
@@ -48,14 +48,14 @@ uiapp = DocumentManager.Instance.CurrentUIApplication
 uidoc = DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument
 app = uiapp.Application
 
-global doc
+global doc   # type: ignore
 doc = DocumentManager.Instance.CurrentDBDocument
 cab_tray.doc = doc
 el_sys.doc = doc
 graph.doc = doc
 calc_cab_tray.doc = doc
 
-reload = IN[1]
+reload = IN[1]   # type: ignore
 outlist = list()
 
 # # Create electrical system objects
@@ -89,7 +89,7 @@ list_of_systems = list()
 # 	Autodesk.Revit.UI.Selection.ObjectType.Element, "")
 
 # ob1 = doc.GetElement(ref1.ElementId)
-ob1 = UnwrapElement(IN[2])
+ob1 = UnwrapElement(IN[2])   # type: ignore
 all_systems = ob1.MEPModel.ElectricalSystems
 
 for system in all_systems:

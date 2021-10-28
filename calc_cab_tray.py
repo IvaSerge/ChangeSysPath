@@ -13,7 +13,7 @@ clr.AddReference('RevitAPI')
 import Autodesk
 from Autodesk.Revit.DB import *
 from Autodesk.Revit.DB import BuiltInCategory
-from Autodesk.Revit.DB.Category import GetCategory
+from Autodesk.Revit.DB.Category import GetCategory # type: ignore
 
 # ================ Python imports
 import collections
@@ -186,4 +186,4 @@ def set_tray_size(info_list):
 	tray.LookupParameter(p_name).Set(tray_fill)
 
 
-global doc
+global doc  # type: ignore
