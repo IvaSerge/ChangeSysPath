@@ -105,9 +105,10 @@ systems_in_tray = [
 # cable tray size calculation
 Cable.create_catalogue()
 tray_sys_link = get_tray_sys_link(systems_in_tray)
-tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
-tray_weight = [calc_tray_weight(link) for link in tray_sys_link]
-tray_tags = [get_tags(link) for link in tray_sys_link]
+if calc_all:
+	tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
+	tray_weight = [calc_tray_weight(link) for link in tray_sys_link]
+	tray_tags = [get_tags(link) for link in tray_sys_link]
 
 # find empty trays
 trays_ID_in_use = [x[0].Id for x in tray_sys_link]
