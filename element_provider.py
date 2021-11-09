@@ -48,6 +48,10 @@ class ElementProvider():
 			sys_el = sel_obj.MEPModel.ElectricalSystems
 			sys_all = [x.Id for x in sel_obj.MEPModel.AssignedElectricalSystems]
 			el_sys_list = [x for x in sys_el if x.Id not in sys_all]
+			# filter out electrical circuit only
+			el_sys_list = [
+				x for x in el_sys_list
+				if x.SystemType == Electrical.ElectricalSystemType.PowerCircuit]
 		else:
 			el_sys_list = [x for x in sel_obj.MEPModel.ElectricalSystems]
 		return el_sys_list
