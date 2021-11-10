@@ -150,8 +150,14 @@ def calc_tray_weight(link):
 	weight_cables = weight_tray
 	for sys in el_systems:
 		wire_size = sys.WireSizeString
-		cab = Cable.get_cable(wire_size)
-		weight_cables += cab.weight
+		# try to get wire size from other parameters. Project specific
+		if not(wire_size):
+			param_list = sys.GetParameters("Cable Description_1")
+			wire_size = [i for i in param_list if i.Id == ElementId(8961915)]
+			wire_size = wire_size.AsString()
+
+		cab_weight = get_cable(wire_size)[2]
+		weight_cables += cab_weight
 	return tray, str(int(round(weight_cables)))
 
 
@@ -160,13 +166,14 @@ def get_wire_crossection(sys):
 	# read system parameter
 	# wire_type = sys.wire_type
 	wire_size = sys.WireSizeString
+	if not(wire_size):
+		param_list = sys.GetParameters("Cable Description_1")
+		wire_size = [i for i in param_list if i.Id == ElementId(8961915)][0]
+		wire_size = wire_size.AsString()
 
 	# get info from catalogue
-	cab = Cable.get_cable(wire_size)
-	if cab:
-		return cab.diameter * cab.diameter
-	else:
-		return None
+	cab_diameter = get_cable(wire_size)[1]
+	return cab_diameter * cab_diameter
 
 
 def get_tray_size(tray):
