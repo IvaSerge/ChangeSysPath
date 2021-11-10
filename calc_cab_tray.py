@@ -248,7 +248,7 @@ def get_tags(link):
 		"->" + x.LoadName
 		for x in el_systems]
 	cable_sise = [x.WireSizeString for x in el_systems]
-	from_to_string = '\n'.join(from_to)
+	from_to_string = '\r\n'.join(from_to)
 	size_string = '\n'.join(cable_sise)
 	return tray, from_to_string, size_string
 

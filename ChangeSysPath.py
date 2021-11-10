@@ -103,7 +103,6 @@ systems_in_tray = [
 	if x.run_along_trays]
 
 # cable tray size calculation
-Cable.create_catalogue()
 tray_sys_link = get_tray_sys_link(systems_in_tray)
 if calc_all:
 	tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
