@@ -153,7 +153,7 @@ def calc_tray_weight(link):
 		# try to get wire size from other parameters. Project specific
 		if not(wire_size):
 			param_list = sys.GetParameters("Cable Description_1")
-			wire_size = [i for i in param_list if i.Id == ElementId(8961915)]
+			wire_size = [i for i in param_list if i.Id == ElementId(8961915)][0]
 			wire_size = wire_size.AsString()
 
 		cab_weight = get_cable(wire_size)[2]
