@@ -247,9 +247,17 @@ def get_tags(link):
 	from_to = [x.PanelName +
 		"->" + x.LoadName
 		for x in el_systems]
-	cable_sise = [x.WireSizeString for x in el_systems]
+
+	get_wire = lambda sys: [
+		i for i in sys.GetParameters("Cable Description_1")
+		if i.Id == ElementId(8961915)][0].AsString()
+
+	cable_sise = [
+		x.WireSizeString if x.WireSizeString
+		else get_wire(x)
+		for x in el_systems]
 	from_to_string = '\r\n'.join(from_to)
-	size_string = '\n'.join(cable_sise)
+	size_string = '\r\n'.join(cable_sise)
 	return tray, from_to_string, size_string
 
 
