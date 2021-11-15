@@ -346,7 +346,7 @@ class ElSys():
 		# situation 4. Above. Distance is wrong
 		if level_is_changed and is_above and not(distance_is_ok):
 			# return None
-			return distance > 0.01, distance * 100
+			return None
 
 		# situation 5. Diagonal. Distance is wrong
 		if level_is_changed and not(is_above) and not(distance_is_ok):
@@ -364,8 +364,8 @@ class ElSys():
 			elif first_pnt.DistanceTo(new_pnt) > 0.01 and next_pnt.DistanceTo(new_pnt) < 0.01:
 				return [new_pnt]
 			elif first_pnt.DistanceTo(new_pnt) < 0.01 and next_pnt.DistanceTo(new_pnt) > 0.01:
-				under_point = [first_pnt.X, first_pnt.Y, next_pnt.Z]
-				return under_point
+				under_point = XYZ(first_pnt.X, first_pnt.Y, next_pnt.Z)
+				return [under_point]
 
 	@staticmethod
 	def clear_near_points(points):
