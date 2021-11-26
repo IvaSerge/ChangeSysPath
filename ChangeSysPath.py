@@ -79,8 +79,13 @@ else:
 	all_systems = ElementProvider.get_sys_by_selection()
 	tray_names = ElementProvider.get_tray_names_by_system(all_systems[0])
 
+if tray_names:
+	# system runs along cable tray
+	list_of_nets = [TrayNet(x) for x in tray_names]
+else:
+	# system runs not in cable tray
+	list_of_nets = None
 
-list_of_nets = [TrayNet(x) for x in tray_names]
 el_sys.list_of_nets = list_of_nets
 
 # Create electrical system objects

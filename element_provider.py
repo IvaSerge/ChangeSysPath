@@ -77,7 +77,10 @@ class ElementProvider():
 		Get the list of trays in system by selection
 		"""
 		param_as_text = _sys.LookupParameter("Cable Tray ID").AsString()
-		return param_as_text.split("-")
+		if param_as_text:
+			return param_as_text.split("-")
+		else:
+			return None
 
 	@staticmethod
 	def get_obj_by_selection():
