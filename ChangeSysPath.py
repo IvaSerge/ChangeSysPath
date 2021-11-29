@@ -120,6 +120,16 @@ trays_not_in_use = [x for x in all_trays if x.Id not in trays_ID_in_use]
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
+# for sys_obj in list_of_systems:
+# 	el_system = sys_obj.rvt_sys
+# 	path = sys_obj.path
+# 	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
+# 		doc, el_system.Id)
+# 	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
+# 		try:
+# 			el_system.SetCircuitPath(path)
+# 		except:
+# 			pass
 
 # adopt 1 circuit
 if not(calc_all):
@@ -158,5 +168,3 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = tray_names
 # OUT = list_of_systems[0].run_along_trays
 OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].path)
-
-# OUT = tray_sys_link
