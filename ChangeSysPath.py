@@ -120,24 +120,21 @@ trays_not_in_use = [x for x in all_trays if x.Id not in trays_ID_in_use]
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
-# for sys_obj in list_of_systems:
-# 	el_system = sys_obj.rvt_sys
-# 	path = sys_obj.path
-# 	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
-# 		doc, el_system.Id)
-# 	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
-# 		try:
-# 			el_system.SetCircuitPath(path)
-# 		except:
-# 			pass
 
-# adopt 1 circuit
-if not(calc_all):
-	for sys_obj in list_of_systems:
-		el_system = sys_obj.rvt_sys
-		path = sys_obj.path
-		el_system.SetCircuitPath(path)
+# set path for circuits
+for sys_obj in list_of_systems:
+	el_system = sys_obj.rvt_sys
+	path = sys_obj.path
+	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
+		doc, el_system.Id)
+	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
+		try:
+			el_system.SetCircuitPath(path)
+		except:
+			pass
 
+# adopt parameters for 1 circuit
+if not(calc_all) and param_reverse:
 	if param_reverse:
 		tray_net_param = el_system .LookupParameter("Cable Tray ID")
 		tray_net_str = tray_net_param.AsString()
@@ -145,7 +142,9 @@ if not(calc_all):
 		reversed = not_reversed[::-1]
 		new_value = "-".join(reversed)
 		tray_net_param.Set(new_value)
-else:
+
+# for all circuits
+if calc_all:
 	for tray_fill in tray_filling:
 		set_tray_size(tray_fill)
 	for tw in tray_weight:

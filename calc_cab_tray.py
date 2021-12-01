@@ -30,50 +30,16 @@ import tray_catalogue
 from tray_catalogue import *
 
 
-def GetParVal(elem, name):
-	value = None
-	# custom parameter
-	param = elem.LookupParameter(name)
-	# check is it a BuiltIn parameter if not found
-	if not(param):
-		param = elem.get_Parameter(GetBuiltInParam(name))
-
-	# get paremeter Value if found
-	try:
-		storeType = param.StorageType
-		# value = storeType
-		if storeType == StorageType.String:
-			value = param.AsString()
-		elif storeType == StorageType.Integer:
-			value = param.AsDouble()
-		elif storeType == StorageType.Double:
-			value = param.AsDouble()
-		elif storeType == StorageType.ElementId:
-			value = param.AsValueString()
-	except:
-		pass
-	return value
-
-
-def GetBuiltInParam(paramName):
-	builtInParams = System.Enum.GetValues(BuiltInParameter)
-	param = []
-	for i in builtInParams:
-		if i.ToString() == paramName:
-			param.append(i)
-			return i
-
-
-def SetupParVal(elem, name, pValue):
-	global doc
+def setup_param_value(elem, name, pValue):
 	# custom parameter
 	param = elem.LookupParameter(name)
 	# check is it a BuiltIn parameter if not found
 	if not(param):
 		try:
-			param = elem.get_Parameter(GetBuiltInParam(name)).Set(pValue)
+			param = elem.get_Parameter(get_bip(name)).Set(pValue)
 		except:
 			pass
+
 	if param:
 		try:
 			param.Set(pValue)
@@ -82,19 +48,20 @@ def SetupParVal(elem, name, pValue):
 	return elem
 
 
+def get_bip(paramName):
+	builtInParams = System.Enum.GetValues(BuiltInParameter)
+	param = []
+	for i in builtInParams:
+		if i.ToString() == paramName:
+			param.append(i)
+			return i
+
+
 def category_by_bic_name(_bicString):
 	global doc
 	bicList = System.Enum.GetValues(BuiltInCategory)
 	bic = [i for i in bicList if _bicString == i.ToString()][0]
 	return Category.GetCategory(doc, bic)
-
-
-def dict_get_value(dict, key_name):
-	try:
-		value = dict[key_name]
-	except KeyError:
-		value = None
-	return value
 
 
 def get_tray_sys_link(list_of_systems):
@@ -212,32 +179,33 @@ def set_tray_size(info_list):
 	tray = info_list[0]
 	tray_fill = str(info_list[1])
 	p_name = "MC Object Variable 1"
-	tray.LookupParameter(p_name).Set(tray_fill)
+	setup_param_value(tray, p_name, tray_fill)
 
 
 def set_tray_weight(info_list):
 	tray = info_list[0]
 	tray_weight = str(info_list[1])
 	p_name = "MC Object Variable 2"
-	tray.LookupParameter(p_name).Set(tray_weight)
+	setup_param_value(tray, p_name, tray_weight)
 
 
 def set_tag(info_list):
 	tray = info_list[0]
 	from_to = info_list[1]
 	wire_size = info_list[2]
-	tray.LookupParameter("Multi_Tag_1").Set(wire_size)
-	tray.LookupParameter("Multi_Tag_2").Set(from_to)
+	setup_param_value(tray, "Multi_Tag_1", wire_size)
+	setup_param_value(tray, "Multi_Tag_2", from_to)
 
 
 def clean_tray_parameters(tray_list):
 	"""
 		Put \\s symbol to pre-defined parameters
 	"""
-	map(lambda x: x.LookupParameter("MC Object Variable 1").Set(""), tray_list)
-	map(lambda x: x.LookupParameter("MC Object Variable 2").Set(""), tray_list)
-	map(lambda x: x.LookupParameter("Multi_Tag_1").Set(""), tray_list)
-	map(lambda x: x.LookupParameter("Multi_Tag_2").Set(""), tray_list)
+
+	map(lambda x: setup_param_value(x, "MC Object Variable 1", ""), tray_list)
+	map(lambda x: setup_param_value(x, "MC Object Variable 2", ""), tray_list)
+	map(lambda x: setup_param_value(x, "Multi_Tag_1", ""), tray_list)
+	map(lambda x: setup_param_value(x, "Multi_Tag_2", ""), tray_list)
 
 
 def get_tags(link):
