@@ -139,7 +139,12 @@ def get_wire_crossection(sys):
 		wire_size = wire_size.AsString()
 
 	# get info from catalogue
-	cab_diameter = get_cable(wire_size)[1]
+	try:
+		cab_diameter = get_cable(wire_size)[1]
+	except:
+		raise ValueError(
+			"Cable not in catalogue \n %d" % sys.Id.IntegerValue)
+
 	return cab_diameter * cab_diameter
 
 

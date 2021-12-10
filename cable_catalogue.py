@@ -67,8 +67,9 @@ def get_cable(section):
 		section (str): cross-section of cable`
 	"""
 	global cab_lst
-	cable = [x for x in cab_lst if section in x[0]][0]
+
 	try:
+		cable = [x for x in cab_lst if section in x[0]][0]
 		return cable
 	except:
 		raise ValueError(
