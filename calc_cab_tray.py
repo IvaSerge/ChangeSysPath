@@ -113,7 +113,16 @@ def calc_tray_weight(link):
 	"""Calculate cable tray weight in kg/m """
 	tray = link[0]
 	el_systems = link[1]
+	# try:
 	weight_tray = Tray.get_tray_weight(tray)
+	# except:
+	# 	raise ValueError(
+	# 		"Tray %d not in catalogue.\n Check type and size.\n Width: %d, Height: %d"
+	# 		% (
+	# 			tray.Id.IntegerValue,
+	# 			tray_catalogue.ft_to_mm(tray.Width),
+	# 			tray_catalogue.ft_to_mm(tray.Height)))
+
 	weight_cables = weight_tray
 	for sys in el_systems:
 		wire_size = sys.WireSizeString

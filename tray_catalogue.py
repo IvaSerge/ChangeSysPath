@@ -65,15 +65,18 @@ class Tray():
 		regexp = re.compile(r"(\w+)")
 		short_type = regexp.match(tray.Name).group(1)
 
+		tray_width = tray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).AsValueString()
+		tray_height = tray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).AsValueString()
+
 		# filter by type, width, height
 		filter_by_type = [x for x in Tray.tray_list if x[0] == short_type]
-		filter_by_width = [x for x in filter_by_type if x[1] == round(ft_to_mm(tray.Width))]
-		filter_by_height = [x for x in filter_by_width if x[2] == round(ft_to_mm(tray.Height))]
+		filter_by_width = [x for x in filter_by_type if x[1] == int(tray_width)]
+		filter_by_height = [x for x in filter_by_width if x[2] == int(tray_height)]
 
 		try:
 			weight_tray = filter_by_height[0][3]
 			return weight_tray
 		except:
 			raise ValueError(
-				"Tray not found \n check tray \"%s, %d, %d \""
-				% (tray.Name, ft_to_mm(tray.Width), ft_to_mm(tray.Height)))
+				"Tray not found \n check tray \"%s, %s, %s \""
+				% (tray.Name, tray_width, tray_height))
