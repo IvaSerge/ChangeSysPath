@@ -125,36 +125,50 @@ def calc_tray_weight(link):
 
 	weight_cables = weight_tray
 	for sys in el_systems:
-		wire_size = sys.WireSizeString
-		# try to get wire size from other parameters. Project specific
-		if not(wire_size):
-			param_list = sys.GetParameters("Cable Description_1")
-			wire_size = [i for i in param_list if i.Id == ElementId(8961915)][0]
-			wire_size = wire_size.AsString()
+		# Only for Power circuits
+		if sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
+			wire_size = sys.WireSizeString
+			# try to get wire size from other parameters. Project specific
+			if not(wire_size):
+				param_list = sys.GetParameters("Cable Description_1")
+				wire_size = [i for i in param_list if i.Id == ElementId(8961915)][0]
+				wire_size = wire_size.AsString()
 
-		cab_weight = get_cable(wire_size)[2]
-		weight_cables += cab_weight
+			cab_weight = get_cable(wire_size)[2]
+			weight_cables += cab_weight
+
+		else:
+			# TODO: add cables for DATA and
+			weight_cables = 0
+
 	return tray, str(int(round(weight_cables)))
 
 
 def get_wire_crossection(sys):
 	"""Get cable cross-section of the system"""
-	# read system parameter
-	# wire_type = sys.wire_type
-	wire_size = sys.WireSizeString
-	if not(wire_size):
-		param_list = sys.GetParameters("Cable Description_1")
-		wire_size = [i for i in param_list if i.Id == ElementId(8961915)][0]
-		wire_size = wire_size.AsString()
 
-	# get info from catalogue
-	try:
-		cab_diameter = get_cable(wire_size)[1]
-	except:
-		raise ValueError(
-			"Cable not in catalogue \n %d" % sys.Id.IntegerValue)
+	# Only for Power circuits
+	if sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
+		# read system parameter
+		# wire_type = sys.wire_type
+		wire_size = sys.WireSizeString
+		if not(wire_size):
+			param_list = sys.GetParameters("Cable Description_1")
+			wire_size = [i for i in param_list if i.Id == ElementId(8961915)][0]
+			wire_size = wire_size.AsString()
 
-	return cab_diameter * cab_diameter
+		# get info from catalogue
+		try:
+			cab_diameter = get_cable(wire_size)[1]
+		except:
+			raise ValueError(
+				"Cable not in catalogue \n %d" % sys.Id.IntegerValue)
+		return cab_diameter * cab_diameter
+
+	# for other circuits
+	else:
+		# TODO: add cables for DATA and
+		return 0
 
 
 def get_tray_size(tray):
@@ -190,6 +204,8 @@ def get_tray_size(tray):
 
 
 def set_tray_size(info_list):
+	if not info_list:
+		return None
 	tray = info_list[0]
 	tray_fill = str(info_list[1])
 	p_name = "MC Object Variable 1"
@@ -197,6 +213,8 @@ def set_tray_size(info_list):
 
 
 def set_tray_weight(info_list):
+	if not info_list:
+		return None
 	tray = info_list[0]
 	tray_weight = str(info_list[1])
 	p_name = "MC Object Variable 2"
@@ -204,6 +222,8 @@ def set_tray_weight(info_list):
 
 
 def set_tag(info_list):
+	if not info_list:
+		return None
 	tray = info_list[0]
 	from_to = info_list[1]
 	wire_size = info_list[2]
@@ -234,10 +254,25 @@ def get_tags(link):
 		i for i in sys.GetParameters("Cable Description_1")
 		if i.Id == ElementId(8961915)][0].AsString()
 
-	cable_sise = [
-		x.WireSizeString if x.WireSizeString
-		else get_wire(x)
-		for x in el_systems]
+	# cable_sise = [
+	# 	x.WireSizeString if x.WireSizeString
+	# 	else get_wire(x)
+	# 	for x in el_systems]
+
+	cable_sise = list()
+	for sys in el_systems:
+		# for Power circuits
+		if sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
+			if sys.WireSizeString:
+				cable_sise.append(sys.WireSizeString)
+			else:
+				cable_sise.append(get_wire(sys))
+
+		# for other circuits
+		else:
+			# TODO: add info for Data circuits
+			cable_sise.append("")
+
 	from_to_string = '\r\n'.join(from_to)
 	size_string = '\r\n'.join(cable_sise)
 	return tray, from_to_string, size_string
