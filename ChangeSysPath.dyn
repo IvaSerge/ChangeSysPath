@@ -18,7 +18,7 @@
       "Id": "7723666bfec34752926ee4c5f0865a37",
       "Name": "Calculate_all",
       "Type": "boolean",
-      "Value": "false",
+      "Value": "true",
       "Description": "Selection between a true and false."
     },
     {
@@ -199,7 +199,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": false,
+      "InputValue": true,
       "Id": "7723666bfec34752926ee4c5f0865a37",
       "Inputs": [],
       "Outputs": [

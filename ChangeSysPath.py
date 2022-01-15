@@ -107,12 +107,13 @@ systems_in_tray = [
 	x for x in list_of_systems
 	if x.run_along_trays]
 
-# cable tray size calculation
 tray_sys_link = get_tray_sys_link(systems_in_tray)
-if calc_all:
-	tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
-	tray_weight = [calc_tray_weight(link) for link in tray_sys_link]
-	tray_tags = [get_tags(link) for link in tray_sys_link]
+
+# cable tray size calculation
+# if calc_all:
+# 	tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
+# 	tray_weight = [calc_tray_weight(link) for link in tray_sys_link]
+# 	tray_tags = [get_tags(link) for link in tray_sys_link]
 
 # find empty trays
 trays_ID_in_use = [x[0].Id for x in tray_sys_link]
@@ -133,26 +134,26 @@ for sys_obj in list_of_systems:
 		except:
 			pass
 
-# adopt parameters for 1 circuit
-if not(calc_all) and param_reverse:
-	if param_reverse:
-		tray_net_param = el_system .LookupParameter("Cable Tray ID")
-		tray_net_str = tray_net_param.AsString()
-		not_reversed = tray_net_str.split("-")
-		reversed = not_reversed[::-1]
-		new_value = "-".join(reversed)
-		tray_net_param.Set(new_value)
+# # adopt parameters for 1 circuit
+# if not(calc_all) and param_reverse:
+# 	if param_reverse:
+# 		tray_net_param = el_system .LookupParameter("Cable Tray ID")
+# 		tray_net_str = tray_net_param.AsString()
+# 		not_reversed = tray_net_str.split("-")
+# 		reversed = not_reversed[::-1]
+# 		new_value = "-".join(reversed)
+# 		tray_net_param.Set(new_value)
 
-# for all circuits
-if calc_all:
-	for tray_fill in tray_filling:
-		set_tray_size(tray_fill)
-	for tw in tray_weight:
-		set_tray_weight(tw)
-	for tag in tray_tags:
-		set_tag(tag)
-	# !!!CLEAN INFO IN EMPTY TRAYS
-	clean_tray_parameters(trays_not_in_use)
+# # for all circuits
+# if calc_all:
+# 	for tray_fill in tray_filling:
+# 		set_tray_size(tray_fill)
+# 	for tw in tray_weight:
+# 		set_tray_weight(tw)
+# 	for tag in tray_tags:
+# 		set_tag(tag)
+# 	# !!!CLEAN INFO IN EMPTY TRAYS
+# 	clean_tray_parameters(trays_not_in_use)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
@@ -166,4 +167,4 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = [x.run_along_trays for x in list_of_systems]
 # OUT = tray_names
 # OUT = list_of_systems[0].run_along_trays
-OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].path)
+OUT = tray_names

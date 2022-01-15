@@ -30,7 +30,9 @@ class ElementProvider():
 			ToElements()
 		# filter out not connected systems
 		all_systems = [sys for sys in not_filtered_systems if sys.BaseEquipment]
-		return all_systems
+		data_systems = [sys for sys in all_systems if sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.Data]
+		# return all_systems
+		return data_systems
 
 	@staticmethod
 	def get_sys_by_selection():
@@ -69,6 +71,8 @@ class ElementProvider():
 			x.LookupParameter("Cable Tray ID").AsString()
 			for x in all_trays
 			if x.LookupParameter("Cable Tray ID").AsString()])
+		
+		tray_names = [name for name in tray_names if "IT" in name]
 		return tray_names
 
 	@staticmethod
