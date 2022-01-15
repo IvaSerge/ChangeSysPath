@@ -74,25 +74,25 @@ all_trays = FilteredElementCollector(doc).\
 
 if calc_all:
 	all_systems = ElementProvider.get_all_systems()
-	tray_names = ElementProvider.get_all_tray_names()
 else:
 	all_systems = ElementProvider.get_sys_by_selection()
-	tray_names = ElementProvider.get_tray_names_by_system(all_systems[0])
 
-if tray_names:
-	# system runs along cable tray
-	list_of_nets = [TrayNet(x) for x in tray_names]
-else:
-	# system runs not in cable tray
-	list_of_nets = None
-
-el_sys.list_of_nets = list_of_nets
+# =========Start transaction
+TransactionManager.Instance.EnsureInTransaction(doc)
 
 # Create electrical system objects
-list_of_systems = list()
-for system in all_systems:
-	sys_obj = ElSys(system.Id, param_reverse)
-	list_of_systems.append(sys_obj)
+for el_system in all_systems:
+	sys_obj = ElSys(el_system.Id, param_reverse)
+	tray_names = ElementProvider.get_tray_names_by_system(el_system)
+
+	if tray_names:
+		# system runs along cable tray
+		list_of_nets = [TrayNet(x) for x in tray_names]
+	else:
+		# system runs not in cable tray
+		list_of_nets = None
+	el_sys.list_of_nets = list_of_nets
+
 	sys_obj.find_trays_run()
 
 	try:
@@ -103,28 +103,6 @@ for system in all_systems:
 		tray_net_str = tray_net_str.AsString()
 		error_list.append(tray_net_str)
 
-systems_in_tray = [
-	x for x in list_of_systems
-	if x.run_along_trays]
-
-tray_sys_link = get_tray_sys_link(systems_in_tray)
-
-# cable tray size calculation
-# if calc_all:
-# 	tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
-# 	tray_weight = [calc_tray_weight(link) for link in tray_sys_link]
-# 	tray_tags = [get_tags(link) for link in tray_sys_link]
-
-# find empty trays
-trays_ID_in_use = [x[0].Id for x in tray_sys_link]
-trays_not_in_use = [x for x in all_trays if x.Id not in trays_ID_in_use]
-
-# =========Start transaction
-TransactionManager.Instance.EnsureInTransaction(doc)
-
-# set path for circuits
-for sys_obj in list_of_systems:
-	el_system = sys_obj.rvt_sys
 	path = sys_obj.path
 	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
 		doc, el_system.Id)
@@ -133,6 +111,36 @@ for sys_obj in list_of_systems:
 			el_system.SetCircuitPath(path)
 		except:
 			pass
+
+	outlist.append(sys_obj.run_along_trays)
+
+# systems_in_tray = [
+# 	x for x in list_of_systems
+# 	if x.run_along_trays]
+
+# tray_sys_link = get_tray_sys_link(systems_in_tray)
+
+# cable tray size calculation
+# if calc_all:
+# 	tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
+# 	tray_weight = [calc_tray_weight(link) for link in tray_sys_link]
+# 	tray_tags = [get_tags(link) for link in tray_sys_link]
+
+# find empty trays
+# trays_ID_in_use = [x[0].Id for x in tray_sys_link]
+# trays_not_in_use = [x for x in all_trays if x.Id not in trays_ID_in_use]
+
+# # set path for circuits
+# for sys_obj in list_of_systems:
+# 	el_system = sys_obj.rvt_sys
+# 	path = sys_obj.path
+# 	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
+# 		doc, el_system.Id)
+# 	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
+# 		try:
+# 			el_system.SetCircuitPath(path)
+# 		except:
+# 			pass
 
 # # adopt parameters for 1 circuit
 # if not(calc_all) and param_reverse:
@@ -167,4 +175,4 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = [x.run_along_trays for x in list_of_systems]
 # OUT = tray_names
 # OUT = list_of_systems[0].run_along_trays
-OUT = tray_names
+OUT = outlist
