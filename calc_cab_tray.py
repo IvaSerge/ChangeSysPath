@@ -18,6 +18,8 @@ from Autodesk.Revit.DB.Category import GetCategory  # type: ignore
 # ================ Python imports
 import collections
 from collections import defaultdict
+import re
+from re import *
 
 # ================ local imports
 import vector
@@ -62,6 +64,39 @@ def category_by_bic_name(_bicString):
 	bicList = System.Enum.GetValues(BuiltInCategory)
 	bic = [i for i in bicList if _bicString == i.ToString()][0]
 	return Category.GetCategory(doc, bic)
+
+
+def write_tray_sys_link(file_database, el_system):
+	"""	Writes link info to data base file
+	"""
+
+	# get all connected cable trays for system
+	tray_ids = [i.Id.ToString() for i in el_system.run_along_trays if i.Category.Id.ToString() == "-2008130"]
+
+	# open file for read/wirte.
+	# db structure: TrayId, el_sys.Id[]
+	with open(file_database, "r+") as f_db:
+		data = f_db.read()
+
+		for tray_id in tray_ids:
+			# Search for TrayId
+			check_list = re.findall(tray_id, data, flags=DOTALL)
+			if check_list:
+				old_str = check_list[0]
+				new_str = old_str + "," + el_system.rvt_sys.Id.ToString()
+				data = data.replace(old_str, new_str)
+			else:
+				data = data + "\n" + tray_id + "," + el_system.rvt_sys.Id.ToString()
+
+		f_db.seek(0)
+		f_db.write(data)
+		f_db.truncate()
+
+	# Search for TrayId.
+	# if ID found - add circuit ID to the row
+	# if Id not - add new row: TrayId, el_sys.Id
+
+	return tray_ids
 
 
 def get_tray_sys_link(list_of_systems):

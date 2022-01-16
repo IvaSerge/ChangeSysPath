@@ -7,6 +7,7 @@ pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
 sys.path.append(pyt_path)
 dir_path = IN[0].DirectoryName  # type: ignore
 file_out = dir_path + r"\result.csv"
+file_database = dir_path + r"\database.csv"
 sys.path.append(dir_path)
 
 import System
@@ -87,6 +88,11 @@ if check_id:
 	checkTrayId(doc, dir_path, all_systems)
 
 
+# # clean database
+# with open(file_database, "w") as f_db:
+# 				f_db.write("")
+
+
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
@@ -129,6 +135,19 @@ for el_system in all_systems:
 			e_text = str(e)
 			with open(file_out, "a") as f_out:
 				f_out.write("\n" + el_system.Id.ToString())
+
+	# write result to data baise
+	write_tray_sys_link(file_database, sys_obj)
+
+
+# ====== Calculations ========
+
+
+# tray_sys_link = get_tray_sys_link(systems_in_tray)
+# if calc_all:
+# 	tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
+# 	tray_weight = [calc_tray_weight(link) for link in tray_sys_link]
+# 	tray_tags = [get_tags(link) for link in tray_sys_link]
 
 
 # =========End transaction
