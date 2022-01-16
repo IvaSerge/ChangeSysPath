@@ -6,6 +6,7 @@ import sys
 pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
 sys.path.append(pyt_path)
 dir_path = IN[0].DirectoryName  # type: ignore
+file_out = dir_path + r"\result.csv"
 sys.path.append(dir_path)
 
 import System
@@ -67,7 +68,7 @@ element_provider.uidoc = uidoc
 reload = IN[1]  # type: ignore[reportUndefinedVariable]
 calc_all = IN[2]  # type: ignore
 param_reverse = IN[3]  # type: ignore
-check_id = IN[3]
+check_id = IN[3]  # type: ignore
 
 outlist = list()
 error_list = list()
@@ -86,96 +87,49 @@ if check_id:
 	checkTrayId(doc, dir_path, all_systems)
 
 
-# # =========Start transaction
-# TransactionManager.Instance.EnsureInTransaction(doc)
+# =========Start transaction
+TransactionManager.Instance.EnsureInTransaction(doc)
 
-# # Create electrical system objects
-# for el_system in all_systems:
-# 	sys_obj = ElSys(el_system.Id, param_reverse)
-# 	tray_names = ElementProvider.get_tray_names_by_system(el_system)
+# Create electrical system objects
+for el_system in all_systems:
+	sys_obj = ElSys(el_system.Id, param_reverse)
+	tray_names = ElementProvider.get_tray_names_by_system(el_system)
 
-# 	if tray_names:
-# 		list_of_nets = list()
-# 		# system runs along cable tray
-# 		for name in tray_names:
-# 			try:
-# 				list_of_nets.append(TrayNet(name))
-# 			except:
-# 				raise ValueError("Tray with ID do not exists\n" + name)
+	if tray_names:
+		list_of_nets = list()
+		# system runs along cable tray
+		for name in tray_names:
+			try:
+				list_of_nets.append(TrayNet(name))
+			except:
+				raise ValueError("Tray with ID do not exists\n" + name)
 
-# 	else:
-# 		# system runs not in cable tray
-# 		list_of_nets = None
+	else:
+		# system runs not in cable tray
+		list_of_nets = None
 
-# 	el_sys.list_of_nets = list_of_nets
-# 	sys_obj.find_trays_run()
+	el_sys.list_of_nets = list_of_nets
+	sys_obj.find_trays_run()
 
-# 	try:
-# 		sys_obj.create_new_path()
-# 	except:
-# 		# create error list
-# 		tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
-# 		tray_net_str = tray_net_str.AsString()
-# 		error_list.append(tray_net_str)
+	try:
+		sys_obj.create_new_path()
+	except:
+		# create error list
+		tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
+		tray_net_str = tray_net_str.AsString()
+		error_list.append(tray_net_str)
 
-# 	path = sys_obj.path
-# 	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
-# 		doc, el_system.Id)
-# 	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
-# 		try:
-# 			el_system.SetCircuitPath(path)
-# 		except Exception as e:
-# 			e_text = str(e)
-# 			raise ValueError(e_text + "\n" + el_system.Id.ToString())
+	path = sys_obj.path
+	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
+		doc, el_system.Id)
+	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
+		try:
+			el_system.SetCircuitPath(path)
+		except Exception as e:
+			e_text = str(e)
+			with open(file_out, "a") as f_out:
+				f_out.write("\n" + el_system.Id.ToString())
 
-# systems_in_tray = [
-# 	x for x in list_of_systems
-# 	if x.run_along_trays]
-
-# tray_sys_link = get_tray_sys_link(systems_in_tray)
-
-# cable tray size calculation
-# if calc_all:
-# 	tray_filling = [calc_tray_filling(link) for link in tray_sys_link]
-# 	tray_weight = [calc_tray_weight(link) for link in tray_sys_link]
-# 	tray_tags = [get_tags(link) for link in tray_sys_link]
-
-# find empty trays
-# trays_ID_in_use = [x[0].Id for x in tray_sys_link]
-# trays_not_in_use = [x for x in all_trays if x.Id not in trays_ID_in_use]
-
-# # set path for circuits
-# for sys_obj in list_of_systems:
-# 	el_system = sys_obj.rvt_sys
-# 	path = sys_obj.path
-# 	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
-# 		doc, el_system.Id)
-# 	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
-# 		try:
-# 			el_system.SetCircuitPath(path)
-# 		except:
-# 			pass
-
-# # adopt parameters for 1 circuit
-# if not(calc_all) and param_reverse:
-# 	if param_reverse:
-# 		tray_net_param = el_system .LookupParameter("Cable Tray ID")
-# 		tray_net_str = tray_net_param.AsString()
-# 		not_reversed = tray_net_str.split("-")
-# 		reversed = not_reversed[::-1]
-# 		new_value = "-".join(reversed)
-# 		tray_net_param.Set(new_value)
-
-# # for all circuits
-# if calc_all:
-# 	for tray_fill in tray_filling:
-# 		set_tray_size(tray_fill)
-# 	for tw in tray_weight:
-# 		set_tray_weight(tw)
-# 	for tag in tray_tags:
-# 		set_tag(tag)
-# 	# !!!CLEAN INFO IN EMPTY TRAYS
-# 	clean_tray_parameters(trays_not_in_use)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
@@ -189,5 +143,4 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = [x.run_along_trays for x in list_of_systems]
 # OUT = tray_names
 # OUT = list_of_systems[0].run_along_trays
-# OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
-OUT = checkTrayId(doc, dir_path, all_systems)
+OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)

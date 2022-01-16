@@ -31,8 +31,8 @@ def get_first_tray(doc, name):
 	return elem
 
 
-def checkTrayId(doc, dir_paht, el_systems):
-	file_out = dir_paht + r"\result.csv"
+def checkTrayId(doc, dir_path, el_systems):
+	file_out = dir_path + r"\result.csv"
 	outlist = list()
 	for el_system in el_systems:
 		# search for cable tray IDs in systems
