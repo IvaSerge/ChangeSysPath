@@ -25,7 +25,7 @@ from graph import *
 import vector
 
 
-def _param_by_cat(_bic, _name):
+def param_by_cat(_bic, _name):
 	"""Get parametr by category and parameter Name
 
 	args:
@@ -118,7 +118,7 @@ class TrayNet():
 
 		name = self.name
 		# tray system name is in "Cable Tray ID" parameter
-		param = _param_by_cat(
+		param = param_by_cat(
 			Autodesk.Revit.DB.BuiltInCategory.OST_CableTray,
 			"Cable Tray ID")
 

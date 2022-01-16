@@ -30,9 +30,8 @@ class ElementProvider():
 			ToElements()
 		# filter out not connected systems
 		all_systems = [sys for sys in not_filtered_systems if sys.BaseEquipment]
-		data_systems = [sys for sys in all_systems if sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.Data]
-		# return all_systems
-		return data_systems
+		# data_systems = [sys for sys in all_systems if sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.Data]
+		return all_systems
 
 	@staticmethod
 	def get_sys_by_selection():

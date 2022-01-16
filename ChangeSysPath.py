@@ -5,7 +5,8 @@ import sys
 # sys.path.append(r"C:\Program Files\Dynamo 0.8")
 pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
 sys.path.append(pyt_path)
-sys.path.append(IN[0].DirectoryName)  # type: ignore
+dir_path = IN[0].DirectoryName  # type: ignore
+sys.path.append(dir_path)
 
 import System
 from System import Array
@@ -46,6 +47,8 @@ import element_provider
 from element_provider import *
 import tray_catalogue
 from tray_catalogue import *
+import checkModel
+from checkModel import *
 
 # ================ GLOBAL VARIABLES
 uiapp = DocumentManager.Instance.CurrentUIApplication
@@ -64,6 +67,7 @@ element_provider.uidoc = uidoc
 reload = IN[1]  # type: ignore[reportUndefinedVariable]
 calc_all = IN[2]  # type: ignore
 param_reverse = IN[3]  # type: ignore
+check_id = IN[3]
 
 outlist = list()
 error_list = list()
@@ -77,42 +81,52 @@ if calc_all:
 else:
 	all_systems = ElementProvider.get_sys_by_selection()
 
-# =========Start transaction
-TransactionManager.Instance.EnsureInTransaction(doc)
+# before start script - check Id
+if check_id:
+	checkTrayId(doc, dir_path, all_systems)
 
-# Create electrical system objects
-for el_system in all_systems:
-	sys_obj = ElSys(el_system.Id, param_reverse)
-	tray_names = ElementProvider.get_tray_names_by_system(el_system)
 
-	if tray_names:
-		# system runs along cable tray
-		list_of_nets = [TrayNet(x) for x in tray_names]
-	else:
-		# system runs not in cable tray
-		list_of_nets = None
-	el_sys.list_of_nets = list_of_nets
+# # =========Start transaction
+# TransactionManager.Instance.EnsureInTransaction(doc)
 
-	sys_obj.find_trays_run()
+# # Create electrical system objects
+# for el_system in all_systems:
+# 	sys_obj = ElSys(el_system.Id, param_reverse)
+# 	tray_names = ElementProvider.get_tray_names_by_system(el_system)
 
-	try:
-		sys_obj.create_new_path()
-	except:
-		# create error list
-		tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
-		tray_net_str = tray_net_str.AsString()
-		error_list.append(tray_net_str)
+# 	if tray_names:
+# 		list_of_nets = list()
+# 		# system runs along cable tray
+# 		for name in tray_names:
+# 			try:
+# 				list_of_nets.append(TrayNet(name))
+# 			except:
+# 				raise ValueError("Tray with ID do not exists\n" + name)
 
-	path = sys_obj.path
-	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
-		doc, el_system.Id)
-	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
-		try:
-			el_system.SetCircuitPath(path)
-		except:
-			pass
+# 	else:
+# 		# system runs not in cable tray
+# 		list_of_nets = None
 
-	outlist.append(sys_obj.run_along_trays)
+# 	el_sys.list_of_nets = list_of_nets
+# 	sys_obj.find_trays_run()
+
+# 	try:
+# 		sys_obj.create_new_path()
+# 	except:
+# 		# create error list
+# 		tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
+# 		tray_net_str = tray_net_str.AsString()
+# 		error_list.append(tray_net_str)
+
+# 	path = sys_obj.path
+# 	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
+# 		doc, el_system.Id)
+# 	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
+# 		try:
+# 			el_system.SetCircuitPath(path)
+# 		except Exception as e:
+# 			e_text = str(e)
+# 			raise ValueError(e_text + "\n" + el_system.Id.ToString())
 
 # systems_in_tray = [
 # 	x for x in list_of_systems
@@ -175,4 +189,5 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = [x.run_along_trays for x in list_of_systems]
 # OUT = tray_names
 # OUT = list_of_systems[0].run_along_trays
-OUT = outlist
+# OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
+OUT = checkTrayId(doc, dir_path, all_systems)
