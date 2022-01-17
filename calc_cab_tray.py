@@ -71,30 +71,30 @@ def write_tray_sys_link(file_database, el_system):
 	"""
 
 	# get all connected cable trays for system
-	tray_ids = [i.Id.ToString() for i in el_system.run_along_trays if i.Category.Id.ToString() == "-2008130"]
+	if el_system.run_along_trays:
+		tray_ids = [i.Id.ToString() for i in el_system.run_along_trays if i.Category.Id.ToString() == "-2008130"]
+	else:
+		return None
 
 	# open file for read/wirte.
 	# db structure: TrayId, el_sys.Id[]
 	with open(file_database, "r+") as f_db:
 		data = f_db.read()
-
 		for tray_id in tray_ids:
 			# Search for TrayId
 			check_list = re.findall(tray_id, data, flags=DOTALL)
 			if check_list:
+				# if ID found - add circuit ID to the row
 				old_str = check_list[0]
 				new_str = old_str + "," + el_system.rvt_sys.Id.ToString()
 				data = data.replace(old_str, new_str)
 			else:
+				# if Id not - add new row: TrayId, el_sys.Id
 				data = data + "\n" + tray_id + "," + el_system.rvt_sys.Id.ToString()
 
 		f_db.seek(0)
 		f_db.write(data)
 		f_db.truncate()
-
-	# Search for TrayId.
-	# if ID found - add circuit ID to the row
-	# if Id not - add new row: TrayId, el_sys.Id
 
 	return tray_ids
 
@@ -106,23 +106,25 @@ def get_tray_sys_link(list_of_systems):
 		Search how much systems run through this cable tray
 		OUT - tray, str(system1, system2...)
 	"""
-	outlist = list()
-	all_used_trays = list()
-	for sys in list_of_systems:
-		used_trays_fittings = sys.run_along_trays
-		# filter out fitting elements. We need cable trays only
-		fit_category = category_by_bic_name("OST_CableTrayFitting")
-		used_trays = [x for x in used_trays_fittings if x.Category.Id != fit_category.Id]
-		add_tray = lambda x: all_used_trays.append(x)
-		map(add_tray, used_trays)
-	for tray in all_used_trays:
-		sys_dependend = list()
-		tray_id = tray.Id
-		for sys in list_of_systems:
-			ids_in_sys = [x.Id for x in sys.run_along_trays]
-			if tray_id in ids_in_sys:
-				sys_dependend.append(sys.rvt_sys)
-		outlist.append([tray, sys_dependend])
+
+	# from 
+	# outlist = list()
+	# all_used_trays = list()
+	# for sys in list_of_systems:
+	# 	used_trays_fittings = sys.run_along_trays
+	# 	# filter out fitting elements. We need cable trays only
+	# 	fit_category = category_by_bic_name("OST_CableTrayFitting")
+	# 	used_trays = [x for x in used_trays_fittings if x.Category.Id != fit_category.Id]
+	# 	add_tray = lambda x: all_used_trays.append(x)
+	# 	map(add_tray, used_trays)
+	# for tray in all_used_trays:
+	# 	sys_dependend = list()
+	# 	tray_id = tray.Id
+	# 	for sys in list_of_systems:
+	# 		ids_in_sys = [x.Id for x in sys.run_along_trays]
+	# 		if tray_id in ids_in_sys:
+	# 			sys_dependend.append(sys.rvt_sys)
+	# 	outlist.append([tray, sys_dependend])
 	return outlist
 
 
