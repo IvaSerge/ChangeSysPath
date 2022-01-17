@@ -5,6 +5,7 @@ __email__ = "ivaserge@ukr.net"
 __status__ = "Development"
 
 # ================ system imports
+import sys
 import clr
 import System
 
@@ -70,6 +71,10 @@ def write_tray_sys_link(file_database, el_system):
 	"""	Writes link info to data base file
 	"""
 
+	# clean database
+	with open(file_database, "w") as f_db:
+					f_db.write("")
+
 	# get all connected cable trays for system
 	if el_system.run_along_trays:
 		tray_ids = [i.Id.ToString() for i in el_system.run_along_trays if i.Category.Id.ToString() == "-2008130"]
@@ -99,7 +104,7 @@ def write_tray_sys_link(file_database, el_system):
 	return tray_ids
 
 
-def get_tray_sys_link(list_of_systems):
+def get_tray_sys_link(doc, link_str):
 	"""
 		Find relation cable tray - electrical system.
 
@@ -107,25 +112,14 @@ def get_tray_sys_link(list_of_systems):
 		OUT - tray, str(system1, system2...)
 	"""
 
-	# from 
-	# outlist = list()
-	# all_used_trays = list()
-	# for sys in list_of_systems:
-	# 	used_trays_fittings = sys.run_along_trays
-	# 	# filter out fitting elements. We need cable trays only
-	# 	fit_category = category_by_bic_name("OST_CableTrayFitting")
-	# 	used_trays = [x for x in used_trays_fittings if x.Category.Id != fit_category.Id]
-	# 	add_tray = lambda x: all_used_trays.append(x)
-	# 	map(add_tray, used_trays)
-	# for tray in all_used_trays:
-	# 	sys_dependend = list()
-	# 	tray_id = tray.Id
-	# 	for sys in list_of_systems:
-	# 		ids_in_sys = [x.Id for x in sys.run_along_trays]
-	# 		if tray_id in ids_in_sys:
-	# 			sys_dependend.append(sys.rvt_sys)
-	# 	outlist.append([tray, sys_dependend])
-	return outlist
+	if "," not in link_str:
+		return None
+
+	link_ids = link_str.split(",")
+	tray = doc.GetElement(ElementId(int(link_ids.pop(0))))
+	systems = [doc.GetElement(ElementId(int(i))) for i in link_ids]
+
+	return tray, systems
 
 
 def calc_tray_filling(link):
@@ -161,13 +155,13 @@ def calc_tray_weight(link):
 	# 			tray_catalogue.ft_to_mm(tray.Height)))
 
 	weight_cables = weight_tray
-	for sys in el_systems:
+	for el_sys in el_systems:
 		# Only for Power circuits
-		if sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
-			wire_size = sys.WireSizeString
+		if el_sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
+			wire_size = el_sys.WireSizeString
 			# try to get wire size from other parameters. Project specific
 			if not(wire_size):
-				param_list = sys.GetParameters("Cable Description_1")
+				param_list = el_sys.GetParameters("Cable Description_1")
 				wire_size = [i for i in param_list if i.Id == ElementId(8961915)][0]
 				wire_size = wire_size.AsString()
 
@@ -181,16 +175,16 @@ def calc_tray_weight(link):
 	return tray, str(int(round(weight_cables)))
 
 
-def get_wire_crossection(sys):
+def get_wire_crossection(el_sys):
 	"""Get cable cross-section of the system"""
 
 	# Only for Power circuits
-	if sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
+	if el_sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
 		# read system parameter
-		# wire_type = sys.wire_type
-		wire_size = sys.WireSizeString
+		# wire_type = el_sys.wire_type
+		wire_size = el_sys.WireSizeString
 		if not(wire_size):
-			param_list = sys.GetParameters("Cable Description_1")
+			param_list = el_sys.GetParameters("Cable Description_1")
 			wire_size = [i for i in param_list if i.Id == ElementId(8961915)][0]
 			wire_size = wire_size.AsString()
 
@@ -199,7 +193,7 @@ def get_wire_crossection(sys):
 			cab_diameter = get_cable(wire_size)[1]
 		except:
 			raise ValueError(
-				"Cable not in catalogue \n %d" % sys.Id.IntegerValue)
+				"Cable not in catalogue \n %d" % el_sys.Id.IntegerValue)
 		return cab_diameter * cab_diameter
 
 	# for other circuits
@@ -287,8 +281,8 @@ def get_tags(link):
 		"->" + x.LoadName
 		for x in el_systems]
 
-	get_wire = lambda sys: [
-		i for i in sys.GetParameters("Cable Description_1")
+	get_wire = lambda el_sys: [
+		i for i in el_sys.GetParameters("Cable Description_1")
 		if i.Id == ElementId(8961915)][0].AsString()
 
 	# cable_sise = [
@@ -297,13 +291,13 @@ def get_tags(link):
 	# 	for x in el_systems]
 
 	cable_sise = list()
-	for sys in el_systems:
+	for el_sys in el_systems:
 		# for Power circuits
-		if sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
-			if sys.WireSizeString:
-				cable_sise.append(sys.WireSizeString)
+		if el_sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
+			if el_sys.WireSizeString:
+				cable_sise.append(el_sys.WireSizeString)
 			else:
-				cable_sise.append(get_wire(sys))
+				cable_sise.append(get_wire(el_sys))
 
 		# for other circuits
 		else:

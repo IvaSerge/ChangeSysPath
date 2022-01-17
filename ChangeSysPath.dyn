@@ -41,7 +41,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": false,
+      "InputValue": true,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -434,13 +434,13 @@
         "Height": 121.0,
         "FontSize": 36.0,
         "InitialTop": 776.21934989637089,
-        "InitialHeight": 98.0,
+        "InitialHeight": 145.0,
         "TextblockHeight": 43.0,
         "Background": "#FFC1D676"
       }
     ],
-    "X": -499.4425825723165,
-    "Y": -584.57634266248147,
-    "Zoom": 1.0510705624907088
+    "X": -288.87162517052229,
+    "Y": -405.08360014242248,
+    "Zoom": 0.87580869160905728
   }
 }
