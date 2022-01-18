@@ -157,13 +157,5 @@ if calc_all:
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-# OUT = [x.rvt_sys.CircuitNumber for x in list_of_systems if x.rvt_members == "Error"]
-# try:
-# OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].path)
-# except:
-# 	OUT = test_sys.path
-# Cable.create_catalogue()
-# OUT = [x.run_along_trays for x in list_of_systems]
-# OUT = tray_names
 # OUT = list_of_systems[0].run_along_trays
 OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].path)
