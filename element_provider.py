@@ -70,7 +70,7 @@ class ElementProvider():
 			x.LookupParameter("Cable Tray ID").AsString()
 			for x in all_trays
 			if x.LookupParameter("Cable Tray ID").AsString()])
-		
+
 		tray_names = [name for name in tray_names if "IT" in name]
 		return tray_names
 
