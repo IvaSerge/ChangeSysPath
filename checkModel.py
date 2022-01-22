@@ -55,5 +55,5 @@ def checkTrayId(doc, dir_path, el_systems):
 	else:
 		with open(file_out, "w") as f_out:
 			f_out.write("Ok")
-
+		raise ValueError("Errors not found.")
 	return None
