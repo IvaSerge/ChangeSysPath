@@ -161,12 +161,18 @@ def calc_tray_weight(link):
 				wire_size = [i for i in param_list if i.Id == ElementId(8961915)][0]
 				wire_size = wire_size.AsString()
 
+		else:
+			# cables for DATA and
+			wire_size = el_sys.LookupParameter("Cable Type").AsString()
+
+		# try to get wire type
+		try:
 			cab_weight = get_cable(wire_size)[2]
 			weight_cables += cab_weight
-
-		else:
-			# TODO: add cables for DATA and
-			weight_cables = 0
+		except:
+			# raise ValueError("Cable not in catalogue: %s" % wire_size)
+			cab_weight = 0
+			weight_cables += cab_weight
 
 	return tray, str(int(round(weight_cables)))
 
@@ -188,14 +194,20 @@ def get_wire_crossection(el_sys):
 		try:
 			cab_diameter = get_cable(wire_size)[1]
 		except:
-			raise ValueError(
-				"Cable not in catalogue \n %d" % el_sys.Id.IntegerValue)
+			cab_diameter = 0
+			# raise ValueError(
+			# 	"Cable not in catalogue \n %d" % el_sys.Id.IntegerValue)
 		return cab_diameter * cab_diameter
 
 	# for other circuits
 	else:
-		# TODO: add cables for DATA and
-		return 0
+		# cables for DATA and
+		wire_size = el_sys.LookupParameter("Cable Type").AsString()
+		try:
+			cab_diameter = get_cable(wire_size)[1]
+		except:
+			return 0
+		return cab_diameter * cab_diameter
 
 
 def get_tray_size(tray):
