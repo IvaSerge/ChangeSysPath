@@ -143,6 +143,13 @@ for el_system in all_systems:
 
 if calc_all:
 	# clean parameters of all cable trays
+	with SubTransaction(doc) as sub_tr:
+		sub_tr.Start()
+		all_trays = FilteredElementCollector(doc).\
+			OfCategory(BuiltInCategory.OST_CableTray).\
+			WhereElementIsNotElementType()
+		clean_tray_parameters(all_trays)
+		sub_tr.Commit()
 
 	# open file
 	with open(file_database, "r") as f_db:

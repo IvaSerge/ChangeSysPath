@@ -262,11 +262,13 @@ def clean_tray_parameters(tray_list):
 	"""
 		Put \\s symbol to pre-defined parameters
 	"""
-
-	map(lambda x: setup_param_value(x, "MC Object Variable 1", ""), tray_list)
-	map(lambda x: setup_param_value(x, "MC Object Variable 2", ""), tray_list)
-	map(lambda x: setup_param_value(x, "Multi_Tag_1", ""), tray_list)
-	map(lambda x: setup_param_value(x, "Multi_Tag_2", ""), tray_list)
+	try:
+		map(lambda x: setup_param_value(x, "MC Object Variable 1", ""), tray_list)
+		map(lambda x: setup_param_value(x, "MC Object Variable 2", ""), tray_list)
+		map(lambda x: setup_param_value(x, "Multi_Tag_1", ""), tray_list)
+		map(lambda x: setup_param_value(x, "Multi_Tag_2", ""), tray_list)
+	except:
+		pass
 
 
 def get_tags(link):
