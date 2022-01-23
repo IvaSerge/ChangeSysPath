@@ -74,14 +74,16 @@ check_id = IN[3]  # type: ignore
 outlist = list()
 error_list = list()
 
-with open(file_out, "w") as f_out:
-		f_out.write("")
+# # clean files
+# with open(file_out, "w") as f_out:
+# 	f_out.write("")
+
+# with open(file_database, "w") as f_db:
+# 	f_db.write("")
 
 if calc_all:
 	all_systems = ElementProvider.get_all_systems()
-	# clean Database
-	with open(file_database, "w") as f_db:
-		f_db.write("")
+
 else:
 	all_systems = ElementProvider.get_sys_by_selection()
 
@@ -168,9 +170,8 @@ if calc_all:
 			except:
 				with open(file_out, "a") as f_out:
 					tray_weight = 0
-					link.pop()
-					link_text = ", ".join(link)
-					f_out.write("\nWeight not found. Check tray size: " + link_text)
+					tray_id = link[0].Id.ToString()
+					f_out.write("\nWeight not found. Check tray size: " + tray_id)
 
 			tray_fill = calc_tray_filling(link)
 			tray_tag = get_tags(link)
@@ -183,14 +184,4 @@ if calc_all:
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-# OUT = [x.rvt_sys.CircuitNumber for x in list_of_systems if x.rvt_members == "Error"]
-# try:
-# OUT = el_sys.process_list(lambda x: vector.toPoint(x), list_of_systems[0].path)
-# except:
-# 	OUT = test_sys.path
-# Cable.create_catalogue()
-# OUT = [x.run_along_trays for x in list_of_systems]
-# OUT = tray_names
-# OUT = list_of_systems[0].run_along_trays
-# OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
-OUT = all_systems
+OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
