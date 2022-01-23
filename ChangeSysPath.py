@@ -139,10 +139,11 @@ for el_system in all_systems:
 
 	if calc_all:
 		# write result to data baise
-		# clean database
 		write_tray_sys_link(file_database, sys_obj)
 
 if calc_all:
+	# clean parameters of all cable trays
+
 	# open file
 	with open(file_database, "r") as f_db:
 		while True:
@@ -155,8 +156,16 @@ if calc_all:
 				continue
 
 			# calculate parameters
+			try:
+				tray_weight = calc_tray_weight(link)
+			except:
+				with open(file_out, "a") as f_out:
+					tray_weight = 0
+					link.pop()
+					link_text = ", ".join(link)
+					f_out.write("\nWeight not found. Check tray size: " + link_text)
+
 			tray_fill = calc_tray_filling(link)
-			tray_weight = calc_tray_weight(link)
 			tray_tag = get_tags(link)
 
 			# write parameters to tray
