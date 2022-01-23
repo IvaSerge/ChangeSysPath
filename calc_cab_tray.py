@@ -71,10 +71,6 @@ def write_tray_sys_link(file_database, el_system):
 	"""	Writes link info to data base file
 	"""
 
-	# clean database
-	with open(file_database, "w") as f_db:
-					f_db.write("")
-
 	# get all connected cable trays for system
 	if el_system.run_along_trays:
 		tray_ids = [i.Id.ToString() for i in el_system.run_along_trays if i.Category.Id.ToString() == "-2008130"]

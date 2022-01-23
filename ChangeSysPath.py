@@ -74,8 +74,14 @@ check_id = IN[3]  # type: ignore
 outlist = list()
 error_list = list()
 
+with open(file_out, "w") as f_out:
+		f_out.write("")
+
 if calc_all:
 	all_systems = ElementProvider.get_all_systems()
+	# clean Database
+	with open(file_database, "w") as f_db:
+		f_db.write("")
 else:
 	all_systems = ElementProvider.get_sys_by_selection()
 
@@ -92,45 +98,51 @@ for el_system in all_systems:
 	sys_obj = ElSys(el_system.Id, param_reverse)
 	tray_names = ElementProvider.get_tray_names_by_system(el_system)
 
-if tray_names:
-	list_of_nets = list()
-	# system runs along cable tray
-	for name in tray_names:
-		try:
-			list_of_nets.append(TrayNet(name))
-		except:
-			raise ValueError("Tray with ID do not exists\n" + name)
+	if tray_names:
+		list_of_nets = list()
+		# system runs along cable tray
+		for name in tray_names:
+			try:
+				list_of_nets.append(TrayNet(name))
+			except:
+				error_text = "\nTray with ID do not exists: " + name
+				# write errors to file
+				with open(file_out, "a") as f_out:
+					f_out.write(error_text)
+				# raise ValueError("Tray with ID do not exists\n" + name)
 
-else:
-	# system runs not in cable tray
-	list_of_nets = None
+	else:
+		# system runs not in cable tray
+		list_of_nets = None
 
-el_sys.list_of_nets = list_of_nets
-sys_obj.find_trays_run()
+	el_sys.list_of_nets = list_of_nets
+	sys_obj.find_trays_run()
 
-try:
-	sys_obj.create_new_path()
-except:
-	# create error list
-	tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
-	tray_net_str = tray_net_str.AsString()
-	error_list.append(tray_net_str)
-
-path = sys_obj.path
-elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
-	doc, el_system.Id)
-if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
 	try:
-		el_system.SetCircuitPath(path)
-	except Exception as e:
-		e_text = str(e)
-		with open(file_out, "a") as f_out:
-			f_out.write("\n" + el_system.Id.ToString())
+		sys_obj.create_new_path()
+	except:
+		# create error list
+		tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
+		tray_net_str = tray_net_str.AsString()
+		error_list.append(tray_net_str)
+
+	path = sys_obj.path
+	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
+		doc, el_system.Id)
+	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
+		try:
+			el_system.SetCircuitPath(path)
+		except Exception as e:
+			e_text = str(e)
+			with open(file_out, "a") as f_out:
+				f_out.write("\nCheck electrical system: " + el_system.Id.ToString())
+
+	if calc_all:
+		# write result to data baise
+		# clean database
+		write_tray_sys_link(file_database, sys_obj)
 
 if calc_all:
-	# # write result to data baise
-	write_tray_sys_link(file_database, sys_obj)
-
 	# open file
 	with open(file_database, "r") as f_db:
 		while True:
@@ -164,4 +176,5 @@ TransactionManager.Instance.TransactionTaskDone()
 # OUT = [x.run_along_trays for x in list_of_systems]
 # OUT = tray_names
 # OUT = list_of_systems[0].run_along_trays
-OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
+# OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
+OUT = all_systems
