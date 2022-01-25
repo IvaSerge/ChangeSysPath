@@ -27,6 +27,13 @@
       "Type": "boolean",
       "Value": "false",
       "Description": "Selection between a true and false."
+    },
+    {
+      "Id": "c0f09a714564413eb1bddbfbffd132c7",
+      "Name": "CheckId",
+      "Type": "boolean",
+      "Value": "false",
+      "Description": "Selection between a true and false."
     }
   ],
   "Outputs": [],
@@ -97,6 +104,15 @@
           "Id": "0a74d9c6d0ad4388ab711991d9f3d711",
           "Name": "IN[3]",
           "Description": "Input #3",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "1a8cb7b55f1046a1b77d9c01b3734ea0",
+          "Name": "IN[4]",
+          "Description": "Input #4",
           "UsingDefaultValue": false,
           "Level": 2,
           "UseLevels": false,
@@ -235,6 +251,26 @@
       ],
       "Replication": "Disabled",
       "Description": "Selection between a true and false."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
+      "NodeType": "BooleanInputNode",
+      "InputValue": false,
+      "Id": "c0f09a714564413eb1bddbfbffd132c7",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "65b3cbf84d50482c92d3a4e12c4ae0e5",
+          "Name": "",
+          "Description": "Boolean",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Selection between a true and false."
     }
   ],
   "Connectors": [
@@ -272,6 +308,11 @@
       "Start": "61debfda3c524e3fac28050d43c30fa0",
       "End": "0a74d9c6d0ad4388ab711991d9f3d711",
       "Id": "21c23cf876324fb68b2713891886d85a"
+    },
+    {
+      "Start": "65b3cbf84d50482c92d3a4e12c4ae0e5",
+      "End": "1a8cb7b55f1046a1b77d9c01b3734ea0",
+      "Id": "96829fea112146ee88f28ba5ee17dd90"
     }
   ],
   "Dependencies": [],
@@ -288,12 +329,12 @@
     },
     "Camera": {
       "Name": "Background Preview",
-      "EyeX": 49017.01946386401,
-      "EyeY": 24970.721604067941,
-      "EyeZ": -17161.925179968428,
-      "LookX": -7759.6503010098459,
-      "LookY": -21419.225335939827,
-      "LookZ": -7008.7673066459611,
+      "EyeX": -112938.01911330721,
+      "EyeY": 29649.565364270973,
+      "EyeZ": -750687.431069894,
+      "LookX": -7683.6957304427924,
+      "LookY": -21209.565364270973,
+      "LookZ": -6940.1626801060047,
       "UpX": -0.58157908795309854,
       "UpY": 0.62114778027827733,
       "UpZ": -0.52530105607252375
@@ -306,8 +347,8 @@
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 477.89650121609361,
-        "Y": 794.87274580039661
+        "X": 482.261456724405,
+        "Y": 776.21934989637089
       },
       {
         "ShowGeometry": true,
@@ -316,8 +357,8 @@
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 805.69536138672811,
-        "Y": 678.25602839913881
+        "X": 773.63658335731191,
+        "Y": 598.60540088427319
       },
       {
         "ShowGeometry": true,
@@ -356,8 +397,8 @@
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 478.81109896143181,
-        "Y": 884.6915440921897
+        "X": 495.21498940995207,
+        "Y": 898.41462637641348
       },
       {
         "ShowGeometry": true,
@@ -366,30 +407,40 @@
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 483.16176099804136,
-        "Y": 977.83352412378565
+        "X": 491.62319977583104,
+        "Y": 1000.1528270762583
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "CheckId",
+        "Id": "c0f09a714564413eb1bddbfbffd132c7",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 491.69670506896068,
+        "Y": 1090.4175394901085
       }
     ],
     "Annotations": [
       {
-        "Id": "3a1fee46da6c4d41892a622ffac348db",
-        "Title": "Reload",
+        "Id": "d17b37288dee4fe39dbfc6ddfaeb3393",
+        "Title": "Reoad",
         "Nodes": [
           "d4faef3825fc49ce8fedebdcd48067ca"
         ],
-        "Left": 467.89650121609361,
-        "Top": 741.87274580039661,
+        "Left": 472.261456724405,
+        "Top": 723.21934989637089,
         "Width": 155.0,
         "Height": 121.0,
         "FontSize": 36.0,
-        "InitialTop": 794.87274580039661,
-        "InitialHeight": 98.0,
+        "InitialTop": 776.21934989637089,
+        "InitialHeight": 145.0,
         "TextblockHeight": 43.0,
         "Background": "#FFC1D676"
       }
     ],
-    "X": -322.30156303234043,
-    "Y": -423.76836761008929,
-    "Zoom": 0.88070426104973154
+    "X": -34.465385280970509,
+    "Y": -321.82455633056509,
+    "Zoom": 0.74937399501109048
   }
 }

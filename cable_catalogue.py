@@ -4,7 +4,7 @@ import math
 
 cab_lst = list()
 
-# cross-section | D mm | Weight kg/km | R Om/km | L mH/km
+# cross-section | D mm | Weight kg/m | R Om/km | L mH/km
 cab_lst.append(["1-#1.5, 1-#1.5, 1-#1.5", 8.3, 0.12])
 cab_lst.append(["1-#1.5, 1-#1.5 mm, 1-#1.5", 8.3, 0.12])
 cab_lst.append(["1-#2.5, 1-#2.5 mm, 1-#2.5", 9.5, 0.169])
@@ -59,6 +59,8 @@ cab_lst.append(["5 runs of 3-#150, 1-#150 mm, 1-#70", 125.2, 39.95])
 cab_lst.append(["6 runs of 3-#150, 1-#150 mm, 1-#70", 137.2, 47.94])
 cab_lst.append(["7 runs of 3-#150, 1-#150 mm, 1-#70", 148.2, 55.93])
 cab_lst.append(["8 runs of 3-#150, 1-#150 mm, 1-#70", 158.4, 63.92])
+
+cab_lst.append(["LAN 250 (S/FTP)", 6.9, 0.05])
 
 
 def get_cable(section):
