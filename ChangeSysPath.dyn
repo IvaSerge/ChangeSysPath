@@ -41,7 +41,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": true,
+      "InputValue": false,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -271,6 +271,26 @@
       ],
       "Replication": "Disabled",
       "Description": "Selection between a true and false."
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.CodeBlockNodeModel, DynamoCore",
+      "NodeType": "CodeBlockNode",
+      "Code": "false;",
+      "Id": "53e9952cdf6948fcb327fdf1542c1ad7",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "11c8e7d21aa240ddaa85338280940699",
+          "Name": "",
+          "Description": "Value of expression at line 1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Allows for DesignScript code to be authored directly"
     }
   ],
   "Connectors": [
@@ -300,11 +320,6 @@
       "Id": "6c6625a2c4904cb2abd6e4db423d8c32"
     },
     {
-      "Start": "0423f94afde948d1b08ddb1f99d72344",
-      "End": "2d03435a82aa4dbab0989bdd2277ec20",
-      "Id": "784d178ec2be46ea908c1d8de6e81750"
-    },
-    {
       "Start": "61debfda3c524e3fac28050d43c30fa0",
       "End": "0a74d9c6d0ad4388ab711991d9f3d711",
       "Id": "21c23cf876324fb68b2713891886d85a"
@@ -313,6 +328,11 @@
       "Start": "65b3cbf84d50482c92d3a4e12c4ae0e5",
       "End": "1a8cb7b55f1046a1b77d9c01b3734ea0",
       "Id": "96829fea112146ee88f28ba5ee17dd90"
+    },
+    {
+      "Start": "11c8e7d21aa240ddaa85338280940699",
+      "End": "2d03435a82aa4dbab0989bdd2277ec20",
+      "Id": "8389ea84c43f4f52a9550ff9cd33fa75"
     }
   ],
   "Dependencies": [],
@@ -397,8 +417,8 @@
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 495.21498940995207,
-        "Y": 898.41462637641348
+        "X": 482.46932970274315,
+        "Y": 849.29653837402975
       },
       {
         "ShowGeometry": true,
@@ -419,6 +439,16 @@
         "Excluded": false,
         "X": 491.69670506896068,
         "Y": 1090.4175394901085
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Code Block",
+        "Id": "53e9952cdf6948fcb327fdf1542c1ad7",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 532.27433500780444,
+        "Y": 909.85808639100617
       }
     ],
     "Annotations": [
@@ -439,8 +469,8 @@
         "Background": "#FFC1D676"
       }
     ],
-    "X": 24.682483590936958,
-    "Y": -218.04569911421831,
-    "Zoom": 0.60987457570390113
+    "X": -226.16174464233075,
+    "Y": -540.82082005756581,
+    "Zoom": 1.0086833469265057
   }
 }
