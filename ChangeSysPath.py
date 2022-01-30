@@ -165,7 +165,7 @@ if calc_all:
 				continue
 
 			# chxeck if tray is editable
-			tray_id = link[0].Id.ToString()
+			tray_id = link[0].Id
 			elem_status = WorksharingUtils.GetCheckoutStatus(doc, tray_id)
 
 			# calculate parameters
@@ -174,11 +174,11 @@ if calc_all:
 			except:
 				with open(file_out, "a") as f_out:
 					tray_weight = 0
-					f_out.write("\nWeight not found. Check tray size: " + tray_id)
+					f_out.write("\nWeight not found. Check tray size: " + tray_id.ToString())
 
 			if elem_status == CheckoutStatus.OwnedByOtherUser:
 				with open(file_out, "a") as f_out:
-					f_out.write("\nTray not editable: " + tray_id)
+					f_out.write("\nTray not editable: " + tray_id.ToString())
 				continue
 
 			tray_fill = calc_tray_filling(link)
