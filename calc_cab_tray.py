@@ -34,6 +34,10 @@ from tray_catalogue import *
 
 
 def setup_param_value(elem, name, pValue):
+	elem_status = WorksharingUtils.GetCheckoutStatus(doc, elem.Id)
+	if elem_status == CheckoutStatus.OwnedByOtherUser:
+		return None
+
 	# custom parameter
 	param = elem.LookupParameter(name)
 	# check is it a BuiltIn parameter if not found
