@@ -31,7 +31,14 @@ class ElementProvider():
 		# filter out not connected systems
 		all_systems = [sys for sys in not_filtered_systems if sys.BaseEquipment]
 		# data_systems = [sys for sys in all_systems if sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.Data]
-		return all_systems
+
+		# filter out systems with empty "Cable tray Id" and path not Custom
+		path_mode = Autodesk.Revit.DB.Electrical.ElectricalCircuitPathMode.Custom
+		systems_with_Id = [sys for sys in all_systems
+			if sys.LookupParameter("Cable Tray ID").HasValue]
+		systems_without_Id = [sys for sys in all_systems if
+			not(sys.LookupParameter("Cable Tray ID").HasValue) and sys.CircuitPathMode != path_mode]
+		return systems_without_Id + systems_with_Id
 
 	@staticmethod
 	def get_sys_by_selection():
