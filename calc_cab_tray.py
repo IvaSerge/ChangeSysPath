@@ -77,7 +77,7 @@ def write_tray_sys_link(file_database, el_system):
 
 	# get all connected cable trays for system
 	if el_system.run_along_trays:
-		tray_ids = [i.Id.ToString() for i in el_system.run_along_trays if i.Category.Id.ToString() == "-2008130"]
+		tray_ids = set([i.Id.ToString() for i in el_system.run_along_trays if i.Category.Id.ToString() == "-2008130"])
 	else:
 		return None
 
@@ -91,12 +91,16 @@ def write_tray_sys_link(file_database, el_system):
 			if check_list:
 				# if ID found - add circuit ID to the row
 				old_str = check_list[0]
-				new_str = old_str + "," + el_system.rvt_sys.Id.ToString()
-				data = data.replace(old_str, new_str)
+				# dublicates now allowed
+				if el_system.rvt_sys.Id.ToString() not in old_str:
+					new_str = old_str + "," + el_system.rvt_sys.Id.ToString()
+					data = data.replace(old_str, new_str)
 			else:
 				# if Id not - add new row: TrayId, el_sys.Id
 				data = data + "\n" + tray_id + "," + el_system.rvt_sys.Id.ToString()
-
+				f_db.seek(0)
+				f_db.write(data)
+				f_db.truncate()
 		f_db.seek(0)
 		f_db.write(data)
 		f_db.truncate()
