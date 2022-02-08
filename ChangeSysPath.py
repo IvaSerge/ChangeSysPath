@@ -118,7 +118,13 @@ for el_system in all_systems:
 		list_of_nets = None
 
 	el_sys.list_of_nets = list_of_nets
-	sys_obj.find_trays_run()
+	try:
+		sys_obj.find_trays_run()
+	except Exception as e:
+		error_text = e
+		# write errors to file
+		with open(file_out, "a") as f_out:
+			f_out.write(error_text)
 
 	try:
 		sys_obj.create_new_path()
