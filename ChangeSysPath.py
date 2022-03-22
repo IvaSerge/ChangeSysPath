@@ -123,8 +123,13 @@ for el_system in all_systems:
 	except Exception as e:
 		error_text = e
 		# write errors to file
-		with open(file_out, "a") as f_out:
-			f_out.write(error_text)
+		try:
+			with open(file_out, "a") as f_out:
+				f_out.write(error_text)
+		except:
+			error_text = "\nCant write to file. ERROR in system: " + sys_obj.Id.ToString()
+			with open(file_out, "a") as f_out:
+				f_out.write(error_text)
 
 	try:
 		sys_obj.create_new_path()

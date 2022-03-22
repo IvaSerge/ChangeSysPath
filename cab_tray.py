@@ -107,7 +107,7 @@ class TrayNet():
 
 		if len(points) > 2:
 			raise ValueError(
-				"More than 3 connectors found \n check instanse \"%s\"" % instance.Id)
+				"More than 3 connectors found \n check instanse %s" % instance.Id.ToString())
 		return points
 
 	def _get_first_tray(self):
