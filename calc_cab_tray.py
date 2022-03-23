@@ -5,6 +5,7 @@ __email__ = "ivaserge@ukr.net"
 __status__ = "Development"
 
 # ================ system imports
+from os import system
 import sys
 import clr
 import System
@@ -121,8 +122,14 @@ def get_tray_sys_link(doc, link_str):
 
 	link_ids = link_str.split(",")
 	tray = doc.GetElement(ElementId(int(link_ids.pop(0))))
-	systems = [doc.GetElement(ElementId(int(i))) for i in link_ids]
-
+	systems = list()
+	# filtering out not existimg systems
+	for link in link_ids:
+		try:
+			model_elem = doc.GetElement(ElementId(int(link)))
+			systems.append(model_elem)
+		except:
+			pass
 	return tray, systems
 
 
