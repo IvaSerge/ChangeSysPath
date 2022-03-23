@@ -154,6 +154,7 @@ for el_system in all_systems:
 		# write result to data baise
 		write_tray_sys_link(file_database, sys_obj)
 
+# set tray parameters
 if calc_all:
 	# clean parameters of all cable trays
 	with SubTransaction(doc) as sub_tr:
@@ -175,8 +176,13 @@ if calc_all:
 			if not link:
 				continue
 
-			# chxeck if tray is editable
-			tray_id = link[0].Id
+			# check if tray is editable
+			# if tray not exists - continue
+			if link[0]:
+				tray_id = link[0].Id
+			else:
+				continue
+
 			elem_status = WorksharingUtils.GetCheckoutStatus(doc, tray_id)
 
 			if elem_status == CheckoutStatus.OwnedByOtherUser:
