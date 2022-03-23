@@ -192,13 +192,14 @@ if calc_all:
 					f_out.write("\nTray not editable: " + tray_id.ToString())
 				continue
 
-			tray_fill = calc_tray_filling(link)
-			tray_tag = get_tags(link)
+			else:
+				tray_fill = calc_tray_filling(link)
+				tray_tag = get_tags(link)
 
-			# write parameters to tray
-			set_tray_size(tray_fill)
-			set_tray_weight(tray_weight)
-			set_tag(tray_tag)
+				# write parameters to tray
+				set_tray_size(tray_fill)
+				set_tray_weight(tray_weight)
+				set_tag(tray_tag)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
