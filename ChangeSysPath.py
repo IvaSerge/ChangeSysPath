@@ -121,15 +121,17 @@ for el_system in all_systems:
 	try:
 		sys_obj.find_trays_run()
 	except Exception as e:
-		error_text = e
-		# write errors to file
-		try:
+		# check if error is allerady in the file
+		with open(file_out, "r") as post_out:
+			data = post_out.read()
+			check_list = re.findall(str(e), data, flags=DOTALL)
+
+		# if error not in the file - write to file
+		if not(check_list):
+			error_text = "\n" + str(e)
+			# write errors to file
 			with open(file_out, "a") as f_out:
-				f_out.write(error_text)
-		except:
-			error_text = "\nCant write to file. ERROR in system: " + sys_obj.Id.ToString()
-			with open(file_out, "a") as f_out:
-				f_out.write(error_text)
+					f_out.write(error_text)
 
 	try:
 		sys_obj.create_new_path()
