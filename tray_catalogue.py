@@ -64,6 +64,12 @@ class Tray():
 	tray_list.append(["CLM", 500, 60, 2.92])
 	tray_list.append(["CLM", 600, 60, 3.15])
 
+	tray_list.append(["CLH", 200, 80, 12.58])
+	tray_list.append(["CLH", 300, 80, 12.92])
+	tray_list.append(["CLH", 400, 80, 13.26])
+	tray_list.append(["CLH", 500, 80, 13.62])
+	tray_list.append(["CLH", 600, 80, 13.96])
+
 	@staticmethod
 	def get_tray_weight(tray):
 		"""Calculate cable tray weight in kg/m """
