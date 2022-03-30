@@ -72,8 +72,12 @@ class Tray():
 		regexp = re.compile(r"(\w+)")
 		short_type = regexp.match(tray.Name).group(1)
 
-		tray_width = tray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).AsValueString()
-		tray_height = tray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).AsValueString()
+		# width and height from parameter to str
+		regexp = re.compile(r"(\d+)")
+		tray_width_string = tray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).AsValueString()
+		tray_width = regexp.match(tray_width_string).group(1)
+		tray_height_string = tray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).AsValueString()
+		tray_height = regexp.match(tray_height_string).group(1)
 
 		# filter by type, width, height
 		filter_by_type = [x for x in Tray.tray_list if x[0] == short_type]
