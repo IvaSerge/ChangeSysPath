@@ -35,9 +35,12 @@ class ElementProvider():
 		# filter out systems with empty "Cable tray Id" and path not Custom
 		path_mode = Autodesk.Revit.DB.Electrical.ElectricalCircuitPathMode.Custom
 		systems_with_Id = [sys for sys in all_systems
-			if sys.LookupParameter("Cable Tray ID").HasValue]
+			if sys.LookupParameter("Cable Tray ID").HasValue and
+			sys.LookupParameter("Cable Tray ID").AsString() != "NA"]
+
 		systems_without_Id = [sys for sys in all_systems if
 			not(sys.LookupParameter("Cable Tray ID").HasValue) and sys.CircuitPathMode != path_mode]
+
 		return systems_without_Id + systems_with_Id
 
 	@staticmethod
@@ -60,8 +63,15 @@ class ElementProvider():
 			el_sys_list = [
 				x for x in el_sys_list
 				if x.SystemType == Electrical.ElectricalSystemType.PowerCircuit]
+
 		else:
 			el_sys_list = [x for x in sel_obj.MEPModel.ElectricalSystems]
+
+		# filter NA circuit
+		el_sys_list = [
+			x for x in el_sys_list
+			if x.LookupParameter("Cable Tray ID").AsString() != "NA"]
+
 		return el_sys_list
 
 	@staticmethod
