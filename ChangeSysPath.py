@@ -156,6 +156,9 @@ for el_system in all_systems:
 		# write result to data baise
 		write_tray_sys_link(file_database, sys_obj)
 
+# Save results, as next changes could break script run
+doc.Save()
+
 # set tray parameters
 if calc_all:
 	# clean parameters of all cable trays
