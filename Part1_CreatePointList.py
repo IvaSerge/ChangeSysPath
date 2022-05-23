@@ -35,6 +35,7 @@ from RevitServices.Transactions import TransactionManager
 import operator
 from operator import itemgetter, attrgetter
 import itertools
+import time
 
 # ================ local imports
 import el_sys
@@ -103,6 +104,7 @@ with open(file_report, "a") as f_out:
 # Create electrical system objects
 i_sys = 1.0
 for el_system in all_systems:
+	time_start = time.time()
 	report_text = "\n" + el_system.Id.ToString()
 	with open(file_report, "a") as f_out:
 		f_out.write(report_text)
@@ -160,7 +162,9 @@ for el_system in all_systems:
 		write_path(file_points, el_system.Id.ToString(), path)
 
 	current_percentage = str(round(i_sys / SYSTEMS_TOTAL, 2) * 100)
-	report_text = ". Done: " + current_percentage
+	time_end = time.time()
+	time_exec = str(time_end - time_start)
+	report_text = ". Done: " + current_percentage + ", " + "Runtime: " + time_exec
 	i_sys += 1
 	with open(file_report, "a") as f_out:
 		f_out.write(report_text)
