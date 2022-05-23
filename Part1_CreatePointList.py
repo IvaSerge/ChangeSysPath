@@ -91,18 +91,17 @@ with open(file_trays, "w") as f_db:
 with open(file_report, "w") as f_db:
 	f_db.write("")
 
-all_systems = ElementProvider.get_all_systems()[0:19]
+all_systems = ElementProvider.get_all_systems()
 
 # write to report
 SYSTEMS_TOTAL = len(all_systems)
-report_text = "TOTAL systems: " + str(SYSTEMS_TOTAL + 1)
+report_text = "TOTAL systems: " + str(SYSTEMS_TOTAL)
 with open(file_report, "a") as f_out:
 	f_out.write(report_text)
 
 
 # Create electrical system objects
-i_sys = 1.0
-for el_system in all_systems:
+for i_sys, el_system in enumerate(all_systems):
 	report_text = "\n" + el_system.Id.ToString()
 	with open(file_report, "a") as f_out:
 		f_out.write(report_text)
