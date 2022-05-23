@@ -109,6 +109,29 @@ def write_tray_sys_link(file_database, el_system):
 	return tray_ids
 
 
+def write_path(file_database, el_system, path):
+	"""	Writes path info to data base file
+	"""
+
+	out_str = "\n" + el_system
+
+	for xyz_coords in path:
+		x_coord = str(xyz_coords.X)
+		y_coord = str(xyz_coords.Y)
+		z_coord = str(xyz_coords.Z)
+
+		out_str += ", " + x_coord
+		out_str += ", " + y_coord
+		out_str += ", " + z_coord
+
+	# open file for read/wirte.
+	# db structure: TrayId, el_sys.Id[]
+	with open(file_database, "a") as f_db:
+		f_db.write(out_str)
+
+	return out_str
+
+
 def get_tray_sys_link(doc, link_str):
 	"""
 		Find relation cable tray - electrical system.

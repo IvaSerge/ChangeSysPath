@@ -91,7 +91,7 @@ with open(file_trays, "w") as f_db:
 with open(file_report, "w") as f_db:
 	f_db.write("")
 
-all_systems = ElementProvider.get_all_systems()
+all_systems = ElementProvider.get_all_systems()[0:19]
 
 # write to report
 SYSTEMS_TOTAL = len(all_systems)
@@ -101,10 +101,9 @@ with open(file_report, "a") as f_out:
 
 
 # Create electrical system objects
-for i, el_system in enumerate(all_systems):
-	current_percentage = round(i / SYSTEMS_TOTAL * 1000) / 10
-
-	report_text = el_system.Id.ToString() + "Done: " + current_percentage
+i_sys = 1.0
+for el_system in all_systems:
+	report_text = "\n" + el_system.Id.ToString()
 	with open(file_report, "a") as f_out:
 		f_out.write(report_text)
 
@@ -144,28 +143,26 @@ for i, el_system in enumerate(all_systems):
 			with open(file_errors, "a") as f_out:
 					f_out.write(error_text)
 
-# 	try:
-# 		sys_obj.create_new_path()
-# 	except:
-# 		# create error list
-# 		tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
-# 		tray_net_str = tray_net_str.AsString()
-# 		error_list.append(tray_net_str)
+	try:
+		sys_obj.create_new_path()
+	except:
+		# create error list
+		tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
+		tray_net_str = tray_net_str.AsString()
+		error_list.append(tray_net_str)
 
-# 	path = sys_obj.path
-# 	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
-# 		doc, el_system.Id)
-# 	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
-# 		try:
-# 			el_system.SetCircuitPath(path)
-# 		except Exception as e:
-# 			e_text = str(e)
-# 			with open(file_out, "a") as f_out:
-# 				f_out.write("\nCheck electrical system: " + el_system.Id.ToString())
+	path = sys_obj.path
 
-	# if calc_all:
-	# 	# write result to data baise
-	# 	write_tray_sys_link(file_database, sys_obj)
+	# write result to data baise
+	if path:
+		write_tray_sys_link(file_trays, sys_obj)
+		write_path(file_points, el_system.Id.ToString(), path)
+
+	current_percentage = str(round(i_sys / SYSTEMS_TOTAL, 2) * 100)
+	report_text = ". Done: " + current_percentage
+	i_sys += 1
+	with open(file_report, "a") as f_out:
+		f_out.write(report_text)
 
 
-OUT = all_systems
+OUT = path[0].X, path[0].Y, path[0].Z
