@@ -95,13 +95,14 @@ all_systems = ElementProvider.get_all_systems()
 
 # write to report
 SYSTEMS_TOTAL = len(all_systems)
-report_text = "TOTAL systems: " + str(SYSTEMS_TOTAL)
+report_text = "TOTAL systems: " + str(SYSTEMS_TOTAL + 1)
 with open(file_report, "a") as f_out:
 	f_out.write(report_text)
 
 
 # Create electrical system objects
-for i_sys, el_system in enumerate(all_systems):
+i_sys = 1.0
+for el_system in all_systems:
 	report_text = "\n" + el_system.Id.ToString()
 	with open(file_report, "a") as f_out:
 		f_out.write(report_text)
@@ -153,6 +154,7 @@ for i_sys, el_system in enumerate(all_systems):
 	path = sys_obj.path
 
 	# write result to data baise
+
 	if path:
 		write_tray_sys_link(file_trays, sys_obj)
 		write_path(file_points, el_system.Id.ToString(), path)
