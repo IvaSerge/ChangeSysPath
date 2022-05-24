@@ -73,21 +73,18 @@ element_provider.uidoc = uidoc
 
 reload = IN[1]  # type: ignore[reportUndefinedVariable]
 calc_all = True  # type: ignore
-param_reverse = IN[3]  # type: ignore
-check_id = IN[3]  # type: ignore
+param_reverse = False  # type: ignore
 
 outlist = list()
 error_list = list()
 
-continue_exec = False
-
+continue_exec = IN[2]  # type: ignore
 all_systems = ElementProvider.get_all_systems()
 SYSTEMS_TOTAL = len(all_systems)
-report_text = "TOTAL systems: " + str(SYSTEMS_TOTAL + 1)
-with open(file_report, "a") as f_out:
-	f_out.write(report_text)
+
 
 if not continue_exec:
+
 	# clean files
 	with open(file_errors, "w") as f_out:
 		f_out.write("")
@@ -101,17 +98,19 @@ if not continue_exec:
 	with open(file_report, "w") as f_db:
 		f_db.write("")
 
+	report_text = "TOTAL systems: " + str(SYSTEMS_TOTAL + 1)
+	with open(file_report, "a") as f_out:
+		f_out.write(report_text)
+
 	i_sys = 1.0
 
 # TODO
 if continue_exec:
-	pass
-	# do not clean files
-	# filter out systems list
-	# all_systems = [x if i x not in Done list]
-
-	# calculate Done systems
-	# i_sys = 1.0
+	with open(file_report, "r+") as report:
+		data = report.read()
+		check_list = re.findall(r"(\d+)\.\sDone", data, flags=DOTALL)
+		all_systems = [i for i in all_systems if i.Id.ToString() not in check_list]
+		i = len(check_list)
 
 
 # Create electrical system objects
@@ -182,5 +181,4 @@ for el_system in all_systems:
 	with open(file_report, "a") as f_out:
 		f_out.write(report_text)
 
-
-OUT = path[0].X, path[0].Y, path[0].Z
+OUT = all_systems
