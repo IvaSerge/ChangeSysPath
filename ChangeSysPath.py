@@ -67,19 +67,19 @@ element_provider.doc = doc
 element_provider.uidoc = uidoc
 
 reload = IN[1]  # type: ignore[reportUndefinedVariable]
-calc_all = IN[2]  # type: ignore
+calc_all = False  # type: ignore
 param_reverse = IN[3]  # type: ignore
 check_id = IN[3]  # type: ignore
 
 outlist = list()
 error_list = list()
 
-# clean files
-with open(file_out, "w") as f_out:
-	f_out.write("")
+# # clean files
+# with open(file_out, "w") as f_out:
+# 	f_out.write("")
 
-with open(file_database, "w") as f_db:
-	f_db.write("")
+# with open(file_database, "w") as f_db:
+# 	f_db.write("")
 
 if calc_all:
 	all_systems = ElementProvider.get_all_systems()
