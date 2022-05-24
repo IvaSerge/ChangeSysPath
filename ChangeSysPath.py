@@ -67,9 +67,7 @@ element_provider.doc = doc
 element_provider.uidoc = uidoc
 
 reload = IN[1]  # type: ignore[reportUndefinedVariable]
-calc_all = False  # type: ignore
 param_reverse = IN[3]  # type: ignore
-check_id = IN[3]  # type: ignore
 
 outlist = list()
 error_list = list()
@@ -81,16 +79,7 @@ error_list = list()
 # with open(file_database, "w") as f_db:
 # 	f_db.write("")
 
-if calc_all:
-	all_systems = ElementProvider.get_all_systems()
-
-else:
-	all_systems = ElementProvider.get_sys_by_selection()
-
-# before start script - check Id
-if check_id:
-	checkTrayId(doc, dir_path, all_systems)
-
+all_systems = ElementProvider.get_sys_by_selection()
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
@@ -151,10 +140,6 @@ for el_system in all_systems:
 			e_text = str(e)
 			with open(file_out, "a") as f_out:
 				f_out.write("\nCheck electrical system: " + el_system.Id.ToString())
-
-	if calc_all:
-		# write result to data baise
-		write_tray_sys_link(file_database, sys_obj)
 
 
 # =========End transaction
