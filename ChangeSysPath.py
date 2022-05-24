@@ -156,61 +156,6 @@ for el_system in all_systems:
 		# write result to data baise
 		write_tray_sys_link(file_database, sys_obj)
 
-# Save results, as next changes could break script run
-doc.Save()
-
-# set tray parameters
-if calc_all:
-	# clean parameters of all cable trays
-	with SubTransaction(doc) as sub_tr:
-		sub_tr.Start()
-		all_trays = FilteredElementCollector(doc).\
-			OfCategory(BuiltInCategory.OST_CableTray).\
-			WhereElementIsNotElementType()
-		clean_tray_parameters(all_trays)
-		sub_tr.Commit()
-
-	# open file
-	with open(file_database, "r") as f_db:
-		while True:
-			line = f_db.readline()
-			if not line:
-				break
-
-			link = get_tray_sys_link(doc, line)
-			if not link:
-				continue
-
-			# check if tray is editable
-			# if tray not exists - continue
-			if link[0]:
-				tray_id = link[0].Id
-			else:
-				continue
-
-			elem_status = WorksharingUtils.GetCheckoutStatus(doc, tray_id)
-
-			if elem_status == CheckoutStatus.OwnedByOtherUser:
-				with open(file_out, "a") as f_out:
-					f_out.write("\nTray not editable: " + tray_id.ToString())
-				continue
-
-			else:
-				# calculate parameters
-				try:
-					tray_weight = calc_tray_weight(link)
-					set_tray_weight(tray_weight)
-				except:
-					with open(file_out, "a") as f_out:
-						tray_weight = 0
-						f_out.write("\nWeight not found. Check tray size: " + tray_id.ToString())
-
-				tray_fill = calc_tray_filling(link)
-				tray_tag = get_tags(link)
-
-				# write parameters to tray
-				set_tray_size(tray_fill)
-				set_tag(tray_tag)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()

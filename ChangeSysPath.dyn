@@ -16,9 +16,9 @@
     },
     {
       "Id": "7723666bfec34752926ee4c5f0865a37",
-      "Name": "Calculate_all",
+      "Name": "Continue",
       "Type": "boolean",
-      "Value": "false",
+      "Value": "true",
       "Description": "Selection between a true and false."
     },
     {
@@ -40,6 +40,20 @@
       "Name": "String",
       "Type": "string",
       "Value": "Part1_CreatePointList.py",
+      "Description": "Creates a string."
+    },
+    {
+      "Id": "2db7f533fd394b5496a8d937d47292ad",
+      "Name": "String",
+      "Type": "string",
+      "Value": "Part2_ChangeSysPath.py",
+      "Description": "Creates a string."
+    },
+    {
+      "Id": "85c63775bc1841c3ba18d86a75349902",
+      "Name": "String",
+      "Type": "string",
+      "Value": "Part3_CalculateTraysParameters.py",
       "Description": "Creates a string."
     }
   ],
@@ -222,7 +236,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": false,
+      "InputValue": true,
       "Id": "7723666bfec34752926ee4c5f0865a37",
       "Inputs": [],
       "Outputs": [
@@ -280,26 +294,6 @@
       "Description": "Selection between a true and false."
     },
     {
-      "ConcreteType": "Dynamo.Graph.Nodes.CodeBlockNodeModel, DynamoCore",
-      "NodeType": "CodeBlockNode",
-      "Code": "false;",
-      "Id": "53e9952cdf6948fcb327fdf1542c1ad7",
-      "Inputs": [],
-      "Outputs": [
-        {
-          "Id": "11c8e7d21aa240ddaa85338280940699",
-          "Name": "",
-          "Description": "Value of expression at line 1",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        }
-      ],
-      "Replication": "Disabled",
-      "Description": "Allows for DesignScript code to be authored directly"
-    },
-    {
       "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
       "NodeType": "StringInputNode",
       "InputValue": "Part1_CreatePointList.py",
@@ -308,6 +302,46 @@
       "Outputs": [
         {
           "Id": "84091bc0d0194821861806bdfae8dd42",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "NodeType": "StringInputNode",
+      "InputValue": "Part2_ChangeSysPath.py",
+      "Id": "2db7f533fd394b5496a8d937d47292ad",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "783f5d2f1f6e47dfb9a9d69a1b024c1d",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "NodeType": "StringInputNode",
+      "InputValue": "Part3_CalculateTraysParameters.py",
+      "Id": "85c63775bc1841c3ba18d86a75349902",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "60d16f3097604395b8d910dfa9271c78",
           "Name": "",
           "Description": "String",
           "UsingDefaultValue": false,
@@ -342,6 +376,11 @@
       "Id": "0b2c89439aa949fc85924afc091b6d8d"
     },
     {
+      "Start": "0423f94afde948d1b08ddb1f99d72344",
+      "End": "2d03435a82aa4dbab0989bdd2277ec20",
+      "Id": "76a905be96ed44cda0ca239a6917331c"
+    },
+    {
       "Start": "61debfda3c524e3fac28050d43c30fa0",
       "End": "0a74d9c6d0ad4388ab711991d9f3d711",
       "Id": "21c23cf876324fb68b2713891886d85a"
@@ -352,14 +391,9 @@
       "Id": "96829fea112146ee88f28ba5ee17dd90"
     },
     {
-      "Start": "11c8e7d21aa240ddaa85338280940699",
-      "End": "2d03435a82aa4dbab0989bdd2277ec20",
-      "Id": "8389ea84c43f4f52a9550ff9cd33fa75"
-    },
-    {
       "Start": "84091bc0d0194821861806bdfae8dd42",
       "End": "c1793981a2564442b958a5e8fbf8a6a3",
-      "Id": "4435920900284e0ab7e9a1d269d7d276"
+      "Id": "02017c0e3761452fa7c1f219419a89bc"
     }
   ],
   "Dependencies": [],
@@ -394,8 +428,8 @@
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 482.261456724405,
-        "Y": 776.21934989637089
+        "X": 484.62785585492963,
+        "Y": 769.120152504797
       },
       {
         "ShowGeometry": true,
@@ -404,8 +438,8 @@
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 773.63658335731191,
-        "Y": 598.60540088427319
+        "X": 794.37300854284,
+        "Y": 735.46580710875742
       },
       {
         "ShowGeometry": true,
@@ -439,13 +473,13 @@
       },
       {
         "ShowGeometry": true,
-        "Name": "Calculate_all",
+        "Name": "Continue",
         "Id": "7723666bfec34752926ee4c5f0865a37",
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 482.46932970274315,
-        "Y": 849.29653837402975
+        "X": 481.0869013570416,
+        "Y": 857.5911084482409
       },
       {
         "ShowGeometry": true,
@@ -454,8 +488,8 @@
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 491.62319977583104,
-        "Y": 1000.1528270762583
+        "X": 468.12191789889937,
+        "Y": 968.35697512511547
       },
       {
         "ShowGeometry": true,
@@ -464,18 +498,8 @@
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 491.69670506896068,
-        "Y": 1090.4175394901085
-      },
-      {
-        "ShowGeometry": true,
-        "Name": "Code Block",
-        "Id": "53e9952cdf6948fcb327fdf1542c1ad7",
-        "IsSetAsInput": false,
-        "IsSetAsOutput": false,
-        "Excluded": false,
-        "X": 532.27433500780444,
-        "Y": 909.85808639100617
+        "X": 482.01970664904752,
+        "Y": 1062.7689725760711
       },
       {
         "ShowGeometry": true,
@@ -486,6 +510,26 @@
         "Excluded": false,
         "X": -14.740028637997511,
         "Y": 710.935205268018
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "String",
+        "Id": "2db7f533fd394b5496a8d937d47292ad",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": -19.768512319560443,
+        "Y": 799.57693279052273
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "String",
+        "Id": "85c63775bc1841c3ba18d86a75349902",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": -57.446286632663018,
+        "Y": 881.18678939869869
       }
     ],
     "Annotations": [
@@ -495,19 +539,19 @@
         "Nodes": [
           "d4faef3825fc49ce8fedebdcd48067ca"
         ],
-        "Left": 472.261456724405,
-        "Top": 723.21934989637089,
+        "Left": 474.62785585492963,
+        "Top": 716.120152504797,
         "Width": 155.0,
         "Height": 121.0,
         "FontSize": 36.0,
-        "InitialTop": 776.21934989637089,
+        "InitialTop": 769.120152504797,
         "InitialHeight": 145.0,
         "TextblockHeight": 43.0,
         "Background": "#FFC1D676"
       }
     ],
-    "X": 435.83825535766925,
-    "Y": -443.82082005756581,
-    "Zoom": 1.0086833469265057
+    "X": 11.917974319973268,
+    "Y": -591.01879284242671,
+    "Zoom": 0.89159075741013949
   }
 }
