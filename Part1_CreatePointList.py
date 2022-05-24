@@ -110,7 +110,7 @@ if continue_exec:
 		data = report.read()
 		check_list = re.findall(r"(\d+)\.\sDone", data, flags=DOTALL)
 		all_systems = [i for i in all_systems if i.Id.ToString() not in check_list]
-		i = len(check_list)
+		i_sys = float(len(check_list))
 
 
 # Create electrical system objects
