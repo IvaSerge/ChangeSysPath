@@ -79,30 +79,43 @@ check_id = IN[3]  # type: ignore
 outlist = list()
 error_list = list()
 
-# clean files
-with open(file_errors, "w") as f_out:
-	f_out.write("")
-
-with open(file_points, "w") as f_db:
-	f_db.write("")
-
-with open(file_trays, "w") as f_db:
-	f_db.write("")
-
-with open(file_report, "w") as f_db:
-	f_db.write("")
+continue_exec = False
 
 all_systems = ElementProvider.get_all_systems()
-
-# write to report
 SYSTEMS_TOTAL = len(all_systems)
 report_text = "TOTAL systems: " + str(SYSTEMS_TOTAL + 1)
 with open(file_report, "a") as f_out:
 	f_out.write(report_text)
 
+if not continue_exec:
+	# clean files
+	with open(file_errors, "w") as f_out:
+		f_out.write("")
+
+	with open(file_points, "w") as f_db:
+		f_db.write("")
+
+	with open(file_trays, "w") as f_db:
+		f_db.write("")
+
+	with open(file_report, "w") as f_db:
+		f_db.write("")
+
+	i_sys = 1.0
+
+# TODO
+if continue_exec:
+	pass
+	# do not clean files
+	# filter out systems list
+	# all_systems = [x if i x not in Done list]
+
+	# calculate Done systems
+	# i_sys = 1.0
+
 
 # Create electrical system objects
-i_sys = 1.0
+
 for el_system in all_systems:
 	time_start = time.time()
 	report_text = "\n" + el_system.Id.ToString()
