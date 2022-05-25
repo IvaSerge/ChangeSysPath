@@ -7,7 +7,7 @@ import sys
 pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
 sys.path.append(pyt_path)
 dir_path = IN[0].DirectoryName  # type: ignore
-file_in = dir_path + r"\database_points1.csv"
+file_in = dir_path + r"\database_points.csv"
 file_out = dir_path + r"\database_report.csv"
 file_errors = dir_path + r"\database_errorlist.csv"
 sys.path.append(dir_path)
@@ -78,19 +78,27 @@ calc_all = True  # type: ignore
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
-regexp = re.compile(r"(-*\d+\.*\d+e?\D?\d+),|(-*\d+\.*\d+e?\D?\d+)$")
+regexp = re.compile(r"-*\w+\.*\w+-?e?\w*")
 outlist = list()
+
 with open(file_in, "r") as f_in:
 	next(f_in)
+
 	for line in f_in:
-		if len(line) == 0:
+		if len(line) == 0 or not line:
 			continue
 
-		list_total = collections.deque([i[0] if i[0] else i[1] for i in regexp.findall(line)])
+		search_result = regexp.findall(line)
+		list_total = collections.deque([i for i in search_result])
 		el_system_id = int(list_total.popleft())
 		el_system = doc.GetElement(ElementId(el_system_id))
 
+		# check if system exists in model
+		if not el_system:
+			continue
+
 		path = list()
+
 		while list_total:
 			pnt_x = float(list_total.popleft())
 			pnt_y = float(list_total.popleft())
@@ -102,15 +110,18 @@ with open(file_in, "r") as f_in:
 		if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
 				try:
 					el_system.SetCircuitPath(path)
+					outlist.append(el_system)
 				except Exception as e:
 					e_text = str(e)
-					with open(file_errors, "a") as f_out:
-						f_out.write("\nCheck electrical system: " + el_system.Id.ToString())
+					# with open(file_errors, "a") as f_out:
+					# 	f_out.write("\nCheck electrical system: " + el_system.Id.ToString())
+
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-try:
-	OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
-except:
-	OUT = None
+# try:
+# 	OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
+# except:
+# 	OUT = None
+OUT = outlist
