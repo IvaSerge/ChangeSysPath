@@ -163,7 +163,7 @@ def calc_tray_filling(link):
 	tray_size = get_tray_size(tray)
 	tray_cross_section = tray_size[0] * tray_size[1]
 	# get cable size for system
-	cab_cross_section_list = [get_wire_crossection(x) for x in el_systems]
+	cab_cross_section_list = [get_wire_crossection(x) for x in el_systems if x]
 	cab_cross_section_list = [x for x in cab_cross_section_list if x]
 	if cab_cross_section_list:
 		total_cs = sum(cab_cross_section_list)
@@ -323,7 +323,8 @@ def clean_tray_parameters(tray_list):
 
 def get_tags(link):
 	tray = link[0]
-	el_systems = link[1]
+	# filter out empty systems
+	el_systems = [i for i in link[1] if i]
 	# get ElSys info
 	from_to = [x.PanelName +
 		"->" + x.LoadName
