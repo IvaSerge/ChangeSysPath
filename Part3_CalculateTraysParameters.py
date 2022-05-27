@@ -6,8 +6,8 @@ import sys
 pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
 sys.path.append(pyt_path)
 dir_path = IN[0].DirectoryName  # type: ignore
-file_out = dir_path + r"\result.csv"
-file_database = dir_path + r"\database.csv"
+file_out = dir_path + r"\database_errorlist.csv"
+file_database = dir_path + r"\database_trays.csv"
 sys.path.append(dir_path)
 
 import System
@@ -81,19 +81,25 @@ with SubTransaction(doc) as sub_tr:
 	all_trays = FilteredElementCollector(doc).\
 		OfCategory(BuiltInCategory.OST_CableTray).\
 		WhereElementIsNotElementType()
+	all_trays = [i for i in all_trays if
+		WorksharingUtils.GetCheckoutStatus(doc, i.Id) != CheckoutStatus.OwnedByOtherUser]
+
 	clean_tray_parameters(all_trays)
 	sub_tr.Commit()
 
 # open file
 with open(file_database, "r") as f_db:
-	while True:
-		line = f_db.readline()
-		if not line:
-			break
+	for line in f_db:
 
-		link = get_tray_sys_link(doc, line)
+		if len(line) <= 1:
+			continue
+		else:
+			link = get_tray_sys_link(doc, line)
+
 		if not link:
 			continue
+
+		outlist.append(link)
 
 		# check if tray is editable
 		# if tray not exists - continue
@@ -109,24 +115,23 @@ with open(file_database, "r") as f_db:
 				f_out.write("\nTray not editable: " + tray_id.ToString())
 			continue
 
-		else:
-			# calculate parameters
-			try:
-				tray_weight = calc_tray_weight(link)
-				set_tray_weight(tray_weight)
-			except:
-				with open(file_out, "a") as f_out:
-					tray_weight = 0
-					f_out.write("\nWeight not found. Check tray size: " + tray_id.ToString())
+		# calculate parameters
+		try:
+			tray_weight = calc_tray_weight(link)
+			set_tray_weight(tray_weight)
+		except:
+			with open(file_out, "a") as f_out:
+				tray_weight = 0
+				f_out.write("\nWeight not found. Check tray size: " + tray_id.ToString())
 
-			tray_fill = calc_tray_filling(link)
-			tray_tag = get_tags(link)
+		tray_fill = calc_tray_filling(link)
+		tray_tag = get_tags(link)
 
-			# write parameters to tray
-			set_tray_size(tray_fill)
-			set_tag(tray_tag)
+		# # write parameters to tray
+		set_tray_size(tray_fill)
+		set_tag(tray_tag)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-OUT = all_trays
+OUT = outlist
