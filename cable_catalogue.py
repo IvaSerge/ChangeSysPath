@@ -4,7 +4,7 @@ import math
 
 cab_lst = list()
 
-# cross-section | D mm | Weight kg/m | R Om/km | L mH/km
+# cross-section | D mm | Weight kg/m 
 cab_lst.append(["1-#1.5, 1-#1.5, 1-#1.5", 8.3, 0.12])
 cab_lst.append(["1-#1.5, 1-#1.5 mm, 1-#1.5", 8.3, 0.12])
 cab_lst.append(["1-#2.5, 1-#2.5 mm, 1-#2.5", 9.5, 0.169])
@@ -31,27 +31,33 @@ cab_lst.append(["3-#50, 1-#25", 32, 2.12])
 cab_lst.append(["3-#50, 1-#50 mm, 1-#25", 36.1, 2.69])
 cab_lst.append(["3-#70, 1-#35", 36, 2.94])
 cab_lst.append(["3-#70, 1-#70 mm, 1-#35", 40.6, 3.65])
+cab_lst.append(["2 runs of 3-#70, 1-#70", 57.4, 7.3])
 cab_lst.append(["3-#95, 1-#50", 40.5, 3.87])
 cab_lst.append(["3-#95, 1-#95 mm, 1-#50", 46, 5.01])
+
 cab_lst.append(["3x(1x150)", 105, 3.396])
 cab_lst.append(["3x(1x240)", 117, 4.434])
 cab_lst.append(["2x3(1x150)", 210, 6.792])
+
 cab_lst.append(["3-#120, 1-#70", 44, 4.78])
 cab_lst.append(["2 runs of 3-#120, 1-#70", 62.23, 9.56])
 cab_lst.append(["3 runs of 3-#120, 1-#70", 76.21, 14.34])
 cab_lst.append(["4 runs of 3-#120, 1-#70", 88, 19.12])
+
 cab_lst.append(["3-#120, 1-#120 mm, 1-#70", 50, 6.74])
 cab_lst.append(["2 runs of 3-#120, 1-#120 mm, 1-#70", 70.71, 13])
 cab_lst.append(["3 runs of 3-#120, 1-#120 mm, 1-#70", 86.6, 20.22])
 cab_lst.append(["4 runs of 3-#120, 1-#120 mm, 1-#70", 100, 26.96])
 cab_lst.append(["5 runs of 3-#120, 1-#120 mm, 1-#70", 111.8, 33.7])
 cab_lst.append(["6 runs of 3-#120, 1-#120 mm, 1-#70", 122.47, 40.44])
+
 cab_lst.append(["3-#150, 1-#70", 48.5, 5.87])
 cab_lst.append(["2 runs of 3-#150, 1-#70", 68.6, 11.74])
 cab_lst.append(["3 runs of 3-#150, 1-#70", 84.0, 17.61])
 cab_lst.append(["4 runs of 3-#150, 1-#70", 97.0, 23.48])
 cab_lst.append(["5 runs of 3-#150, 1-#70", 108.5, 29.35])
 cab_lst.append(["6 runs of 3-#150, 1-#70", 118.8, 35.22])
+
 cab_lst.append(["3-#150, 1-#150 mm, 1-#70", 56, 7.99])
 cab_lst.append(["2 runs of 3-#150, 1-#150 mm, 1-#70", 79.2, 15.98])
 cab_lst.append(["4 runs of 3-#150, 1-#150 mm, 1-#70", 97, 31.96])
