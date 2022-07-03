@@ -243,7 +243,13 @@ class ElSys():
 			i += 1
 
 		outlist = flatten_list(outlist)
-		self.run_along_trays = process_list(lambda x: doc.GetElement(x), outlist)
+		outlist = process_list(lambda x: doc.GetElement(x), outlist)
+
+		# remove last element, if it is fitting
+		if outlist[-1].Category.Id.IntegerValue == -2008126:
+			outlist.pop()
+
+		self.run_along_trays = outlist
 
 	@staticmethod
 	def get_alt_foot_point(point_A, point_B, point_C):
@@ -435,7 +441,7 @@ class ElSys():
 	def create_new_path(self):
 		# check if trays in parameter exist
 		net_names_in_param = self._get_rout_names()
-		tray_path = None
+		# tray_path = None
 		if net_names_in_param:
 			net_names = [x.name for x in self.list_of_nets]  # type: ignore
 			for name in net_names_in_param:
