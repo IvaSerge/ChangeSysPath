@@ -79,7 +79,7 @@ class ElSys():
 		self.path = None
 		self.wire_type = self.rvt_sys.get_Parameter(
 			BuiltInParameter.RBS_ELEC_CIRCUIT_WIRE_TYPE_PARAM).AsValueString()
-		# self.wire_size = self.rvt_sys.LookupParameter("E_CableSize").AsString()
+		self.list_of_nets = None
 
 	def sort_by_distance(self, _unsorted):
 		"""Sort families by nearest distance
@@ -207,7 +207,7 @@ class ElSys():
 			self.run_along_trays = None
 			return None
 		for rout in rout_names:
-			for net in list_of_nets:  # type: ignore
+			for net in self.list_of_nets:  # type: ignore
 				if net.name == rout:
 					el_sys_nets.append(net)
 
@@ -437,7 +437,7 @@ class ElSys():
 		net_names_in_param = self._get_rout_names()
 		tray_path = None
 		if net_names_in_param:
-			net_names = [x.name for x in list_of_nets]  # type: ignore
+			net_names = [x.name for x in self.list_of_nets]  # type: ignore
 			for name in net_names_in_param:
 				if name not in net_names:
 					raise ValueError(

@@ -104,7 +104,6 @@ if not continue_exec:
 
 	i_sys = 1.0
 
-# TODO
 if continue_exec:
 	with open(file_report, "r+") as report:
 		data = report.read()
@@ -114,7 +113,6 @@ if continue_exec:
 
 
 # Create electrical system objects
-
 for el_system in all_systems:
 	time_start = time.time()
 	report_text = "\n" + el_system.Id.ToString()
@@ -152,7 +150,7 @@ for el_system in all_systems:
 		# system runs not in cable tray
 		list_of_nets = None
 
-	el_sys.list_of_nets = list_of_nets
+	sys_obj.list_of_nets = list_of_nets
 	try:
 		sys_obj.find_trays_run()
 	except Exception as e:
