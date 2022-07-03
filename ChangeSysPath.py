@@ -72,13 +72,6 @@ param_reverse = IN[3]  # type: ignore
 outlist = list()
 error_list = list()
 
-# # clean files
-# with open(file_out, "w") as f_out:
-# 	f_out.write("")
-
-# with open(file_database, "w") as f_db:
-# 	f_db.write("")
-
 all_systems = ElementProvider.get_sys_by_selection()
 
 # =========Start transaction
@@ -97,9 +90,6 @@ for el_system in all_systems:
 				list_of_nets.append(TrayNet(name))
 			except:
 				error_text = "\nTray with ID do not exists: " + name
-				# write errors to file
-				# with open(file_out, "a") as f_out:
-				# 	f_out.write(error_text)
 				raise ValueError("Tray with ID do not exists\n" + name)
 
 	else:
@@ -110,18 +100,6 @@ for el_system in all_systems:
 	try:
 		sys_obj.find_trays_run()
 	except Exception as e:
-		# check if error is allerady in the file
-		# with open(file_out, "r") as post_out:
-		# 	data = post_out.read()
-		# 	check_list = re.findall(str(e), data, flags=DOTALL)
-
-		# if error not in the file - write to file
-		# if not(check_list):
-		# 	error_text = "\n" + str(e)
-			# # write errors to file
-			# with open(file_out, "a") as f_out:
-			# 		f_out.write(error_text)
-
 		error_text = "\n" + str(e)
 		raise ValueError(error_text)
 
