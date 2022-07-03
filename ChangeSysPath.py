@@ -119,8 +119,8 @@ if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
 		el_system.SetCircuitPath(path)
 	except Exception as e:
 		e_text = str(e)
-		with open(file_out, "a") as f_out:
-			f_out.write("\nCheck electrical system: " + el_system.Id.ToString())
+		error_text = ("Check electrical system: " + el_system.Id.ToString())
+		raise ValueError(error_text)
 
 
 # =========End transaction
