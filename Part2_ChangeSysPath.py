@@ -113,15 +113,9 @@ with open(file_in, "r") as f_in:
 					outlist.append(el_system)
 				except Exception as e:
 					e_text = str(e)
-					# with open(file_errors, "a") as f_out:
-					# 	f_out.write("\nCheck electrical system: " + el_system.Id.ToString())
 
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
-# try:
-# 	OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
-# except:
-# 	OUT = None
 OUT = outlist
