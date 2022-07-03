@@ -6,8 +6,6 @@ import sys
 pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
 sys.path.append(pyt_path)
 dir_path = IN[0].DirectoryName  # type: ignore
-file_out = dir_path + r"\result.csv"
-file_database = dir_path + r"\database.csv"
 sys.path.append(dir_path)
 
 import System

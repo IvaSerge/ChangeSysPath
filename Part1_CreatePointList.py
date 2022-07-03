@@ -137,7 +137,7 @@ for el_system in all_systems:
 						line = f_in.readline()
 						if not line:
 							break
-						if error_text in line:
+						if name in line:
 							error_in_file = True
 							break
 
