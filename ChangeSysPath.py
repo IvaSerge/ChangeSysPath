@@ -96,7 +96,7 @@ for el_system in all_systems:
 		# system runs not in cable tray
 		list_of_nets = None
 
-	el_sys.list_of_nets = list_of_nets
+	sys_obj.list_of_nets = list_of_nets
 	try:
 		sys_obj.find_trays_run()
 	except Exception as e:
