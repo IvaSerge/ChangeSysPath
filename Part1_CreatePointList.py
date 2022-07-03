@@ -132,10 +132,21 @@ for el_system in all_systems:
 				list_of_nets.append(TrayNet(name))
 			except:
 				error_text = "\nTray with ID do not exists: " + name
-				# write errors to file
-				with open(file_errors, "a") as f_out:
-					f_out.write(error_text)
-				# raise ValueError("Tray with ID do not exists\n" + name)
+				# find error in file
+				error_in_file = False
+				with open(file_errors, "r") as f_in:
+					while True:
+						line = f_in.readline()
+						if not line:
+							break
+						if error_text in line:
+							error_in_file = True
+							break
+
+				if not error_in_file:
+					# write errors to file
+					with open(file_errors, "a") as f_out:
+						f_out.write(error_text)
 
 	else:
 		# system runs not in cable tray
