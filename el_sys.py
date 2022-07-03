@@ -246,7 +246,7 @@ class ElSys():
 		outlist = process_list(lambda x: doc.GetElement(x), outlist)
 
 		# remove last element, if it is fitting
-		if all(outlist, len(outlist) > 1, outlist[-1].Category.Id.IntegerValue == -2008126):
+		if all([outlist, len(outlist) > 1, outlist[-1].Category.Id.IntegerValue == -2008126]):
 			outlist.pop()
 
 		self.run_along_trays = outlist
