@@ -228,7 +228,7 @@ class TrayNet():
 		next_instances = next_net.instances
 
 		min_dist = 1000000
-		# not very optimiset all-to-all distances comparasion
+		# not very optimal all-to-all distances comparasion
 		for c_inst in current_instances:
 			for n_inst in next_instances:
 				distance = TrayNet.get_shortest_distance(c_inst, n_inst)
