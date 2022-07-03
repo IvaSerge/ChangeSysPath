@@ -73,54 +73,54 @@ outlist = list()
 error_list = list()
 
 all_systems = ElementProvider.get_sys_by_selection()
+el_system = all_systems[0]
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
 
 # Create electrical system objects
-for el_system in all_systems:
-	sys_obj = ElSys(el_system.Id, param_reverse)
-	tray_names = ElementProvider.get_tray_names_by_system(el_system)
+sys_obj = ElSys(el_system.Id, param_reverse)
+tray_names = ElementProvider.get_tray_names_by_system(el_system)
 
-	if tray_names:
-		list_of_nets = list()
-		# system runs along cable tray
-		for name in tray_names:
-			try:
-				list_of_nets.append(TrayNet(name))
-			except:
-				error_text = "\nTray with ID do not exists: " + name
-				raise ValueError("Tray with ID do not exists\n" + name)
-
-	else:
-		# system runs not in cable tray
-		list_of_nets = None
-
-	sys_obj.list_of_nets = list_of_nets
-	try:
-		sys_obj.find_trays_run()
-	except Exception as e:
-		error_text = "\n" + str(e)
-		raise ValueError(error_text)
-
-	try:
-		sys_obj.create_new_path()
-	except:
-		# create error list
-		tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
-		tray_net_str = tray_net_str.AsString()
-		error_list.append(tray_net_str)
-
-	path = sys_obj.path
-	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
-		doc, el_system.Id)
-	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
+if tray_names:
+	list_of_nets = list()
+	# system runs along cable tray
+	for name in tray_names:
 		try:
-			el_system.SetCircuitPath(path)
-		except Exception as e:
-			e_text = str(e)
-			with open(file_out, "a") as f_out:
-				f_out.write("\nCheck electrical system: " + el_system.Id.ToString())
+			list_of_nets.append(TrayNet(name))
+		except:
+			error_text = "\nTray with ID do not exists: " + name
+			raise ValueError("Tray with ID do not exists\n" + name)
+
+else:
+	# system runs not in cable tray
+	list_of_nets = None
+
+sys_obj.list_of_nets = list_of_nets
+try:
+	sys_obj.find_trays_run()
+except Exception as e:
+	error_text = "\n" + str(e)
+	raise ValueError(error_text)
+
+try:
+	sys_obj.create_new_path()
+except:
+	# create error list
+	tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
+	tray_net_str = tray_net_str.AsString()
+	error_list.append(tray_net_str)
+
+path = sys_obj.path
+elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
+	doc, el_system.Id)
+if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
+	try:
+		el_system.SetCircuitPath(path)
+	except Exception as e:
+		e_text = str(e)
+		with open(file_out, "a") as f_out:
+			f_out.write("\nCheck electrical system: " + el_system.Id.ToString())
 
 
 # =========End transaction
