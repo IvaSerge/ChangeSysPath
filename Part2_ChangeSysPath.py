@@ -105,9 +105,10 @@ with open(file_in, "r") as f_in:
 			pnt_z = float(list_total.popleft())
 			path.append(XYZ(pnt_x, pnt_y, pnt_z))
 
+		disable_path_change = el_system.LookupParameter("Disable_change_ of_ path").AsInteger()
 		elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
 			doc, el_system.Id)
-		if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
+		if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser and disable_path_change != 0:
 				try:
 					el_system.SetCircuitPath(path)
 					outlist.append(el_system)
