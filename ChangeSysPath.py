@@ -114,7 +114,7 @@ disable_path_change = el_system.LookupParameter("Disable_change_ of_ path").AsIn
 
 elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
 	doc, el_system.Id)
-if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser and disable_path_change == 0:
+if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
 	try:
 		el_system.SetCircuitPath(path)
 	except Exception as e:
