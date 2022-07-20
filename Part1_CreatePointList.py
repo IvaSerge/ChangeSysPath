@@ -189,5 +189,9 @@ for el_system in all_systems:
 	i_sys += 1
 	with open(file_report, "a") as f_out:
 		f_out.write(report_text)
+	
+	# stop execution on overtime
+	if time_exec > 5.0:
+		raise ValueError(report_text)
 
 OUT = all_systems
