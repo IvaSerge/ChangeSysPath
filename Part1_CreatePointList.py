@@ -1,4 +1,6 @@
 # ================ system imports
+from tokenize import Double
+from winsound import Beep
 import clr
 
 import sys
@@ -17,6 +19,7 @@ sys.path.append(dir_path)
 import System
 from System import Array
 from System.Collections.Generic import *
+from System import Console
 
 # ================ Revit imports
 clr.AddReference('RevitAPIUI')
@@ -191,7 +194,8 @@ for el_system in all_systems:
 		f_out.write(report_text)
 
 	# stop execution on overtime
-	if time_exec > 5.0:
+	if float(time_exec) > 5.0:
+		Console.Beep()
 		raise ValueError(report_text)
 
 OUT = all_systems
