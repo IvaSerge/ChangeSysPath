@@ -114,7 +114,7 @@ class ElementProvider():
 		# check if selection is electrical board
 		# OST_ElectricalEquipment.Id == -2001040
 		return sel_obj
-	
+
 	@staticmethod
 	def get_trays_by_id(_cabletray_ID):
 		"""
