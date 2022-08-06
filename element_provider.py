@@ -89,7 +89,7 @@ class ElementProvider():
 			for x in all_trays
 			if x.LookupParameter("Cable Tray ID").AsString()])
 
-		tray_names = [name for name in tray_names if "IT" in name]
+		# tray_names = [name for name in tray_names if "IT" in name]
 		return tray_names
 
 	@staticmethod
@@ -114,6 +114,31 @@ class ElementProvider():
 		# check if selection is electrical board
 		# OST_ElectricalEquipment.Id == -2001040
 		return sel_obj
+	
+	@staticmethod
+	def get_trays_by_id(_cabletray_ID):
+		"""
+		Get trays in model by "Cable Tray ID" parameter
+		"""
+		# get "Cable Tray ID" parameter ID
+		first_tray = FilteredElementCollector(doc).\
+			OfCategory(BuiltInCategory.OST_CableTray).\
+			WhereElementIsNotElementType().\
+			FirstElement()
+
+		param_id = first_tray.LookupParameter("Cable Tray ID").Id
+
+		fnrvStr = FilterStringEquals()
+		pvp = ParameterValueProvider(param_id)
+		frule = FilterStringRule(pvp, fnrvStr, _cabletray_ID, True)
+		filter = ElementParameterFilter(frule)
+		elem = FilteredElementCollector(doc).\
+			OfCategory(BuiltInCategory.OST_CableTray).\
+			WhereElementIsNotElementType().\
+			WherePasses(filter).\
+			ToElements()
+
+		return elem
 
 
 global doc
