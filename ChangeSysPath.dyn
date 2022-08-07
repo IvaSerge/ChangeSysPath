@@ -55,6 +55,13 @@
       "Type": "string",
       "Value": "Part3_CalculateTraysParameters.py",
       "Description": "Creates a string."
+    },
+    {
+      "Id": "b18c6ffba1b043f29f8c6de0ebf3730d",
+      "Name": "String",
+      "Type": "string",
+      "Value": "Part4_CheckHealth.py",
+      "Description": "Creates a string."
     }
   ],
   "Outputs": [],
@@ -352,6 +359,26 @@
       ],
       "Replication": "Disabled",
       "Description": "Creates a string."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "NodeType": "StringInputNode",
+      "InputValue": "Part4_CheckHealth.py",
+      "Id": "b18c6ffba1b043f29f8c6de0ebf3730d",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "8e5ada65d7604dbd8653ae7a91dc78a8",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string."
     }
   ],
   "Connectors": [
@@ -404,7 +431,7 @@
       "ScaleFactor": 10000.0,
       "HasRunWithoutCrash": true,
       "IsVisibleInDynamoLibrary": true,
-      "Version": "2.3.0.5885",
+      "Version": "2.3.2.15696",
       "RunType": "Manual",
       "RunPeriod": "1000"
     },
@@ -528,8 +555,18 @@
         "IsSetAsInput": true,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": -57.446286632663018,
+        "X": -57.446286632663032,
         "Y": 881.18678939869869
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "String",
+        "Id": "b18c6ffba1b043f29f8c6de0ebf3730d",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 2.1833775158492017,
+        "Y": 987.87553496165015
       }
     ],
     "Annotations": [
@@ -550,8 +587,8 @@
         "Background": "#FFC1D676"
       }
     ],
-    "X": 88.069404553460231,
-    "Y": -425.17993481343365,
+    "X": 119.06940455346023,
+    "Y": -544.17993481343365,
     "Zoom": 1.0035904826517836
   }
 }

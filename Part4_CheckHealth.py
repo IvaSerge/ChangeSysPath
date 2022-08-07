@@ -79,29 +79,30 @@ calc_all = True  # type: ignore
 param_reverse = False  # type: ignore
 
 # get all cable trays with not empty "Cable tray ID"
-tray_net_ids = ElementProvider.get_all_tray_names()
+net_names = ElementProvider.get_all_tray_names()
 
 
-# for every tray-net
-# tray_id = [i for i in tray_net_ids][0]
-# get net_instances
-net_name = "T.LV1F.151"
-tray_net = TrayNet(net_name)
-inst_in_net = tray_net.instances
-inst_in_net_IDs = [i.Id for i in inst_in_net]
+for net_name in net_names:
+	tray_net = TrayNet(net_name)
+	inst_in_net = tray_net.instances
+	inst_in_net_IDs = [i.Id for i in inst_in_net]
 
+	# check if there dublicates of the systems
+	inst_in_model = ElementProvider.get_trays_by_id(net_name)
+	for inst in inst_in_model:
+		if inst.Id not in inst_in_net_IDs:
+			error_text = "\nDuplicate of net found: " + net_name
+			with open(file_errors, "a") as f_out:
+							f_out.write(error_text)
+			break
 
-# check if there dublicates of the systems
-inst_in_model = ElementProvider.get_trays_by_id(net_name)
-for inst in inst_in_model:
-	if inst.Id not in inst_in_net_IDs:
-		# if instance not in net_instance - report an Error.
-		error_text = "\nDuplicate of net found: " + net_name
+	# check if one net system contains elements with other tray IDs
+	inst_net_ids = [i.LookupParameter("Cable Tray ID").AsString() for i in inst_in_net]
+	inst_net_ids = set(inst_net_ids)
+	inst_net_ids = [i for i in inst_net_ids if i]
+	if len(inst_net_ids) != 1:
+		error_text = "\nNet has multy names: " + net_name
 		with open(file_errors, "a") as f_out:
-						f_out.write(error_text)
-		break
+			f_out.write(error_text)
 
-# check if one net system contains elements with other tray IDs
-
-
-OUT = inst_in_model
+OUT = inst_net_ids
