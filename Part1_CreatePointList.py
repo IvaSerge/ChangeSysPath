@@ -194,7 +194,7 @@ for el_system in all_systems:
 		f_out.write(report_text)
 
 	# stop execution on overtime
-	if float(time_exec) > 5.0:
+	if float(time_exec) > 20.0:
 		Console.Beep()
 		raise ValueError(report_text)
 
