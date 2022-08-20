@@ -144,7 +144,11 @@ def get_tray_sys_link(doc, link_str):
 		return None
 
 	link_ids = link_str.split(",")
-	tray = doc.GetElement(ElementId(int(link_ids.pop(0))))
+	# check if tray in the model
+	try:
+		tray = doc.GetElement(ElementId(int(link_ids.pop(0))))
+	except:
+		return None
 	systems = list()
 	# filtering out not existimg systems
 	for link in link_ids:
