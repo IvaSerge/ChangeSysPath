@@ -18,6 +18,85 @@ from Autodesk.Revit.DB import *
 class ElementProvider():
 
 	@staticmethod
+	def inst_by_cat_strparamvalue(_bic, _bip, _val, _isType):
+		"""Get all family instances by category and parameter value
+
+			args:
+			_bic: BuiltInCategory.OST_xxx
+			_bip: BuiltInParameter
+			_val: Parameter value
+			_isType: is Type or Instance
+
+			return:
+			list()[Autodesk.Revit.DB.FamilySymbol]
+		"""
+		if _isType:
+			fnrvStr = FilterStringEquals()
+			pvp = ParameterValueProvider(ElementId(int(_bip)))
+			frule = FilterStringRule(pvp, fnrvStr, _val, False)
+			filter = ElementParameterFilter(frule)
+			elem = FilteredElementCollector(doc).\
+				OfCategory(_bic).\
+				WhereElementIsElementType().\
+				WherePasses(filter).\
+				ToElements()
+		else:
+			fnrvStr = FilterStringEquals()
+			pvp = ParameterValueProvider(ElementId(int(_bip)))
+			frule = FilterStringRule(pvp, fnrvStr, _val, False)
+			filter = ElementParameterFilter(frule)
+			elem = FilteredElementCollector(doc).\
+				OfCategory(_bic).\
+				WhereElementIsNotElementType().\
+				WherePasses(filter).\
+				ToElements()
+		return elem
+
+	@staticmethod
+	def get_parval(elem, name):
+		# type: (FamilyInstance, str) -> any
+		"""Get parametr value
+
+		args:
+			elem - family instance or type
+			name - parameter name
+		return:
+			value - parameter value
+		"""
+
+		value = None
+		# custom parameter
+		param = elem.LookupParameter(name)
+		# check is it a BuiltIn parameter if not found
+		if not(param):
+			param = elem.get_Parameter(ElementProvider.get_bip(name))
+
+		# get paremeter Value if found
+		try:
+			storeType = param.StorageType
+			# value = storeType
+			if storeType == StorageType.String:
+				value = param.AsString()
+			elif storeType == StorageType.Integer:
+				value = param.AsDouble()
+			elif storeType == StorageType.Double:
+				value = param.AsDouble()
+			elif storeType == StorageType.ElementId:
+				value = param.AsValueString()
+		except:
+			pass
+		return value
+
+	@staticmethod
+	def get_bip(paramName):
+		builtInParams = System.Enum.GetValues(BuiltInParameter)
+		param = []
+		for i in builtInParams:
+			if i.ToString() == paramName:
+				param.append(i)
+				return i
+
+	@staticmethod
 	def get_all_systems():
 		"""
 		Get all systems, that connected to electrical boards
@@ -43,6 +122,35 @@ class ElementProvider():
 
 		# return systems_without_Id + systems_with_Id
 		return systems_with_Id
+
+	@staticmethod
+	def elsys_by_brd(_brd):
+		# type: (FamilyInstance) -> list
+		"""Get all systems of electrical board.
+
+			args:
+			_brd - electrical board FamilyInstance
+
+			return list(0, 1) where:
+			0 - main electrical circuit
+			1 - list of connectet low circuits
+		"""
+		allsys = _brd.MEPModel.ElectricalSystems
+		lowsys = _brd.MEPModel.AssignedElectricalSystems
+		if lowsys:
+			lowsysId = [i.Id for i in lowsys]
+			mainboardsysLst = [i for i in allsys if i.Id not in lowsysId]
+			if len(mainboardsysLst) == 0:
+				mainboardsys = None
+			else:
+				mainboardsys = mainboardsysLst[0]
+			lowsys = [i for i in allsys if i.Id in lowsysId]
+			# TODO: Check sorting of circuits
+			# lowsys.sort(key=lambda x: float(
+			# 	ElementProvider.get_parval(x, "RBS_ELEC_CIRCUIT_NUMBER")))
+			return mainboardsys, lowsys
+		else:
+			return [i for i in allsys][0], None
 
 	@staticmethod
 	def get_sys_by_selection():
