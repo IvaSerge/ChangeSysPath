@@ -29,13 +29,6 @@
       "Description": "Selection between a true and false."
     },
     {
-      "Id": "c0f09a714564413eb1bddbfbffd132c7",
-      "Name": "CheckId",
-      "Type": "boolean",
-      "Value": "false",
-      "Description": "Selection between a true and false."
-    },
-    {
       "Id": "e8ce4643bc2b470bb5b807daac261533",
       "Name": "String",
       "Type": "string",
@@ -281,26 +274,6 @@
       "Description": "Selection between a true and false."
     },
     {
-      "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
-      "NodeType": "BooleanInputNode",
-      "InputValue": false,
-      "Id": "c0f09a714564413eb1bddbfbffd132c7",
-      "Inputs": [],
-      "Outputs": [
-        {
-          "Id": "65b3cbf84d50482c92d3a4e12c4ae0e5",
-          "Name": "",
-          "Description": "Boolean",
-          "UsingDefaultValue": false,
-          "Level": 2,
-          "UseLevels": false,
-          "KeepListStructure": false
-        }
-      ],
-      "Replication": "Disabled",
-      "Description": "Selection between a true and false."
-    },
-    {
       "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
       "NodeType": "StringInputNode",
       "InputValue": "Part1_CreatePointList.py",
@@ -379,6 +352,25 @@
       ],
       "Replication": "Disabled",
       "Description": "Creates a string."
+    },
+    {
+      "ConcreteType": "Dynamo.Nodes.DSModelElementSelection, DSRevitNodesUI",
+      "NodeType": "ExtensionNode",
+      "InstanceId": [],
+      "Id": "ee86f1a4e1354909b0dd05ed182a2dcd",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "da2e3d1b8d784abaa90bdee0fb7dd6fc",
+          "Name": "Element",
+          "Description": "The selected elements.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled"
     }
   ],
   "Connectors": [
@@ -418,9 +410,9 @@
       "Id": "21c23cf876324fb68b2713891886d85a"
     },
     {
-      "Start": "65b3cbf84d50482c92d3a4e12c4ae0e5",
+      "Start": "da2e3d1b8d784abaa90bdee0fb7dd6fc",
       "End": "1a8cb7b55f1046a1b77d9c01b3734ea0",
-      "Id": "96829fea112146ee88f28ba5ee17dd90"
+      "Id": "8997e3aa2c16464caa2016a9eda0c45d"
     }
   ],
   "Dependencies": [],
@@ -520,16 +512,6 @@
       },
       {
         "ShowGeometry": true,
-        "Name": "CheckId",
-        "Id": "c0f09a714564413eb1bddbfbffd132c7",
-        "IsSetAsInput": true,
-        "IsSetAsOutput": false,
-        "Excluded": false,
-        "X": 482.01970664904752,
-        "Y": 1062.7689725760711
-      },
-      {
-        "ShowGeometry": true,
         "Name": "String",
         "Id": "e8ce4643bc2b470bb5b807daac261533",
         "IsSetAsInput": true,
@@ -567,6 +549,16 @@
         "Excluded": false,
         "X": 2.1833775158492017,
         "Y": 987.87553496165015
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Select Model Element",
+        "Id": "ee86f1a4e1354909b0dd05ed182a2dcd",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 441.74614280214905,
+        "Y": 1097.4942986822743
       }
     ],
     "Annotations": [
@@ -587,8 +579,8 @@
         "Background": "#FFC1D676"
       }
     ],
-    "X": 119.06940455346023,
-    "Y": -544.17993481343365,
-    "Zoom": 1.0035904826517836
+    "X": 114.41237471902548,
+    "Y": -64.706068033016322,
+    "Zoom": 0.44486375316614429
   }
 }
