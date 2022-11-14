@@ -158,6 +158,7 @@ for el_system in all_systems:
 		sys_obj.find_trays_run()
 	except Exception as e:
 		# check if the error is allerady in the file
+		error_text = "\n" + "Check system:" + sys_obj.Id.ToString() + ", Error: " + str(e)
 		with open(file_errors, "r") as post_out:
 			data = post_out.read()
 			check_list = re.findall(str(e), data, flags=DOTALL)
