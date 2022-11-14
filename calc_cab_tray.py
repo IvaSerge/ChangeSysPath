@@ -350,7 +350,12 @@ def get_tags(link):
 			if el_sys.WireSizeString:
 				cable_sise.append(el_sys.WireSizeString)
 			else:
-				cable_sise.append(get_wire(el_sys))
+				# check if cab_size not None
+				cab_size = get_wire(el_sys)
+				if cab_size:
+					cable_sise.append(cab_size)
+				else:
+					cable_sise.append("")
 
 		# for other circuits
 		else:
