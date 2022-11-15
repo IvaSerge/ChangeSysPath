@@ -105,4 +105,7 @@ for net_name in net_names:
 		with open(file_errors, "a") as f_out:
 			f_out.write(error_text)
 
+# sort data in result file
+sortData(file_errors)
+
 OUT = inst_net_ids

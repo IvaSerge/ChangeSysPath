@@ -57,3 +57,12 @@ def checkTrayId(doc, dir_path, el_systems):
 			f_out.write("Ok")
 		raise ValueError("Errors not found.")
 	return None
+
+
+def sortData(filename):
+	with open(filename, "r") as datafile:
+		data = datafile.readlines()
+		data.sort()
+
+	with open(filename, "w") as datafile:
+		datafile.write(''.join(data))

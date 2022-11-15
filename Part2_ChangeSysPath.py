@@ -119,4 +119,7 @@ with open(file_in, "r") as f_in:
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()
 
+# sort error file after execution
+sortData(file_errors)
+
 OUT = outlist
