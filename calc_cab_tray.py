@@ -167,7 +167,8 @@ def calc_tray_filling(link):
 	tray_size = get_tray_size(tray)
 	tray_cross_section = tray_size[0] * tray_size[1]
 	# get cable size for system
-	cab_cross_section_list = [get_wire_crossection(x) for x in el_systems if x]
+	cab_cross_section_list = [get_wire_crossection(x, tray_size[1])
+		for x in el_systems if x]
 	cab_cross_section_list = [x for x in cab_cross_section_list if x]
 	if cab_cross_section_list:
 		total_cs = sum(cab_cross_section_list)
@@ -182,15 +183,7 @@ def calc_tray_weight(link):
 	"""Calculate cable tray weight in kg/m """
 	tray = link[0]
 	el_systems = link[1]
-	# try:
 	weight_tray = Tray.get_tray_weight(tray)
-	# except:
-	# 	raise ValueError(
-	# 		"Tray %d not in catalogue.\n Check type and size.\n Width: %d, Height: %d"
-	# 		% (
-	# 			tray.Id.IntegerValue,
-	# 			tray_catalogue.ft_to_mm(tray.Width),
-	# 			tray_catalogue.ft_to_mm(tray.Height)))
 
 	weight_cables = weight_tray
 	for el_sys in el_systems:
@@ -219,7 +212,7 @@ def calc_tray_weight(link):
 	return tray, str(int(round(weight_cables)))
 
 
-def get_wire_crossection(el_sys):
+def get_wire_crossection(el_sys, tray_height):
 	"""Get cable cross-section of the system"""
 
 	# Only for Power circuits
@@ -239,11 +232,17 @@ def get_wire_crossection(el_sys):
 			cab_diameter = 0
 			# raise ValueError(
 			# 	"Cable not in catalogue \n %d" % el_sys.Id.IntegerValue)
-		return cab_diameter * cab_diameter
+
+		# Used space is different for cables <16mm and >16mm
+		# Cables >16mm cant be stacked and treated as "single layer only"
+		if cab_diameter < 25:
+			return cab_diameter * cab_diameter
+		else:
+			return cab_diameter * tray_height
 
 	# for other circuits
 	else:
-		# cables for DATA and
+		# cables for DATA and FA
 		wire_size = el_sys.LookupParameter("Cable Type").AsString()
 		try:
 			cab_diameter = get_cable(wire_size)[1]
@@ -281,7 +280,10 @@ def get_tray_size(tray):
 		t_height_list.append(con.Height)
 	t_width = vector.ft_to_mm(min(t_width_list))
 	t_height = vector.ft_to_mm(min(t_height_list))
-	return t_width, t_height
+	# width is max dimention
+	max_width = t_width if t_width > t_height else t_height
+	min_height = t_height if t_height < t_width else t_width
+	return max_width, min_height
 
 
 def set_tray_size(info_list):
