@@ -15,7 +15,7 @@ import re
 
 def ft_to_mm(ft):
 	mm = Autodesk.Revit.DB.UnitUtils.ConvertFromInternalUnits(
-		ft, Autodesk.Revit.DB.DisplayUnitType.DUT_MILLIMETERS)
+		ft, UnitTypeId.Millimeters)
 	return mm
 
 

@@ -21,7 +21,7 @@ def get_first_tray(doc, name):
 		"Cable Tray ID")
 	fnrvStr = FilterStringEquals()
 	pvp = ParameterValueProvider(param.Id)
-	frule = FilterStringRule(pvp, fnrvStr, name, False)
+	frule = FilterStringRule(pvp, fnrvStr, name)
 	filter = ElementParameterFilter(frule)
 	elem = FilteredElementCollector(doc).\
 		OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_CableTray).\

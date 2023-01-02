@@ -124,7 +124,7 @@ class TrayNet():
 
 		fnrvStr = FilterStringEquals()
 		pvp = ParameterValueProvider(param.Id)
-		frule = FilterStringRule(pvp, fnrvStr, name, False)
+		frule = FilterStringRule(pvp, fnrvStr, name)
 		filter = ElementParameterFilter(frule)
 
 		elem = FilteredElementCollector(doc).\

@@ -33,7 +33,7 @@ class ElementProvider():
 		if _isType:
 			fnrvStr = FilterStringEquals()
 			pvp = ParameterValueProvider(ElementId(int(_bip)))
-			frule = FilterStringRule(pvp, fnrvStr, _val, False)
+			frule = FilterStringRule(pvp, fnrvStr, _val)
 			filter = ElementParameterFilter(frule)
 			elem = FilteredElementCollector(doc).\
 				OfCategory(_bic).\
@@ -43,7 +43,7 @@ class ElementProvider():
 		else:
 			fnrvStr = FilterStringEquals()
 			pvp = ParameterValueProvider(ElementId(int(_bip)))
-			frule = FilterStringRule(pvp, fnrvStr, _val, False)
+			frule = FilterStringRule(pvp, fnrvStr, _val)
 			filter = ElementParameterFilter(frule)
 			elem = FilteredElementCollector(doc).\
 				OfCategory(_bic).\
@@ -135,8 +135,8 @@ class ElementProvider():
 			0 - main electrical circuit
 			1 - list of connectet low circuits
 		"""
-		allsys = _brd.MEPModel.ElectricalSystems
-		lowsys = _brd.MEPModel.AssignedElectricalSystems
+		allsys = _brd.MEPModel.GetElectricalSystems()
+		lowsys = _brd.MEPModel.GetAssignedElectricalSystems()
 		if lowsys:
 			lowsysId = [i.Id for i in lowsys]
 			mainboardsysLst = [i for i in allsys if i.Id not in lowsysId]
@@ -165,8 +165,8 @@ class ElementProvider():
 		# check if selection is electrical board
 		# OST_ElectricalEquipment.Id == -2001040
 		if sel_obj.Category.Id == ElementId(-2001040):
-			sys_el = sel_obj.MEPModel.ElectricalSystems
-			sys_all = [x.Id for x in sel_obj.MEPModel.AssignedElectricalSystems]
+			sys_el = sel_obj.MEPModel.GetElectricalSystems()
+			sys_all = [x.Id for x in sel_obj.MEPModel.GetAssignedElectricalSystems()]
 			el_sys_list = [x for x in sys_el if x.Id not in sys_all]
 			# filter out electrical circuit only
 			el_sys_list = [
@@ -174,7 +174,7 @@ class ElementProvider():
 				if x.SystemType == Electrical.ElectricalSystemType.PowerCircuit]
 
 		else:
-			el_sys_list = [x for x in sel_obj.MEPModel.ElectricalSystems]
+			el_sys_list = [x for x in sel_obj.MEPModel.GetElectricalSystems()]
 
 		# filter NA circuit
 		el_sys_list = [
@@ -238,7 +238,7 @@ class ElementProvider():
 
 		fnrvStr = FilterStringEquals()
 		pvp = ParameterValueProvider(param_id)
-		frule = FilterStringRule(pvp, fnrvStr, _cabletray_ID, True)
+		frule = FilterStringRule(pvp, fnrvStr, _cabletray_ID)
 		filter = ElementParameterFilter(frule)
 		elem = FilteredElementCollector(doc).\
 			OfCategory(BuiltInCategory.OST_CableTray).\
