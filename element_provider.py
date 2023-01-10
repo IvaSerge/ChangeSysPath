@@ -137,6 +137,13 @@ class ElementProvider():
 		"""
 		allsys = _brd.MEPModel.GetElectricalSystems()
 		lowsys = _brd.MEPModel.GetAssignedElectricalSystems()
+
+		# filter out non Power circuits
+		allsys = [i for i in allsys
+			if i.SystemType == Electrical.ElectricalSystemType.PowerCircuit]
+		lowsys = [i for i in lowsys
+			if i.SystemType == Electrical.ElectricalSystemType.PowerCircuit]
+
 		if lowsys:
 			lowsysId = [i.Id for i in lowsys]
 			mainboardsysLst = [i for i in allsys if i.Id not in lowsysId]
