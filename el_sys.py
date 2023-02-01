@@ -349,17 +349,13 @@ class ElSys():
 		# situation 3. Above. Distance is Ok.
 		if level_is_changed and is_above and distance_is_ok:
 			return [next_pnt]
-			# return 3
 
 		# situation 4. Above. Distance is wrong
 		if level_is_changed and is_above and not(distance_is_ok):
-			# return None
 			return None
 
 		# situation 5. Diagonal. Distance is wrong
 		if level_is_changed and not(is_above) and not(distance_is_ok):
-			# new_pnt = XYZ(next_pnt.X, next_pnt.Y, first_pnt.Z)
-			# return [new_pnt]
 			return None
 
 		# situation 6. Diagonal. Distance is Ok
