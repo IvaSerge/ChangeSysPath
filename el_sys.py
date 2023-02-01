@@ -81,6 +81,8 @@ class ElSys():
 			BuiltInParameter.RBS_ELEC_CIRCUIT_WIRE_TYPE_PARAM).AsValueString()
 		self.list_of_nets = None
 
+		self.test_int = None
+
 	def sort_by_distance(self, _unsorted):
 		"""Sort families by nearest distance
 		args:
@@ -356,10 +358,11 @@ class ElSys():
 
 		# situation 5. Diagonal. Distance is wrong
 		if level_is_changed and not(is_above) and not(distance_is_ok):
-			new_pnt = XYZ(next_pnt.X, next_pnt.Y, first_pnt.Z)
-			return [new_pnt]
+			# new_pnt = XYZ(next_pnt.X, next_pnt.Y, first_pnt.Z)
+			# return [new_pnt]
+			return None
 
-		# situation 5. Diagonal. Distance is Ok
+		# situation 6. Diagonal. Distance is Ok
 		if level_is_changed and not(is_above) and distance_is_ok:
 			new_pnt = XYZ(next_pnt.X, next_pnt.Y, first_pnt.Z)
 			# check if new point is close to first point
@@ -474,6 +477,18 @@ class ElSys():
 					path_instances))
 
 		self.path = self.clear_near_points(inst_path)
+
+	def calculate_distance_between_points(self):
+		if not self.path:
+			return None
+
+		calc_list = list()
+		for i in range(len(self.path) - 2):
+			# i = 150
+			pnt_current = self.path[i]
+			pnt_next = self.path[i + 1]
+			calc_list.append(pnt_current.DistanceTo(pnt_next))
+		return calc_list
 
 
 global doc  # type: ignore
