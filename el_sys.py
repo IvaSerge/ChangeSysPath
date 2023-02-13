@@ -149,7 +149,7 @@ class ElSys():
 					continue
 		return None
 
-	def _get_rout_names(self):
+	def get_rout_names(self):
 		"""Get name list of cable trays through which cables run
 		"""
 		# the list should be in correct ORDER at this point!
@@ -204,7 +204,7 @@ class ElSys():
 
 		# find a net in net list
 		el_sys_nets = list()
-		rout_names = self._get_rout_names()
+		rout_names = self.get_rout_names()
 		if not(rout_names):
 			self.run_along_trays = None
 			return None
@@ -439,7 +439,7 @@ class ElSys():
 
 	def create_new_path(self):
 		# check if trays in parameter exist
-		net_names_in_param = self._get_rout_names()
+		net_names_in_param = self.get_rout_names()
 		# tray_path = None
 		if net_names_in_param:
 			net_names = [x.name for x in self.list_of_nets]  # type: ignore

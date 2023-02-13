@@ -125,6 +125,10 @@ for el_system in all_systems:
 	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
 		try:
 			el_system.SetCircuitPath(path)
+			# change rout ID if parameter is Reversed
+			if param_reverse:
+				revesed_ID = "-".join(sys_obj.get_rout_names())
+				el_system.LookupParameter("Cable Tray ID").Set(revesed_ID)
 		except Exception as e:
 			e_text = str(e)
 			error_text = ("Check electrical system: " + el_system.Id.ToString())
