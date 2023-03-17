@@ -42,7 +42,7 @@ def checkTrayId(doc, dir_path, el_systems):
 				# try to find the first element with the ID
 				first_tray = get_first_tray(doc, tray_name)
 				# if ID not found
-				if not(first_tray):
+				if not first_tray:
 					outlist.append(tray_name)
 	if outlist:
 		# if it is not it the system Id - write to result.csv info
