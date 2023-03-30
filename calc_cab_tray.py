@@ -42,7 +42,7 @@ def setup_param_value(elem, name, pValue):
 	# custom parameter
 	param = elem.LookupParameter(name)
 	# check is it a BuiltIn parameter if not found
-	if not(param):
+	if not param:
 		try:
 			param = elem.get_Parameter(get_bip(name)).Set(pValue)
 		except:
@@ -191,7 +191,7 @@ def calc_tray_weight(link):
 		if el_sys.SystemType == Autodesk.Revit.DB.Electrical.ElectricalSystemType.PowerCircuit:
 			wire_size = el_sys.WireSizeString
 			# try to get wire size from other parameters. Project specific
-			if not(wire_size):
+			if not wire_size:
 				param_list = el_sys.GetParameters("Cable Description_1")
 				wire_size = [i for i in param_list if i.Id == ElementId(8961915)][0]
 				wire_size = wire_size.AsString()
@@ -220,7 +220,7 @@ def get_wire_crossection(el_sys, tray_height):
 		# read system parameter
 		# wire_type = el_sys.wire_type
 		wire_size = el_sys.WireSizeString
-		if not(wire_size):
+		if not wire_size:
 			param_list = el_sys.GetParameters("Cable Description_1")
 			wire_size = [i for i in param_list if i.Id == ElementId(8961915)][0]
 			wire_size = wire_size.AsString()
