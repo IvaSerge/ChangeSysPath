@@ -1,4 +1,4 @@
-# pyright: reportUnusedVariables=false
+
 """Provide elements for script"""
 
 __author__ = "IvaSerge"
@@ -68,7 +68,7 @@ class ElementProvider():
 		# custom parameter
 		param = elem.LookupParameter(name)
 		# check is it a BuiltIn parameter if not found
-		if not(param):
+		if not param:
 			param = elem.get_Parameter(ElementProvider.get_bip(name))
 
 		# get paremeter Value if found

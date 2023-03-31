@@ -164,7 +164,7 @@ for el_system in all_systems:
 			check_list = re.findall(str(e), data, flags=DOTALL)
 
 		# if error not in the file - write to file
-		if not(check_list):
+		if not check_list:
 			error_text = "\n" + str(e)
 			# write errors to file
 			with open(file_errors, "a") as f_out:

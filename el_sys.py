@@ -161,7 +161,7 @@ class ElSys():
 
 		# tray-net names shoud be separated by koma and white space
 		# Example: aaaa, bbbb
-		if tray_net_str and not(self.is_reversed):
+		if tray_net_str and not self.is_reversed:
 			return tray_net_str.split("-")
 		elif tray_net_str and self.is_reversed:
 			not_reversed = tray_net_str.split("-")
@@ -205,7 +205,7 @@ class ElSys():
 		# find a net in net list
 		el_sys_nets = list()
 		rout_names = self.get_rout_names()
-		if not(rout_names):
+		if not rout_names:
 			self.run_along_trays = None
 			return None
 		for rout in rout_names:
@@ -301,12 +301,12 @@ class ElSys():
 				in_X = ElSys.get_alt_foot_point(tray_start, tray_end, previous_pnt)
 				out_X = ElSys.get_alt_foot_point(tray_start, tray_end, next_pnt)
 
-				if in_X and not(out_X):
+				if in_X and not out_X:
 					sorted_lst = sort_list_by_point(next_pnt, [tray_start, tray_end, in_X])
 					sorted_points.append(sorted_lst[1])
 					sorted_points.append(sorted_lst[0])
 
-				elif out_X and not(in_X):
+				elif out_X and not in_X:
 					sorted_lst = sort_list_by_point(previous_pnt, [tray_start, tray_end, out_X])
 					sorted_points.append(sorted_lst[0])
 					sorted_points.append(sorted_lst[1])
@@ -333,17 +333,17 @@ class ElSys():
 
 		# parameters to check
 		distance_is_ok = distance > 0.01
-		level_is_changed = not(Autodesk.Revit.DB.XYZ.IsAlmostEqualTo(first_z, next_z))
+		level_is_changed = not Autodesk.Revit.DB.XYZ.IsAlmostEqualTo(first_z, next_z)
 		is_above = all([
 			first_pnt.X == next_pnt.X,
 			first_pnt.Y == next_pnt.Y])
 
 		# situatioh 1. On the same level. Distance Ok
-		if distance_is_ok and not(level_is_changed):
+		if distance_is_ok and not level_is_changed:
 			return [next_pnt]
 
 		# situatioh 2. On the same level. Distance is wrong
-		if not(distance_is_ok) and not(level_is_changed):
+		if not distance_is_ok and not level_is_changed:
 			return None
 
 		# situation 3. Above. Distance is Ok.
@@ -351,15 +351,15 @@ class ElSys():
 			return [next_pnt]
 
 		# situation 4. Above. Distance is wrong
-		if level_is_changed and is_above and not(distance_is_ok):
+		if level_is_changed and is_above and not distance_is_ok:
 			return None
 
 		# situation 5. Diagonal. Distance is wrong
-		if level_is_changed and not(is_above) and not(distance_is_ok):
+		if level_is_changed and not is_above and not distance_is_ok:
 			return None
 
 		# situation 6. Diagonal. Distance is Ok
-		if level_is_changed and not(is_above) and distance_is_ok:
+		if level_is_changed and not is_above and distance_is_ok:
 			new_pnt = XYZ(next_pnt.X, next_pnt.Y, first_pnt.Z)
 			# check if new point is close to first point
 			if first_pnt.DistanceTo(new_pnt) > 0.01 and next_pnt.DistanceTo(new_pnt) > 0.01:  # Ok
