@@ -1,7 +1,6 @@
 """Cable tray fuctions."""
 
 __author__ = "IvaSerge"
-__email__ = "ivaserge@ukr.net"
 __status__ = "Development"
 
 # ================ system imports
@@ -13,7 +12,6 @@ clr.AddReference('RevitAPI')
 import Autodesk
 from Autodesk.Revit.DB import *
 from Autodesk.Revit.DB import BuiltInCategory
-from Autodesk.Revit.DB.Category import GetCategory  # type: ignore
 
 # ================ Python imports
 import collections
@@ -58,10 +56,9 @@ def param_by_cat(_bic, _name):
 	return None
 
 
-def category_by_bic_name(_bicString):
-	bicList = System.Enum.GetValues(BuiltInCategory)
-	bic = [i for i in bicList if _bicString == i.ToString()][0]
-	return GetCategory(doc, bic)
+def category_by_bic_name(doc, _bicString):
+	bic_value = System.Enum.Parse(BuiltInCategory, _bicString)
+	return Autodesk.Revit.DB.Category.GetCategory(doc, bic_value)
 
 
 class TrayNet():
@@ -139,8 +136,8 @@ class TrayNet():
 		reference_list = list()
 		elem = _inst
 		category_elem = elem.Category.Id
-		category_tray = category_by_bic_name("OST_CableTray").Id
-		category_fitting = category_by_bic_name("OST_CableTrayFitting").Id
+		category_tray = category_by_bic_name(elem.Document, "OST_CableTray").Id
+		category_fitting = category_by_bic_name(elem.Document, "OST_CableTrayFitting").Id
 
 		# for cable tray
 		if category_elem == category_tray:
@@ -151,7 +148,13 @@ class TrayNet():
 			elem_mep_model = elem.MEPModel
 			elem_con_manager = elem_mep_model.ConnectorManager
 
+		# check if element has connectors
+		# try:
 		elem_cons = elem_con_manager.Connectors
+		# except:
+		# 	error_text = (elem.Id.ToString())
+		# 	raise ValueError(error_text)
+
 		for connector in elem_cons:
 			elem_ref = connector.AllRefs
 			if elem_ref:

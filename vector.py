@@ -1,7 +1,6 @@
 """Electrical systems fuctions."""
 
 __author__ = "IvaSerge"
-__email__ = "ivaserge@ukr.net"
 __status__ = "Development"
 
 # ================ system imports

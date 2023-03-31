@@ -39,26 +39,37 @@ import operator
 from operator import itemgetter, attrgetter
 import itertools
 import time
+import importlib
 
 # ================ local imports
 import el_sys
+importlib.reload(el_sys)
 from el_sys import ElSys
+
 import cab_tray
-from cab_tray import *
+importlib.reload(cab_tray)
+
 import graph
-from graph import *
+importlib.reload(graph)
+
 import vector
-from vector import *
+importlib.reload(graph)
+
 import calc_cab_tray
-from calc_cab_tray import *
+importlib.reload(calc_cab_tray)
+
 import cable_catalogue
-from cable_catalogue import *
+importlib.reload(cable_catalogue)
+
 import element_provider
-from element_provider import *
+importlib.reload(element_provider)
+from element_provider import ElementProvider
+
 import tray_catalogue
-from tray_catalogue import *
+importlib.reload(tray_catalogue)
+
 import checkModel
-from checkModel import *
+importlib.reload(checkModel)
 
 # ================ GLOBAL VARIABLES
 uiapp = DocumentManager.Instance.CurrentUIApplication
@@ -83,7 +94,7 @@ net_names = ElementProvider.get_all_tray_names()
 
 
 for net_name in net_names:
-	tray_net = TrayNet(net_name)
+	tray_net = cab_tray.TrayNet(net_name)
 	inst_in_net = tray_net.instances
 	inst_in_net_IDs = [i.Id for i in inst_in_net]
 
@@ -106,6 +117,6 @@ for net_name in net_names:
 			f_out.write(error_text)
 
 # sort data in result file
-sortData(file_errors)
+checkModel.sortData(file_errors)
 
 OUT = inst_net_ids
