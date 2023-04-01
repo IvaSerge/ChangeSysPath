@@ -462,9 +462,11 @@ class ElSys():
 			# first instance - is electrical board
 			brd_inst = self.rvt_members[0]
 			path_instances.append(brd_inst)
-			map(lambda x: path_instances.append(x), self.run_along_trays)
+			path_instances.extend(self.run_along_trays)
 			# get path on the tray
-			points_list = process_list(lambda x: cab_tray.TrayNet.get_connector_points(x), path_instances)
+			points_list = list(
+				process_list(lambda x: cab_tray.TrayNet.get_connector_points(x),
+				path_instances))
 			tray_path = self._tray_path(points_list)
 			# other instances
 			sys_inst = self.rvt_members[1:]
@@ -479,6 +481,7 @@ class ElSys():
 					path_instances))
 
 		self.path = self.clear_near_points(inst_path)
+		return self.path
 
 	def calculate_distance_between_points(self):
 		if not self.path:
