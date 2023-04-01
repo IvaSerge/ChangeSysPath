@@ -114,45 +114,45 @@ for el_system in all_systems:
 		list_of_nets = None
 
 	sys_obj.list_of_nets = list_of_nets
-	# try:
-	sys_obj.find_trays_run()
-	# except Exception as e:
-	# 	error_text = "\n" + str(e)
-	# 	raise ValueError(error_text)
+	try:
+		sys_obj.find_trays_run()
+	except Exception as e:
+		error_text = "\n" + str(e)
+		raise ValueError(error_text)
 
-	# try:
-	# sys_obj.create_new_path()
-	# except:
-	# 	# create error list
-	# 	tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
-	# 	tray_net_str = tray_net_str.AsString()
-	# 	error_list.append(tray_net_str)
+	try:
+		sys_obj.create_new_path()
+	except:
+		# create error list
+		tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
+		tray_net_str = tray_net_str.AsString()
+		error_list.append(tray_net_str)
 
-	# path = sys_obj.path
-# 	disable_path_change = el_system.LookupParameter("Disable_change_ of_ path").AsInteger()
+	path = sys_obj.path
+	disable_path_change = el_system.LookupParameter("Disable_change_ of_ path").AsInteger()
 
-# 	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
-# 		doc, el_system.Id)
-# 	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
-# 		try:
-# 			el_system.SetCircuitPath(path)
-# 			# change rout ID if parameter is Reversed
-# 			if param_reverse:
-# 				revesed_ID = "-".join(sys_obj.get_rout_names())
-# 				el_system.LookupParameter("Cable Tray ID").Set(revesed_ID)
-# 		except Exception as e:
-# 			e_text = str(e)
-# 			error_text = ("Check electrical system: " + el_system.Id.ToString())
-# 			raise ValueError(error_text)
-
-
-# # =========End transaction
-# TransactionManager.Instance.TransactionTaskDone()
-
-# try:
-# 	OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
-# except:
-# 	OUT = all_systems
+	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
+		doc, el_system.Id)
+	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
+		try:
+			el_system.SetCircuitPath(path)
+			# change rout ID if parameter is Reversed
+			if param_reverse:
+				revesed_ID = "-".join(sys_obj.get_rout_names())
+				el_system.LookupParameter("Cable Tray ID").Set(revesed_ID)
+		except Exception as e:
+			e_text = str(e)
+			error_text = ("Check electrical system: " + el_system.Id.ToString())
+			raise ValueError(error_text)
 
 
-OUT = sys_obj.run_along_trays
+# =========End transaction
+TransactionManager.Instance.TransactionTaskDone()
+
+try:
+	OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
+except:
+	OUT = all_systems
+
+
+# OUT = sys_obj.create_new_path()
