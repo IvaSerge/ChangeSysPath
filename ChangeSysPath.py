@@ -29,26 +29,37 @@ from RevitServices.Transactions import TransactionManager
 import operator
 from operator import itemgetter, attrgetter
 import itertools
+import importlib
 
 # ================ local imports
 import el_sys
+importlib.reload(el_sys)
 from el_sys import ElSys
+
 import cab_tray
-from cab_tray import *
+importlib.reload(cab_tray)
+
 import graph
-from graph import *
+importlib.reload(graph)
+
 import vector
-from vector import *
+importlib.reload(graph)
+
 import calc_cab_tray
-from calc_cab_tray import *
+importlib.reload(calc_cab_tray)
+
 import cable_catalogue
-from cable_catalogue import *
+importlib.reload(cable_catalogue)
+
 import element_provider
-from element_provider import *
+importlib.reload(element_provider)
+from element_provider import ElementProvider
+
 import tray_catalogue
-from tray_catalogue import *
+importlib.reload(tray_catalogue)
+
 import checkModel
-from checkModel import *
+importlib.reload(checkModel)
 
 # ================ GLOBAL VARIABLES
 uiapp = DocumentManager.Instance.CurrentUIApplication
@@ -93,7 +104,7 @@ for el_system in all_systems:
 		# system runs along cable tray
 		for name in tray_names:
 			try:
-				list_of_nets.append(TrayNet(name))
+				list_of_nets.append(cab_tray.TrayNet(name))
 			except:
 				error_text = "\nTray with ID do not exists: " + name
 				raise ValueError("Tray with ID do not exists\n" + name)
@@ -103,42 +114,45 @@ for el_system in all_systems:
 		list_of_nets = None
 
 	sys_obj.list_of_nets = list_of_nets
-	try:
-		sys_obj.find_trays_run()
-	except Exception as e:
-		error_text = "\n" + str(e)
-		raise ValueError(error_text)
+	# try:
+	sys_obj.find_trays_run()
+	# except Exception as e:
+	# 	error_text = "\n" + str(e)
+	# 	raise ValueError(error_text)
 
-	try:
-		sys_obj.create_new_path()
-	except:
-		# create error list
-		tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
-		tray_net_str = tray_net_str.AsString()
-		error_list.append(tray_net_str)
+	# try:
+	# sys_obj.create_new_path()
+	# except:
+	# 	# create error list
+	# 	tray_net_str = sys_obj.rvt_sys.LookupParameter("Cable Tray ID")
+	# 	tray_net_str = tray_net_str.AsString()
+	# 	error_list.append(tray_net_str)
 
-	path = sys_obj.path
-	disable_path_change = el_system.LookupParameter("Disable_change_ of_ path").AsInteger()
+	# path = sys_obj.path
+# 	disable_path_change = el_system.LookupParameter("Disable_change_ of_ path").AsInteger()
 
-	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
-		doc, el_system.Id)
-	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
-		try:
-			el_system.SetCircuitPath(path)
-			# change rout ID if parameter is Reversed
-			if param_reverse:
-				revesed_ID = "-".join(sys_obj.get_rout_names())
-				el_system.LookupParameter("Cable Tray ID").Set(revesed_ID)
-		except Exception as e:
-			e_text = str(e)
-			error_text = ("Check electrical system: " + el_system.Id.ToString())
-			raise ValueError(error_text)
+# 	elem_stat = Autodesk.Revit.DB.WorksharingUtils.GetCheckoutStatus(
+# 		doc, el_system.Id)
+# 	if elem_stat != Autodesk.Revit.DB.CheckoutStatus.OwnedByOtherUser:
+# 		try:
+# 			el_system.SetCircuitPath(path)
+# 			# change rout ID if parameter is Reversed
+# 			if param_reverse:
+# 				revesed_ID = "-".join(sys_obj.get_rout_names())
+# 				el_system.LookupParameter("Cable Tray ID").Set(revesed_ID)
+# 		except Exception as e:
+# 			e_text = str(e)
+# 			error_text = ("Check electrical system: " + el_system.Id.ToString())
+# 			raise ValueError(error_text)
 
 
-# =========End transaction
-TransactionManager.Instance.TransactionTaskDone()
+# # =========End transaction
+# TransactionManager.Instance.TransactionTaskDone()
 
-try:
-	OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
-except:
-	OUT = all_systems
+# try:
+# 	OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
+# except:
+# 	OUT = all_systems
+
+
+OUT = sys_obj.run_along_trays

@@ -39,26 +39,38 @@ import operator
 from operator import itemgetter, attrgetter
 import itertools
 import time
+import importlib
+import re
 
 # ================ local imports
 import el_sys
+importlib.reload(el_sys)
 from el_sys import ElSys
+
 import cab_tray
-from cab_tray import *
+importlib.reload(cab_tray)
+
 import graph
-from graph import *
+importlib.reload(graph)
+
 import vector
-from vector import *
+importlib.reload(graph)
+
 import calc_cab_tray
-from calc_cab_tray import *
+importlib.reload(calc_cab_tray)
+
 import cable_catalogue
-from cable_catalogue import *
+importlib.reload(cable_catalogue)
+
 import element_provider
-from element_provider import *
+importlib.reload(element_provider)
+from element_provider import ElementProvider
+
 import tray_catalogue
-from tray_catalogue import *
+importlib.reload(tray_catalogue)
+
 import checkModel
-from checkModel import *
+importlib.reload(checkModel)
 
 # ================ GLOBAL VARIABLES
 uiapp = DocumentManager.Instance.CurrentUIApplication
@@ -110,7 +122,7 @@ if not continue_exec:
 if continue_exec:
 	with open(file_report, "r+") as report:
 		data = report.read()
-		check_list = re.findall(r"(\d+)\.\sDone", data, flags=DOTALL)
+		check_list = re.findall(r"(\d+)\.\sDone", data, flags=re.DOTALL)
 		all_systems = [i for i in all_systems if i.Id.ToString() not in check_list]
 		i_sys = float(len(check_list))
 
@@ -130,7 +142,7 @@ for el_system in all_systems:
 		# system runs along cable tray
 		for name in tray_names:
 			try:
-				list_of_nets.append(TrayNet(name))
+				list_of_nets.append(cab_tray.TrayNet(name))
 			except:
 				error_text = "\nTray with ID do not exists: " + name
 				# find error in file
@@ -161,7 +173,7 @@ for el_system in all_systems:
 		error_text = "\n" + "Check system:" + sys_obj.Id.ToString() + ", Error: " + str(e)
 		with open(file_errors, "r") as post_out:
 			data = post_out.read()
-			check_list = re.findall(str(e), data, flags=DOTALL)
+			check_list = re.findall(str(e), data, flags=re.DOTALL)
 
 		# if error not in the file - write to file
 		if not check_list:
@@ -183,8 +195,8 @@ for el_system in all_systems:
 	# write result to data baise
 
 	if path:
-		write_tray_sys_link(file_trays, sys_obj)
-		write_path(file_points, el_system.Id.ToString(), path)
+		calc_cab_tray.write_tray_sys_link(file_trays, sys_obj)
+		calc_cab_tray.write_path(file_points, el_system.Id.ToString(), path)
 
 	current_percentage = str(round(i_sys / SYSTEMS_TOTAL, 2) * 100)
 	time_end = time.time()

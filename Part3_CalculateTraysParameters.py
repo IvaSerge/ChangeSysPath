@@ -31,26 +31,37 @@ from RevitServices.Transactions import TransactionManager
 import operator
 from operator import itemgetter, attrgetter
 import itertools
+import importlib
 
 # ================ local imports
 import el_sys
+importlib.reload(el_sys)
 from el_sys import ElSys
+
 import cab_tray
-from cab_tray import *
+importlib.reload(cab_tray)
+
 import graph
-from graph import *
+importlib.reload(graph)
+
 import vector
-from vector import *
+importlib.reload(graph)
+
 import calc_cab_tray
-from calc_cab_tray import *
+importlib.reload(calc_cab_tray)
+
 import cable_catalogue
-from cable_catalogue import *
+importlib.reload(cable_catalogue)
+
 import element_provider
-from element_provider import *
+importlib.reload(element_provider)
+from element_provider import ElementProvider
+
 import tray_catalogue
-from tray_catalogue import *
+importlib.reload(tray_catalogue)
+
 import checkModel
-from checkModel import *
+importlib.reload(checkModel)
 
 # ================ GLOBAL VARIABLES
 uiapp = DocumentManager.Instance.CurrentUIApplication
@@ -84,7 +95,7 @@ with SubTransaction(doc) as sub_tr:
 	all_trays = [i for i in all_trays if
 		WorksharingUtils.GetCheckoutStatus(doc, i.Id) != CheckoutStatus.OwnedByOtherUser]
 
-	clean_tray_parameters(all_trays)
+	calc_cab_tray.clean_tray_parameters(all_trays)
 	sub_tr.Commit()
 
 # open file
@@ -94,7 +105,7 @@ with open(file_database, "r") as f_db:
 		if len(line) <= 1:
 			continue
 		else:
-			link = get_tray_sys_link(doc, line)
+			link = calc_cab_tray.get_tray_sys_link(doc, line)
 
 		if not link:
 			continue
@@ -117,19 +128,19 @@ with open(file_database, "r") as f_db:
 
 		# calculate parameters
 		try:
-			tray_weight = calc_tray_weight(link)
-			set_tray_weight(tray_weight)
+			tray_weight = calc_cab_tray.calc_tray_weight(link)
+			calc_cab_tray.set_tray_weight(tray_weight)
 		except:
 			with open(file_out, "a") as f_out:
 				tray_weight = 0
 				f_out.write("\nWeight not found. Check tray size: " + tray_id.ToString())
 
-		tray_fill = calc_tray_filling(link)
-		tray_tag = get_tags(link)
+		tray_fill = calc_cab_tray.calc_tray_filling(link)
+		tray_tag = calc_cab_tray.get_tags(link)
 
 		# # write parameters to tray
-		set_tray_size(tray_fill)
-		set_tag(tray_tag)
+		calc_cab_tray.set_tray_size(tray_fill)
+		calc_cab_tray.set_tag(tray_tag)
 
 # =========End transaction
 TransactionManager.Instance.TransactionTaskDone()

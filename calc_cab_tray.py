@@ -65,9 +65,8 @@ def get_bip(paramName):
 
 def category_by_bic_name(_bicString):
 	global doc
-	bicList = System.Enum.GetValues(BuiltInCategory)
-	bic = [i for i in bicList if _bicString == i.ToString()][0]
-	return Category.GetCategory(doc, bic)
+	bic_value = System.Enum.Parse(BuiltInCategory, _bicString)
+	return Autodesk.Revit.DB.Category.GetCategory(doc, bic_value)
 
 
 def write_tray_sys_link(file_database, el_system):

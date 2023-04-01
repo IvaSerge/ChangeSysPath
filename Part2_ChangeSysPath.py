@@ -36,26 +36,37 @@ import itertools
 import re
 from re import *
 import collections
+import importlib
 
 # ================ local imports
 import el_sys
+importlib.reload(el_sys)
 from el_sys import ElSys
+
 import cab_tray
-from cab_tray import *
+importlib.reload(cab_tray)
+
 import graph
-from graph import *
+importlib.reload(graph)
+
 import vector
-from vector import *
+importlib.reload(graph)
+
 import calc_cab_tray
-from calc_cab_tray import *
+importlib.reload(calc_cab_tray)
+
 import cable_catalogue
-from cable_catalogue import *
+importlib.reload(cable_catalogue)
+
 import element_provider
-from element_provider import *
+importlib.reload(element_provider)
+from element_provider import ElementProvider
+
 import tray_catalogue
-from tray_catalogue import *
+importlib.reload(tray_catalogue)
+
 import checkModel
-from checkModel import *
+importlib.reload(checkModel)
 
 # ================ GLOBAL VARIABLES
 uiapp = DocumentManager.Instance.CurrentUIApplication
@@ -120,6 +131,6 @@ with open(file_in, "r") as f_in:
 TransactionManager.Instance.TransactionTaskDone()
 
 # sort error file after execution
-sortData(file_errors)
+checkModel.sortData(file_errors)
 
 OUT = outlist

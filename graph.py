@@ -31,10 +31,11 @@ class Graph():
 		"""
 		self.edges = defaultdict(list)
 		self.weights = {}
+		self.add_edges(nodes)
 
-		map(
-			lambda x: self.add_edge(x[0], x[1], 1),
-			nodes)
+	def add_edges(self, nodes):
+		for nod in nodes:
+			self.add_edge(nod[0], nod[1], 1)
 
 	def add_edge(self, from_node, to_node, weight):
 		# Note: assumes edges are bi-directional

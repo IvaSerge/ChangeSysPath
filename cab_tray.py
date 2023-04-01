@@ -73,12 +73,8 @@ class TrayNet():
 		self.name = net_name
 		self.instances = None
 		self.nodes = None
-
+		self.graph = None
 		self.get_tray_relations()
-		if self.nodes:
-			self.graph = Graph(self.nodes)
-		else:
-			self.graph = None
 
 	@staticmethod
 	def get_connector_points(instance):
@@ -135,25 +131,20 @@ class TrayNet():
 	def _get_all_reference(_inst):
 		reference_list = list()
 		elem = _inst
-		category_elem = elem.Category.Id
-		category_tray = category_by_bic_name(elem.Document, "OST_CableTray").Id
-		category_fitting = category_by_bic_name(elem.Document, "OST_CableTrayFitting").Id
+		category_elem = elem.Category
+		category_tray = category_by_bic_name(elem.Document, "OST_CableTray")
+		category_fitting = category_by_bic_name(elem.Document, "OST_CableTrayFitting")
 
 		# for cable tray
-		if category_elem == category_tray:
+		if category_elem.Id == category_tray.Id:
 			elem_con_manager = elem.ConnectorManager
 
 		# for cable tray fitting
-		if category_elem == category_fitting:
+		if category_elem.Id == category_fitting.Id:
 			elem_mep_model = elem.MEPModel
 			elem_con_manager = elem_mep_model.ConnectorManager
 
-		# check if element has connectors
-		# try:
 		elem_cons = elem_con_manager.Connectors
-		# except:
-		# 	error_text = (elem.Id.ToString())
-		# 	raise ValueError(error_text)
 
 		for connector in elem_cons:
 			elem_ref = connector.AllRefs
@@ -181,7 +172,6 @@ class TrayNet():
 		outlist = list()
 		elems_checked = list()
 
-		# while elems_to_ceck:
 		while elems_to_ceck:
 			elem_current = elems_to_ceck.pop()
 			# there is no need to check element twice
@@ -192,7 +182,7 @@ class TrayNet():
 			elems_checked.append(elem_current.Id)
 			elem_refs = self._get_all_reference(elem_current)
 			# fill que with new references
-			map(lambda x: elems_to_ceck.append(x), elem_refs)
+			elems_to_ceck.extend(elem_refs)
 			# create pair of relations
 			for elem in elem_refs:
 				# filter out self-references
@@ -205,6 +195,10 @@ class TrayNet():
 		self.instances = [
 			doc.GetElement(x)
 			for x in elems_checked]
+
+		if self.nodes:
+			self.graph = Graph(self.nodes)
+		return elems_checked
 
 	@staticmethod
 	def get_shortest_distance(inst_from, inst_to):

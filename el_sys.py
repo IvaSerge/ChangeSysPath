@@ -16,16 +16,20 @@ from Autodesk.Revit.DB import BuiltInCategory
 # ================ Python imports
 import operator
 from operator import itemgetter, attrgetter
+import itertools
+
 
 # ================ local imports
+
 import cab_tray
-from cab_tray import *
 import graph
-from graph import *
 import vector
-from vector import *
+import calc_cab_tray
+import cable_catalogue
 import element_provider
-from element_provider import *
+from element_provider import ElementProvider
+import tray_catalogue
+import checkModel
 
 
 def process_list(_func, _list):
@@ -45,10 +49,12 @@ def flatten_list(data):
 		for i in list_in_progress:
 			if isinstance(i, list):
 				list_found = True
-				map(lambda x: flat_list.append(x), i)
+				# map(lambda x: flat_list.append(x), i)
+				flat_list.extend(i)
 			else:
 				flat_list.append(i)
 		list_in_progress = [x for x in flat_list]
+
 	return list_in_progress
 
 
@@ -184,7 +190,7 @@ class ElSys():
 		for check_point in [start, end]:
 			min_distance = 1000000000
 			for elem in tray_elems:
-				pnts = TrayNet.get_connector_points(elem)
+				pnts = cab_tray.TrayNet.get_connector_points(elem)
 				for pnt in pnts:
 					distance = check_point.DistanceTo(pnt)
 					if distance < min_distance:
@@ -214,46 +220,48 @@ class ElSys():
 		# with cycle check all nets
 		i = 0
 		net_start = el_start
-		outlist = list()
-		while i <= len(el_sys_nets) - 1:
-			outlist.append([])
-
-			# if it is not the last net - find nearest elem to next net
-			# in real life there is only one nearest point
-			# but unpredectable crazy situations are possible HERE!!!
+		outlist = [[] for i in range(len(el_sys_nets))]
+		for i, net in enumerate(el_sys_nets):
+			# 	# if it is not the last net - find nearest elem to next net
+			# 	# in real life there is only one nearest point
+			# 	# but unpredectable crazy situations are possible HERE!!!
 
 			net = el_sys_nets[i]
+			current_cell = outlist[i]
 			if i != len(el_sys_nets) - 1:
-				net_end = TrayNet.find_nearest_pnt(
+				net_end = cab_tray.TrayNet.find_nearest_pnt(
 					net, el_sys_nets[i + 1])
 			else:
 				net_end = el_end
 
 			start_end = self.get_in_out(net, net_start, net_end)
-			start, end = start_end[0].Id, start_end[1].Id
+			start, end = start_end[0], start_end[1]
 
 			if start == end:
 				# it is only one object in net
-				outlist[i].append(start)
+				current_cell.append(start.Id)
 			else:
 				# path need to be calculated using graph
-				path = net.graph.dijsktra(start, end)
-				map(lambda x: outlist[i].append(x), path)
+				path = net.graph.dijsktra(start.Id, end.Id)
+				if isinstance(path, list):
+					current_cell.extend(path)
+				else:
+					current_cell.append(path)
 			net_start = net_end
-			i += 1
 
 		outlist = flatten_list(outlist)
-		outlist = process_list(lambda x: doc.GetElement(x), outlist)
+		outlist = list(process_list(lambda x: doc.GetElement(x), outlist))
 
 		# remove last element, if it is fitting
-		if all([outlist, len(outlist) > 1, outlist[-1].Category.Id.IntegerValue == -2008126]):
+		cat_fitting = calc_cab_tray.category_by_bic_name("OST_CableTrayFitting")
+		if all([outlist, len(outlist) > 1, outlist[-1].Category.Id == cat_fitting.Id]):
 			outlist.pop()
 
 		self.run_along_trays = outlist
 
 	@staticmethod
 	def get_alt_foot_point(point_A, point_B, point_C):
-		triangle_vector = Vec(point_A, point_B)
+		triangle_vector = vector.Vec(point_A, point_B)
 		point_X = triangle_vector.altitude_foot(point_C)
 		if point_X:
 			return point_X
@@ -284,7 +292,7 @@ class ElSys():
 				# next point - is instance that is outside tray
 				if i == len(pnt_list) - 1:
 					next_inst = self.rvt_members[1]
-					next_pnt = TrayNet.get_connector_points(next_inst)[0]
+					next_pnt = cab_tray.TrayNet.get_connector_points(next_inst)[0]
 
 				# next point - is the part of cable tray net
 				else:
@@ -394,7 +402,7 @@ class ElSys():
 
 	@staticmethod
 	def get_exit_point(line_points, check_pnt):
-		vec = Vec(line_points[0], line_points[1])
+		vec = vector.Vec(line_points[0], line_points[1])
 		return vec.altitude_foot(check_pnt)
 
 	@staticmethod
@@ -403,7 +411,7 @@ class ElSys():
 		pnt_a = tray_path[-2]
 		pnt_b = tray_path[-1]
 
-		inst_points = [TrayNet.get_connector_points(x)[0] for x in sys_inst]
+		inst_points = [cab_tray.TrayNet.get_connector_points(x)[0] for x in sys_inst]
 		min_distance = 1000000
 		# for each instance find nearest point to the last two points
 		# get the nearest instance to tray
@@ -456,7 +464,7 @@ class ElSys():
 			path_instances.append(brd_inst)
 			map(lambda x: path_instances.append(x), self.run_along_trays)
 			# get path on the tray
-			points_list = process_list(lambda x: TrayNet.get_connector_points(x), path_instances)
+			points_list = process_list(lambda x: cab_tray.TrayNet.get_connector_points(x), path_instances)
 			tray_path = self._tray_path(points_list)
 			# other instances
 			sys_inst = self.rvt_members[1:]
@@ -467,7 +475,7 @@ class ElSys():
 			path_instances = self.rvt_members
 			inst_path = flatten_list(
 				process_list(
-					lambda x: TrayNet.get_connector_points(x),
+					lambda x: cab_tray.TrayNet.get_connector_points(x),
 					path_instances))
 
 		self.path = self.clear_near_points(inst_path)
