@@ -260,8 +260,9 @@ def get_tray_size(tray):
 	t_width_list = list()
 	t_height_list = list()
 	category_elem = tray.Category.Id
-	category_tray = cab_tray.category_by_bic_name("OST_CableTray").Id
-	category_fitting = cab_tray.category_by_bic_name("OST_CableTrayFitting").Id
+	doc = tray.Document
+	category_tray = cab_tray.category_by_bic_name(doc, "OST_CableTray").Id
+	category_fitting = cab_tray.category_by_bic_name(doc, "OST_CableTrayFitting").Id
 
 	# for cable tray
 	if category_elem == category_tray:

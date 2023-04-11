@@ -138,11 +138,15 @@ class TrayNet():
 		# for cable tray
 		if category_elem.Id == category_tray.Id:
 			elem_con_manager = elem.ConnectorManager
-
 		# for cable tray fitting
-		if category_elem.Id == category_fitting.Id:
+		elif category_elem.Id == category_fitting.Id:
 			elem_mep_model = elem.MEPModel
 			elem_con_manager = elem_mep_model.ConnectorManager
+		# instance is not tray or fitting
+		else:
+			inst_Id = str(_inst.Id.IntegerValue)
+			error_value = "Elem is not a tray: " + inst_Id
+			raise ValueError(error_value)
 
 		elem_cons = elem_con_manager.Connectors
 

@@ -153,6 +153,3 @@ try:
 	OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
 except:
 	OUT = all_systems
-
-
-# OUT = sys_obj.create_new_path()

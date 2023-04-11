@@ -94,7 +94,14 @@ net_names = ElementProvider.get_all_tray_names()
 
 
 for net_name in net_names:
-	tray_net = cab_tray.TrayNet(net_name)
+	try:
+		tray_net = cab_tray.TrayNet(net_name)
+	except ValueError:
+		error_text = "\nCant't create tray net. Not only cable trays found:  " + net_name
+		with open(file_errors, "a") as f_out:
+						f_out.write(error_text)
+		continue
+
 	inst_in_net = tray_net.instances
 	inst_in_net_IDs = [i.Id for i in inst_in_net]
 
