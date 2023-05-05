@@ -43,6 +43,38 @@ def check_circuit(_circuit):
 	return None
 
 
+def get_circuit_info(_circuit):
+	if _circuit.SystemType == Electrical.ElectricalSystemType.PowerCircuit:
+		circuit_system_type = "PowerCircuit"
+	elif _circuit.SystemType == Electrical.ElectricalSystemType.Data:
+		circuit_system_type = "Data"
+	else:
+		circuit_system_type = "None"
+
+	circuit_info = list()
+	circuit_id = str(_circuit.Id)
+	circuit_panel = _circuit.PanelName
+	circuit_number = str(_circuit.CircuitNumber)
+	circuit_member_id = str([i for i in _circuit.Elements][0].Id)
+
+	circuit_info.append(circuit_system_type)
+	circuit_info.append(circuit_id)
+	circuit_info.append(circuit_panel)
+	circuit_info.append(circuit_number)
+	circuit_info.append(circuit_member_id)
+	return circuit_info
+
+
+def write_csv(_file_name, _info):
+	open(_file_name, 'w').close()  # clean file
+	with open(_file_name, 'w', newline='', encoding='utf-8') as csvfile:
+		# creating a csv writer object
+		fields = ['System Type', 'Circuit Id', 'Panel', 'Circuit Number', 'Circuit Element']
+		csvwriter = csv.writer(csvfile, dialect='excel')
+		csvwriter.writerow(fields)
+		csvwriter.writerows(_info)
+
+
 # ================ GLOBAL VARIABLES
 doc = DocumentManager.Instance.CurrentDBDocument
 uidoc = DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument
@@ -52,7 +84,7 @@ view = doc.ActiveView
 
 reload_IN = IN[1]  # type: ignore
 csv_data = dir_path + "\\" + IN[2]  # type: ignore
-outlist = list()
+circuits_info = list()
 circuits = FilteredElementCollector(doc).\
 	OfCategory(BuiltInCategory.OST_ElectricalCircuit).\
 	WhereElementIsNotElementType().\
@@ -62,6 +94,10 @@ for circuit in circuits:
 	check = check_circuit(circuit)
 	if not check:
 		continue
-	outlist.append(check)
+	circuit_info = get_circuit_info(circuit)
+	circuits_info.append(circuit_info)
 
-OUT = outlist
+write_csv(csv_data, circuits_info)
+
+
+OUT = circuits_info
