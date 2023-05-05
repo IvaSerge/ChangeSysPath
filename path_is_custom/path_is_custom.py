@@ -26,11 +26,6 @@ from importlib import reload
 import csv
 import re
 
-# ================ local imports
-import toolsrvt
-reload(toolsrvt)
-from toolsrvt import *
-
 
 def check_circuit(_circuit):
 	is_data_circuit = _circuit.SystemType == Electrical.ElectricalSystemType.PowerCircuit
