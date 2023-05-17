@@ -107,12 +107,13 @@ for net_name in net_names:
 
 	# check if there dublicates of the systems
 	inst_in_model = ElementProvider.get_trays_by_id(net_name)
-	for inst in inst_in_model:
-		if inst.Id not in inst_in_net_IDs:
-			error_text = "\nDuplicate of net found: " + net_name
-			with open(file_errors, "a") as f_out:
-							f_out.write(error_text)
-			break
+	inst_in_model_id = [i.Id for i in inst_in_model if i.Id not in inst_in_net_IDs]
+	if inst_in_model_id:
+		ids_strings = ",".join(inst_in_model_id)
+		error_text = "\nDuplicate of net found: " + net_name + "; Check IDs:" + ids_strings
+		with open(file_errors, "a") as f_out:
+			f_out.write(error_text)
+		break
 
 	# check if one net system contains elements with other tray IDs
 	inst_net_ids = [i.LookupParameter("Cable Tray ID").AsString() for i in inst_in_net]
@@ -126,4 +127,4 @@ for net_name in net_names:
 # sort data in result file
 checkModel.sortData(file_errors)
 
-OUT = inst_net_ids
+OUT = inst_in_model_id
