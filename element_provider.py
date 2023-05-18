@@ -151,9 +151,7 @@ class ElementProvider():
 			else:
 				mainboardsys = mainboardsysLst[0]
 			lowsys = [i for i in allsys if i.Id in lowsysId]
-			# TODO: Check sorting of circuits
-			# lowsys.sort(key=lambda x: float(
-			# 	ElementProvider.get_parval(x, "RBS_ELEC_CIRCUIT_NUMBER")))
+			lowsys.sort(key=lambda x: x.StartSlot)
 			return mainboardsys, lowsys
 		else:
 			return [i for i in allsys][0], None
