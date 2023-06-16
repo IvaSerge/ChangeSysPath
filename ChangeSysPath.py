@@ -83,7 +83,10 @@ error_list = list()
 
 if not IN[4]:  # type: ignore
 	all_systems = ElementProvider.get_sys_by_selection()
-	el_system = all_systems[0]
+	if all_systems:
+		el_system = all_systems[0]
+	else:
+		el_system = None
 else:
 	all_systems = ElementProvider.elsys_by_brd(UnwrapElement(IN[4]))[1]  # type: ignore
 	all_systems = [i for i in all_systems if
