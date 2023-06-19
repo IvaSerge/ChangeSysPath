@@ -65,4 +65,4 @@ def sortData(filename):
 		data.sort()
 
 	with open(filename, "w") as datafile:
-		datafile.write(''.join(data))
+		datafile.write('\n'.join(data))

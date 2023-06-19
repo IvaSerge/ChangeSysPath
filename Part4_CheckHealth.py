@@ -107,7 +107,7 @@ for net_name in net_names:
 
 	# check if there dublicates of the systems
 	inst_in_model = ElementProvider.get_trays_by_id(net_name)
-	inst_in_model_id = [i.Id for i in inst_in_model if i.Id not in inst_in_net_IDs]
+	inst_in_model_id = [i.Id.ToString() for i in inst_in_model if i.Id not in inst_in_net_IDs]
 	if inst_in_model_id:
 		ids_strings = ",".join(inst_in_model_id)
 		error_text = "\nDuplicate of net found: " + net_name + "; Check IDs:" + ids_strings

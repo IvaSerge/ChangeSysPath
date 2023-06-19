@@ -177,7 +177,7 @@ for el_system in all_systems:
 
 		# if error not in the file - write to file
 		if not check_list:
-			error_text = "\n" + str(e)
+			# error_text = "\n" + str(e)
 			# write errors to file
 			with open(file_errors, "a") as f_out:
 					f_out.write(error_text)
@@ -198,7 +198,7 @@ for el_system in all_systems:
 		calc_cab_tray.write_tray_sys_link(file_trays, sys_obj)
 		calc_cab_tray.write_path(file_points, el_system.Id.ToString(), path)
 
-	current_percentage = str(round(i_sys / SYSTEMS_TOTAL, 2) * 100)
+	current_percentage = str(round((i_sys / SYSTEMS_TOTAL) * 100, 1))
 	time_end = time.time()
 	time_exec = str(time_end - time_start)
 	report_text = ". Done: " + current_percentage + ", " + "Runtime: " + time_exec
