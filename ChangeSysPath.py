@@ -83,15 +83,9 @@ error_list = list()
 
 if not IN[4]:  # type: ignore
 	all_systems = ElementProvider.get_sys_by_selection()
-	if all_systems:
-		el_system = all_systems[0]
-	else:
-		el_system = None
+
 else:
-	all_systems = ElementProvider.elsys_by_brd(UnwrapElement(IN[4]))[1]  # type: ignore
-	all_systems = [i for i in all_systems if
-		i.LookupParameter("Cable Tray ID") and
-		i.LookupParameter("Cable Tray ID").AsString() != "NA"]
+	all_systems = ElementProvider.get_sys_by_selection(UnwrapElement(IN[4]))  # type: ignore
 
 # =========Start transaction
 TransactionManager.Instance.EnsureInTransaction(doc)
@@ -156,3 +150,4 @@ try:
 	OUT = el_sys.process_list(lambda x: vector.toPoint(x), path)
 except:
 	OUT = all_systems
+# OUT = sys_obj.path

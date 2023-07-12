@@ -11,6 +11,7 @@
       "Id": "0eb69237dd0c4dc187884facd965d90a",
       "Name": "String",
       "Type": "string",
+      "Type2": "string",
       "Value": "ChangeSysPath.py",
       "Description": "Creates a string.",
       "SelectedIndex": 0
@@ -19,6 +20,7 @@
       "Id": "7723666bfec34752926ee4c5f0865a37",
       "Name": "Continue",
       "Type": "boolean",
+      "Type2": "boolean",
       "Value": "true",
       "Description": "Selection between a true and false.",
       "SelectedIndex": 0
@@ -27,6 +29,7 @@
       "Id": "9b631ce189fa4de5a2e7c622b1b7e5b4",
       "Name": "Reverse",
       "Type": "boolean",
+      "Type2": "boolean",
       "Value": "false",
       "Description": "Selection between a true and false.",
       "SelectedIndex": 0
@@ -35,6 +38,7 @@
       "Id": "e8ce4643bc2b470bb5b807daac261533",
       "Name": "String",
       "Type": "string",
+      "Type2": "string",
       "Value": "Part1_CreatePointList.py",
       "Description": "Creates a string.",
       "SelectedIndex": 0
@@ -43,6 +47,7 @@
       "Id": "2db7f533fd394b5496a8d937d47292ad",
       "Name": "String",
       "Type": "string",
+      "Type2": "string",
       "Value": "Part2_ChangeSysPath.py",
       "Description": "Creates a string.",
       "SelectedIndex": 0
@@ -51,6 +56,7 @@
       "Id": "85c63775bc1841c3ba18d86a75349902",
       "Name": "String",
       "Type": "string",
+      "Type2": "string",
       "Value": "Part3_CalculateTraysParameters.py",
       "Description": "Creates a string.",
       "SelectedIndex": 0
@@ -59,6 +65,7 @@
       "Id": "b18c6ffba1b043f29f8c6de0ebf3730d",
       "Name": "String",
       "Type": "string",
+      "Type2": "string",
       "Value": "Part4_CheckHealth.py",
       "Description": "Creates a string.",
       "SelectedIndex": 0
@@ -69,7 +76,7 @@
     {
       "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
       "NodeType": "BooleanInputNode",
-      "InputValue": true,
+      "InputValue": false,
       "Id": "d4faef3825fc49ce8fedebdcd48067ca",
       "Inputs": [],
       "Outputs": [
@@ -89,6 +96,7 @@
     {
       "ConcreteType": "PythonNodeModels.PythonStringNode, PythonNodeModels",
       "Engine": "CPython3",
+      "EngineName": "CPython3",
       "VariableInputPorts": true,
       "NodeType": "ExtensionNode",
       "Id": "2d5996559be141609f0239af77174c49",
@@ -365,11 +373,11 @@
       "ConcreteType": "Dynamo.Nodes.DSModelElementSelection, DSRevitNodesUI",
       "NodeType": "ExtensionNode",
       "InstanceId": [],
-      "Id": "ee86f1a4e1354909b0dd05ed182a2dcd",
+      "Id": "aee4d18f9f5a4e488c522990ecd8e0a6",
       "Inputs": [],
       "Outputs": [
         {
-          "Id": "da2e3d1b8d784abaa90bdee0fb7dd6fc",
+          "Id": "86833b17dead43b6b43849307ed9cc2f",
           "Name": "Element",
           "Description": "The selected elements.",
           "UsingDefaultValue": false,
@@ -409,7 +417,7 @@
     {
       "Start": "24e320b0a8844744b7c6b6bf89539764",
       "End": "c1793981a2564442b958a5e8fbf8a6a3",
-      "Id": "3f044c909cef4854af4d6df735c941a3",
+      "Id": "5cc5537343ee471fbee80d78d47e6f9f",
       "IsHidden": "False"
     },
     {
@@ -425,9 +433,9 @@
       "IsHidden": "False"
     },
     {
-      "Start": "da2e3d1b8d784abaa90bdee0fb7dd6fc",
+      "Start": "86833b17dead43b6b43849307ed9cc2f",
       "End": "1a8cb7b55f1046a1b77d9c01b3734ea0",
-      "Id": "8997e3aa2c16464caa2016a9eda0c45d",
+      "Id": "dd4698db10f64b9eabe22c0b3660343a",
       "IsHidden": "False"
     }
   ],
@@ -462,7 +470,7 @@
       "ScaleFactor": 10000.0,
       "HasRunWithoutCrash": true,
       "IsVisibleInDynamoLibrary": true,
-      "Version": "2.13.1.3887",
+      "Version": "2.16.1.2727",
       "RunType": "Manual",
       "RunPeriod": "1000"
     },
@@ -593,12 +601,12 @@
       {
         "Name": "Select Model Element",
         "ShowGeometry": true,
-        "Id": "ee86f1a4e1354909b0dd05ed182a2dcd",
+        "Id": "aee4d18f9f5a4e488c522990ecd8e0a6",
         "IsSetAsInput": false,
         "IsSetAsOutput": false,
         "Excluded": false,
-        "X": 749.79835702941159,
-        "Y": 1258.7796430112892
+        "X": 749.990419808234,
+        "Y": 1268.9360857616557
       }
     ],
     "Annotations": [
@@ -615,7 +623,7 @@
         "HasNestedGroups": false,
         "Left": 768.54191926349733,
         "Top": 752.70181498902218,
-        "Width": 209.0,
+        "Width": 214.0,
         "Height": 205.0,
         "FontSize": 36.0,
         "InitialTop": 825.70181498902218,
@@ -624,8 +632,8 @@
         "Background": "#FFC1D676"
       }
     ],
-    "X": -1037.5737698124556,
-    "Y": -853.51194246010471,
-    "Zoom": 1.09587543836899
+    "X": -413.47613882753637,
+    "Y": -421.26479182299113,
+    "Zoom": 0.68042021134601371
   }
 }

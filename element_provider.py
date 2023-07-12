@@ -157,33 +157,27 @@ class ElementProvider():
 			return [i for i in allsys][0], None
 
 	@staticmethod
-	def get_sys_by_selection():
+	def get_sys_by_selection(sel_obj=None):
 		"""
 		Get system by selected object
 		"""
 		el_sys_list = list()
-		# get system by selected object
-		sel = uidoc.Selection.PickObject(  # type: ignore
-			Autodesk.Revit.UI.Selection.ObjectType.Element, "")
-		sel_obj = doc.GetElement(sel.ElementId)  # type: ignore
-		# check if selection is electrical board
-		# OST_ElectricalEquipment.Id == -2001040
-		if sel_obj.Category.Id == ElementId(-2001040):
-			sys_el = sel_obj.MEPModel.GetElectricalSystems()
-			sys_all = [x.Id for x in sel_obj.MEPModel.GetAssignedElectricalSystems()]
-			el_sys_list = [x for x in sys_el if x.Id not in sys_all]
-			# filter out electrical circuit only
-			el_sys_list = [
-				x for x in el_sys_list
-				if x.SystemType == Electrical.ElectricalSystemType.PowerCircuit]
+		if not sel_obj:
+			# get system by selected object
+			sel = uidoc.Selection.PickObject(  # type: ignore
+				Autodesk.Revit.UI.Selection.ObjectType.Element, "")
+			sel_obj = doc.GetElement(sel.ElementId)  # type: ignore
+			# check if selection is electrical board
+			# OST_ElectricalEquipment.Id == -2001040
 
-		else:
-			el_sys_list = [x for x in sel_obj.MEPModel.GetElectricalSystems()]
+		el_sys_list = [x for x in sel_obj.MEPModel.GetElectricalSystems()
+			if all([
+				x.BaseEquipment,
+				x.CircuitType == Autodesk.Revit.DB.Electrical.CircuitType.Circuit,
+			]
+		)]
 
-		# filter NA circuit
-		el_sys_list = [
-			x for x in el_sys_list
-			if x.LookupParameter("Cable Tray ID").AsString() != "NA"]
+		el_sys_list = [x for x in el_sys_list if x.LookupParameter("Cable Tray ID").AsString() != "NA"]
 
 		return el_sys_list
 
