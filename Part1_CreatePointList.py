@@ -144,7 +144,7 @@ for el_system in all_systems:
 			try:
 				list_of_nets.append(cab_tray.TrayNet(name))
 			except:
-				error_text = "\nTray with ID do not exists: " + name
+				error_text = "\nTray with ID do not exists: " + name + " Check system: " + el_system.Id
 				# find error in file
 				error_in_file = False
 				with open(file_errors, "r") as f_in:
