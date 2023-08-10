@@ -97,7 +97,7 @@ for net_name in net_names:
 	try:
 		tray_net = cab_tray.TrayNet(net_name)
 	except ValueError:
-		error_text = "\nCant't create tray net. Not only cable trays found:  " + net_name
+		error_text = "\nCant't create tray net. Not only cable trays found:  " + net_name + "\n"
 		with open(file_errors, "a") as f_out:
 						f_out.write(error_text)
 		continue
@@ -110,7 +110,7 @@ for net_name in net_names:
 	inst_in_model_id = [i.Id.ToString() for i in inst_in_model if i.Id not in inst_in_net_IDs]
 	if inst_in_model_id:
 		ids_strings = ",".join(inst_in_model_id)
-		error_text = "\nDuplicate of net found: " + net_name + "; Check IDs:" + ids_strings
+		error_text = "\nDuplicate of net found: " + net_name + "; Check IDs:" + ids_strings + "\n"
 		with open(file_errors, "a") as f_out:
 			f_out.write(error_text)
 		break
@@ -120,7 +120,7 @@ for net_name in net_names:
 	inst_net_ids = set(inst_net_ids)
 	inst_net_ids = [i for i in inst_net_ids if i]
 	if len(inst_net_ids) != 1:
-		error_text = "\nNet has multy names: " + net_name
+		error_text = "\nNet has multy names: " + net_name + "\n"
 		with open(file_errors, "a") as f_out:
 			f_out.write(error_text)
 

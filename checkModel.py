@@ -64,5 +64,7 @@ def sortData(filename):
 		data = datafile.readlines()
 		data.sort()
 
-	with open(filename, "w") as datafile:
-		datafile.write('\n'.join(data))
+	with open(filename, 'r+') as datafile:
+		# datafile.write('\n'.join(data))
+		for dat in data:
+			datafile.write("%s" % dat)

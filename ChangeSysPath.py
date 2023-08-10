@@ -103,7 +103,7 @@ for el_system in all_systems:
 			try:
 				list_of_nets.append(cab_tray.TrayNet(name))
 			except:
-				raise ValueError("Tray with ID do not exists\n" + name + " Check system: " + el_system.Id)
+				raise ValueError("Tray with ID do not exists\n" + name + " Check system: " + el_system.Id.ToString())
 
 	else:
 		# system runs not in cable tray
