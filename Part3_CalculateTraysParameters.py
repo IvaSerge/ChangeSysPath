@@ -127,13 +127,13 @@ with open(file_database, "r") as f_db:
 			continue
 
 		# calculate parameters
-		try:
-			tray_weight = calc_cab_tray.calc_tray_weight(link)
-			calc_cab_tray.set_tray_weight(tray_weight)
-		except:
-			with open(file_out, "a") as f_out:
-				tray_weight = 0
-				f_out.write("\nWeight not found. Check tray size: " + tray_id.ToString())
+		# try:
+		# 	tray_weight = calc_cab_tray.calc_tray_weight(link)
+		# 	calc_cab_tray.set_tray_weight(tray_weight)
+		# except:
+		# 	with open(file_out, "a") as f_out:
+		# 		tray_weight = 0
+		# 		f_out.write("\nWeight not found. Check tray size: " + tray_id.ToString())
 
 		tray_fill = calc_cab_tray.calc_tray_filling(link)
 		tray_tag = calc_cab_tray.get_tags(link)
