@@ -99,8 +99,9 @@ class TrayNet():
 			points = [instance.Location.Point]
 
 		if len(points) > 2:
-			raise ValueError(
-				"More than 3 connectors found: check instanse %s" % instance.Id.ToString())
+			error_str = error_str = f"More than 3 connectors found: check instance {instance.Id.ToString()}"
+			print(error_str)
+			raise ValueError(error_str)
 		return points
 
 	def _get_first_tray(self):
@@ -146,6 +147,7 @@ class TrayNet():
 		else:
 			inst_Id = str(_inst.Id.IntegerValue)
 			error_value = "Elem is not a tray: " + inst_Id
+			print(error_value)
 			raise ValueError(error_value)
 
 		elem_cons = elem_con_manager.Connectors
