@@ -55,12 +55,7 @@ def setup_param_value(elem, name, pValue):
 
 
 def get_bip(paramName):
-	builtInParams = System.Enum.GetValues(BuiltInParameter)
-	param = []
-	for i in builtInParams:
-		if i.ToString() == paramName:
-			param.append(i)
-			return i
+	return System.Enum.Parse(BuiltInParameter, paramName)
 
 
 def category_by_bic_name(_bicString):
